@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json,sys,argparse,os,re,csv,io
+import json,sys,argparse,os,re,csv,io,copy
 import lxml.etree as LET
 from cfgCommons import Cfg
 from wawCommons import printf, eprintf
@@ -154,8 +154,8 @@ def getNodeWithTheSameCondition(root, testNode):
 def importText(importTree, config):
     imports = importTree.xpath('//importText')
     for imp in imports:
+        filename = imp.text.split('/')
         if VERBOSE: eprintf('Importing %s\n', os.path.join(os.path.dirname(getattr(config, 'common_dialog_main')),*filename))
-        filename = imp.text.split('/') 
         fp = io.open(os.path.join(os.path.dirname(getattr(config, 'common_dialog_main')),*filename) ,'r', encoding='utf-8')
         importTxt = fp.read()
         fp.close()
