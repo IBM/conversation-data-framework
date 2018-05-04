@@ -12,15 +12,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import re
-from wawCommons import eprintf
+from .wawCommons import eprintf
 from collections import OrderedDict
 
 '''
 Created on Jan 15, 2018
 @author: alukes
 '''
+
+try:
+    unicode        # Python 2
+except NameError:
+    unicode = str  # Python 3
+
 
 class IntentData(object):
     """ Represents a data structure containing all necessary information for a single Dialog intent. """

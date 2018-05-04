@@ -12,10 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import sys, argparse, os, re
 from collections import defaultdict
-from wawCommons import printf, eprintf, toIntentName, toEntityName
+from .wawCommons import printf, eprintf, toIntentName, toEntityName
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='convert NLU tsv files into domain-entity and intent-entity mappings.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)

@@ -12,15 +12,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 # coding: utf-8
 import sys, argparse, os, codecs
-from cfgCommons import Cfg
-from wawCommons import printf
-from XLSXHandler import XLSXHandler
-from XMLHandler import XMLHandler
+from .cfgCommons import Cfg
+from .wawCommons import printf
+from .XLSXHandler import XLSXHandler
+from .XMLHandler import XMLHandler
 
-from wawCommons import printf, eprintf
+from .wawCommons import printf, eprintf
 
 def saveDialogDataToFileSystem(dialogData, handler, config):
     if hasattr(config, 'common_generated_dialogs') and not os.path.exists(getattr(config, 'common_generated_dialogs')):
