@@ -752,7 +752,7 @@ if __name__ == '__main__':
         printf('WARNING: Schema not found, using default path /../data_spec/dialog_schema.xml\n;')
     schemaFile = os.path.join(schemaDirname, getattr(config, 'common_schema'))
     if not os.path.exists(schemaFile):
-        eprintf('ERROR: Schema file not found.\n')
+        eprintf('ERROR: Schema file %s not found.\n', schemaFile)
         exit(1)
     schemaTree = LET.parse(schemaFile)
     schema = LET.XMLSchema(schemaTree)
