@@ -2,24 +2,122 @@ group: travis_latest
 language: python
 cache: pip
 python:
-    - 2.7
-    #- 3.6
-matrix:
-    allow_failures:
-        - python: 3.6
+- 2.7
+
 install:
-    #- pip install -r requirements.txt
-    - pip install flake8 pytest
-    - pip install unicode unidecode lxml
-before_script:
-    # stop the build if there are Python syntax errors or undefined names
-    #- flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
-    # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
-    #- flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-script:
-    #- pytest --capture=sys  # add other tests here
-    - cd example/cz_app
-    - python ../../scripts/update_all.py -c common.cfg -c private.cfg
+- pip install flake8 pytest
+- pip install unicode unidecode lxml requests openpyxl
+
+stages:
+  - name: Dialog, intents from XLS to XML, CSV
+  - name: Dialog from XML to JSON
+  - name: Entities from CSV to JSON
+  - name: Intents from CSV to JSON
+  - name: Compose workspace
+  - name: Decompose workspace
+  - name: Intents from JSON to CSV
+  - name: Entities from JSON to CSV
+  - name: Dialog from JSON to XML
+  - name: Deploy test workspace
+  - name: Test workspace
+  - name: Evaluate tests
+  - name: Deploy master workspace
+    if: branch = master
+
+jobs:
+  include:
+    - stage: Dialog, intents from XLS to XML, CSV
+      script:
+        - mkdir -p tests/data/dialog/generated
+        - python scripts/dialog_xls2xml.py -x tests/data/dialog/xls/WEATHER-FAQ-CZ.xlsx -gd tests/data/dialog/generated -gi "tests/data/intents" -v
+        - ./artifactory-deploy.sh $API_KEY tests/data/dialog/generated/*
+
+    - stage: Dialog from XML to JSON
+      script:
+        - mkdir -p outputs
+        - ./artifactory-resolve.sh $API_KEY tests/data/dialog/generated/WEATHER-FAQ-CZ.xml
+        - python scripts/dialog_xml2json.py -dm tests/data/dialog/main.xml -of outputs -od dialog.json -s ../data_spec/dialog_schema.xml -v
+        - ./artifactory-deploy.sh $API_KEY outputs/dialog.json
+
+    - stage: Entities from CSV to JSON
+      script:
+        - mkdir -p outputs
+        - python scripts/entities_csv2json.py -ie tests/data/entities/ -oe entities.json -od outputs -v
+        - ./artifactory-deploy.sh $API_KEY outputs/entities.json
+
+    - stage: Intents from CSV to JSON
+      script:
+        - mkdir -p outputs
+        - python scripts/intents_csv2json.py -ii tests/data/intents/ -od outputs -oi intents.json -v
+        - ./artifactory-deploy.sh $API_KEY outputs/intents.json
+
+    - stage: Compose workspace
+      script:
+        - ./artifactory-resolve.sh $API_KEY outputs/intents.json
+        - ./artifactory-resolve.sh $API_KEY outputs/entities.json
+        - ./artifactory-resolve.sh $API_KEY outputs/dialog.json
+        - python scripts/workspace_compose.py -of outputs -ow workspace.json -oe entities.json -od dialog.json -oi intents.json -v
+        - ./artifactory-deploy.sh $API_KEY outputs/workspace.json
+
+    - stage: Decompose workspace
+      script:
+        - ./artifactory-resolve.sh $API_KEY outputs/workspace.json
+        - python scripts/workspace_decompose.py outputs/workspace.json -i outputs/intentsOut.json -e outputs/entitiesOut.json -d outputs/dialogOut.json -v
+        - ./artifactory-deploy.sh $API_KEY outputs/intentsOut.json
+        - ./artifactory-deploy.sh $API_KEY outputs/entitiesOut.json
+        - ./artifactory-deploy.sh $API_KEY outputs/dialogOut.json
+
+    - stage: Intents from JSON to CSV
+      script:
+        - mkdir -p outputs/intents
+        - ./artifactory-resolve.sh $API_KEY outputs/intentsOut.json
+        - python scripts/intents_json2csv.py outputs/intentsOut.json outputs/intents/ -v
+        - ./artifactory-deploy.sh $API_KEY outputs/intents/*
+
+    - stage: Entities from JSON to CSV
+      script:
+        - mkdir -p outputs/entities
+        - ./artifactory-resolve.sh $API_KEY outputs/entitiesOut.json
+        - python scripts/entities_json2csv.py outputs/entitiesOut.json outputs/entities -v
+        - ./artifactory-deploy.sh $API_KEY outputs/entities/*
+
+    - stage: Dialog from JSON to XML
+      script:
+        - mkdir -p outputs/dialog
+        - ./artifactory-resolve.sh $API_KEY outputs/dialogOut.json
+        - python scripts/dialog_json2xml.py outputs/dialogOut.json -d outputs/dialog/ -v
+        - ./artifactory-deploy.sh $API_KEY outputs/dialog/*
+
+    - stage: Deploy test workspace
+      script:
+        - ./artifactory-resolve.sh $API_KEY outputs/workspace.json
+        - python scripts/workspace_deploy.py -of outputs -ow workspace.json -c tests/test.cfg -v -cn $WA_USERNAME -cp $WA_PASSWORD -cid $WA_WORKSPACE_ID_TEST
+
+    - stage: Test workspace
+      script:
+        - # TODO Get rid of this when workspace_test.py allows cmd params
+        - echo "username = ${WA_USERNAME}" >> tests/test.cfg
+        - echo "password = ${WA_PASSWORD}" >> tests/test.cfg
+        - echo "workspace_id = ${WA_WORKSPACE_ID_TEST}" >> tests/test.cfg
+        - mkdir -p outputs/dialog
+        - python scripts/workspace_test.py tests/test.cfg tests/test_more_outputs.test outputs/test_more_outputs.out -v
+        - ./artifactory-deploy.sh $API_KEY outputs/test_more_outputs.out 
+
+    - stage: Evaluate tests
+      script:
+        - ./artifactory-resolve.sh $API_KEY outputs/test_more_outputs.out
+        - python scripts/evaluate_tests.py tests/test_more_outputs.test outputs/test_more_outputs.out -o outputs/test_more_outputs.junit.xml
+        - ./artifactory-deploy.sh $API_KEY outputs/test_more_outputs.junit.xml
+
+    - stage: Deploy master workspace
+      script:
+        - ./artifactory-resolve.sh $API_KEY outputs/workspace.json
+        - python scripts/workspace_deploy.py -of outputs -ow workspace.json -c tests/test.cfg -v -cn $WA_USERNAME -cp $WA_PASSWORD -cid $WA_WORKSPACE_ID_MASTER
+
 notifications:
-    on_success: change
-    on_failure: change  # `always` will be the setting once code changes slow down
+  recipients:
+  - tondrej@cz.ibm.com
+  #- tomas_macek@cz.ibm.com
+  #- tereza.pytelova@cz.ibm.com
+  on_success: change
+  on_failure: always
