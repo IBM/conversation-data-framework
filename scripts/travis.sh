@@ -1,12 +1,13 @@
 #!/bin/sh
 
-export API_KEY=AKCp5aU5jWcMLvD2ViDN3jV2dtitVbrg2cq1aftQTUXCyGdAc3DjWXBemYFsuduFsAhnpcJ8o
-export WA_PASSWORD=ptFbCMZ2hCC1
-export WA_USERNAME=02045182-1793-440c-b28c-7da07dca3117
-export WA_WORKSPACE_ID_MASTER=4a64f694-0608-4e38-8ccc-eba2dcd30c7e
-export WA_WORKSPACE_ID_TEST=f2e3f277-61a3-40d2-92f9-c3c77f34fb31
-export TRAVIS_BRANCH=local
-export TRAVIS_BUILD_NUMBER=2
+# Those variables is needed to be exported or set as environment variables
+# export API_KEY=
+# export WA_PASSWORD=
+# export WA_USERNAME=
+# export WA_WORKSPACE_ID_MASTER=
+# export WA_WORKSPACE_ID_TEST=
+# export TRAVIS_BRANCH=
+# export TRAVIS_BUILD_NUMBER=
 
 stopIfFailed() 
 {
