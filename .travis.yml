@@ -12,9 +12,10 @@ script:
 - ./ci/travis.sh
 
 notifications:
-  recipients:
-  - tondrej@cz.ibm.com
-  #- tomas_macek@cz.ibm.com
-  #- tereza.pytelova@cz.ibm.com
-  on_success: change
-  on_failure: always
+  email:
+    recipients:
+    - tondrej@cz.ibm.com
+    #- tomas_macek@cz.ibm.com
+    #- tereza.pytelova@cz.ibm.com
+    on_success: change
+    on_failure: always
