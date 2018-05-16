@@ -1,13 +1,16 @@
 	********************************************************************************
-	** SPECIFICATION OF ENTITIES FORMAT
+	** ENTITIES FORMAT
 	********************************************************************************
-	Values of each entity are collected in file with name <entity_name>.txt
-	On each row there is one entity value which may be followed by its synonyms (semicolon separated)
+	Values of each entity is specified in a separate file with the name corresponding to entity name
+	e.g. first_name.csv
+	There is one entity value per row of the file. The Value can be followed by its synonyms separated by semicolumns
 	Example:
 		amy
 		john;johny;johnny;ian
 		susanne;susan
-	For using pattern matching just prefix the first entity value with ~
+	For pattern entities the pattern should be prefixed by ~
 	Example:
 		~email;\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b
 		~fullUSphone;(\d{3})-(\d{3})-(\d{4})
+	Recomendation:
+	Entity files are typically placed to a separate directory (<app_root>/entity) or directories.
