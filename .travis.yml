@@ -17,5 +17,6 @@ notifications:
     - tondrej@cz.ibm.com
     #- tomas_macek@cz.ibm.com
     #- tereza.pytelova@cz.ibm.com
-    on_success: change
+    on_success: always
     on_failure: always
+  slack: 'ibm-watson:${SLACK_TOKEN}'
