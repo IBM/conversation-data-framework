@@ -15,8 +15,10 @@ notifications:
   email:
     recipients:
     - tondrej@cz.ibm.com
+    - tondrej@seznam.cz
     #- tomas_macek@cz.ibm.com
     #- tereza.pytelova@cz.ibm.com
     on_success: always
     on_failure: always
-  slack: 'ibm-watson:${SLACK_TOKEN}'
+  slack:
+    on_success: always
