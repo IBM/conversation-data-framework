@@ -25,3 +25,5 @@ Scripts use python 2.7
 Please install following python modules: configparser, openpyxl, cryptography, unidecode, requests
 
 For brief summary how to run scripts please see scripts.md.
+
+Description of dialog T2C and xml WAW format is placed in doc folder as well as description of entity and intent csv format.
