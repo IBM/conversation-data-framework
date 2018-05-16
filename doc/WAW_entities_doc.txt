@@ -1,0 +1,13 @@
+	********************************************************************************
+	** SPECIFICATION OF ENTITIES FORMAT
+	********************************************************************************
+	Values of each entity are collected in file with name <entity_name>.txt
+	On each row there is one entity value which may be followed by its synonyms (semicolon separated)
+	Example:
+		amy
+		john;johny;johnny;ian
+		susanne;susan
+	For using pattern matching just prefix the first entity value with ~
+	Example:
+		~email;\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b
+		~fullUSphone;(\d{3})-(\d{3})-(\d{4})

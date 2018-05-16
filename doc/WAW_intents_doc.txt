@@ -1,0 +1,28 @@
+	********************************************************************************
+	** SPECIFICATION OF INTENTS TSV FORMAT
+	********************************************************************************
+	Intents are written in tab-separated tsv format.
+	Only english letters, numbers, hyphens and underscores are allowed in intent
+	and domain names.
+
+	**********************************************************************
+	** First column
+	**********************************************************************
+	There is "weight" of specified sentence, i.e. its frequency (mostly 1)
+
+	**********************************************************************
+	** Second column
+	**********************************************************************
+	Contains the domain and the intent specification. The part before
+	the first underscore represents the name of the domain. The rest
+	is the intent specification, which can be divided to "subintents"
+	by another underscores.
+	Example: CHITCHAT_GREETINGS-HELLO
+	stands for the domain "CHITCHAT" and the intent "GREETINGS-HELLO"
+
+	**********************************************************************
+	** Third column
+	**********************************************************************
+	Contains sentence which represents this intent. Every entity can be
+	tagged with its entity name.
+	Example: Hallo <first_name>Hans</first_name>.
