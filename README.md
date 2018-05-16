@@ -22,8 +22,9 @@ Currently supported conversation version is 2017-02-03 except:
 
 Scripts use python 2.7
 
-Please install following python modules: configparser, openpyxl, cryptography, unidecode, requests
+Python modules to be installed: 
+pip install configparser openpyxl cryptography unidecode requests unicode unidecode lxml requests openpyxl
 
 For brief summary how to run scripts please see scripts.md.
 
-Description of dialog T2C and xml WAW format is placed in doc folder as well as description of entity and intent csv format.
+Description of T2C  and xml/csv WAW formats can be found in doc folder.
