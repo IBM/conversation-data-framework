@@ -9,7 +9,7 @@ install:
 - pip install unicode unidecode lxml requests openpyxl
 
 script:
-- ./scripts/travis.sh
+- ./ci/travis.sh
 
 notifications:
   recipients:

@@ -6,8 +6,8 @@ DIR_URL=https://na.artifactory.swg-devops.com/artifactory/iot-waw-trevis-generic
 
 # TODO It does not work for with nested folders
 echo "Artifactory: deploy ${PATH_TO_FILE}";
-for filename in ${PATH_TO_FILE}; do
-    echo "Artifactory: deploy ${filename} to ${DIR_URL}/${filename}";
-    curl -H 'X-JFrog-Art-Api: '${API_KEY} -T ${filename} ${DIR_URL}/${filename};
+for FILENAME in ${PATH_TO_FILE}; do
+    echo "Artifactory: deploy ${FILENAME} to ${DIR_URL}/${FILENAME}";
+    curl -H 'X-JFrog-Art-Api: '${ARTIFACTORY_API_KEY} -T ${FILENAME} ${DIR_URL}/${FILENAME};
     echo "\n";
 done
