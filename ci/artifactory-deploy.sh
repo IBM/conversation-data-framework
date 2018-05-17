@@ -4,7 +4,7 @@ PATH_TO_FILE=$1
 
 DIR_URL=https://na.artifactory.swg-devops.com/artifactory/iot-waw-trevis-generic-local/${TRAVIS_BRANCH}/${TRAVIS_BUILD_NUMBER}
 
-# TODO It does not work for with nested folders
+# TODO It does not work with nested folders
 echo "Artifactory: deploy ${PATH_TO_FILE}";
 for FILENAME in ${PATH_TO_FILE}; do
     echo "Artifactory: deploy ${FILENAME} to ${DIR_URL}/${FILENAME}";
