@@ -140,5 +140,5 @@ if [ "$TRAVIS_BRANCH" = "devel" -a "$TRAVIS_PULL_REQUEST" = "false" -a "$TRAVIS_
     echo "--------------------------------------------------------------------------------";
     echo "-- Cleanup Artifactory";
     echo "--------------------------------------------------------------------------------";
-    ./ci/artifactory-clenup.sh
+    ./ci/artifactory-cleanup.sh
 fi
