@@ -93,6 +93,9 @@ if __name__ == '__main__':
                 if os.path.isfile(os.path.join(fileOrFolder, xlsFile)) and xlsFile.endswith('.xlsx') and \
                         not(xlsFile.startswith('~')) and not(xlsFile.startswith('.')):
                     xlsxHandler.parseXLSXIntoDataBlocks(fileOrFolder + "/" + xlsFile)
+                else:
+                    eprintf('WARNING: The file %s skipped due to failing file selection policy check. It should be .xlsx file not starting with ~ or .(dot).\n', xlsFile)
+
         elif os.path.exists(fileOrFolder):
             xlsxHandler.parseXLSXIntoDataBlocks(fileOrFolder)
 
