@@ -98,12 +98,12 @@ class XMLHandler(object):
         if buttons:
             #segment generating buttons to generic - we might return to it when WA format gets more stable
             '''
-            genericXml = XML.Element('generic', structure='listItem')
+            genericXml = XML.Element('generic', structure = 'listItem')
             genericXml.append(self._createXmlElement('response_type', "option"))
             genericXml.append(self._createXmlElement('preference', "button"))
             genericXml.append(self._createXmlElement('title', "Fast selection buttons"))
 
-            buttonIndex=0
+            buttonIndex = 0
             for buttonLabel, buttonValue in buttons.iteritems():
                 if buttonIndex < MAX_OPTIONS :
                     optionsXml = XML.Element('options')
@@ -112,23 +112,23 @@ class XMLHandler(object):
                     genericXml.append(optionsXml)
                 else:
                     eprintf('Warning: Number of buttons is larger then %s, ignoring: %s, %s\n', MAX_OPTIONS, buttonLabel, buttonLabel)
-                buttonIndex+=1
+                buttonIndex += 1
             outputXml.append(genericXml)
             '''
 
-            suggestionsXml = XML.Element('suggestions', structure='listItem')
-            buttonIndex=0
+            suggestionsXml = XML.Element('suggestions', structure = 'listItem')
+            buttonIndex = 0
             for buttonLabel, buttonValue in buttons.iteritems():
                 if buttonIndex < MAX_OPTIONS :
                     # sanity check, string length 64 is the limit of WA
                     if len(buttonLabel) >64 :
-                        buttonLabel=buttonLabel[:64]
+                        buttonLabel = buttonLabel[:64]
                         eprintf('WARNING: Button label is > 64 char, truncating to: %s\n', buttonLabel)
                     if len(buttonValue) >64 :
-                        buttonValue=buttonValue[:64]
+                        buttonValue = buttonValue[:64]
                         eprintf('WARNING: Button label is > 64 char, truncating to: %s\n', buttonValue)
 
-                    xmlSuggestion = XML.Element('suggestions', structure='listItem')
+                    xmlSuggestion = XML.Element('suggestions', structure = 'listItem')
                     xmlLabel = XML.Element('label')
                     xmlLabel.text = buttonLabel                   
                     xmlValue = XML.Element('value')
@@ -138,7 +138,7 @@ class XMLHandler(object):
                     outputXml.append(xmlSuggestion)
                 else:
                     eprintf('Warning: Number of buttons is larger then %s, ignoring: %s, %s\n', MAX_OPTIONS, buttonLabel, buttonLabel)
-                buttonIndex+=1
+                buttonIndex += 1
         return outputXml
 
 
