@@ -88,6 +88,8 @@ if __name__ == '__main__':
     # check errors during upload
     if 'error' in responseJson:
         eprintf('Cannot upload conversation workspace\nERROR: %s\n', responseJson['error'])
+        if 'errors' in responseJson and len(responseJson['errors']) > 0:
+            eprintf('\t explanation: %s\n', responseJson['errors'][0])
         if VERBOSE: eprintf("INFO: RESPONSE: %s\n", responseJson)
 #        if VERBOSE: eprintf("INFO: WORKSPACE: %s\n", json.dumps(workspace, indent=4))
         sys.exit(1)

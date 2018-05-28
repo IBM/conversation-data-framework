@@ -23,13 +23,13 @@ from XMLHandler import XMLHandler
 from wawCommons import printf, eprintf
 
 def saveDialogDataToFileSystem(dialogData, handler, config):
-    if hasattr(config, 'common_generated_dialogs') and not os.path.exists(getattr(config, 'common_generated_dialogs')):
-        os.makedirs(getattr(config, 'common_generated_dialogs'))
-        print('Created new directory ' + getattr(config, 'common_generated_dialogs'))
+    if hasattr(config, 'common_generated_dialogs') and not os.path.exists(getattr(config, 'common_generated_dialogs')[0]):
+        os.makedirs(getattr(config, 'common_generated_dialogs')[0])
+        print('Created new directory ' + getattr(config, 'common_generated_dialogs')[0])
 
     domains = dialogData.getDomains()
     for domain in domains:
-        filename = getattr(config, 'common_generated_dialogs') + '/' + domain + '.xml'
+        filename = getattr(config, 'common_generated_dialogs')[0] + '/' + domain + '.xml'
         with codecs.open(filename, 'w', encoding='utf8') as dialogFile:
             xmlData = handler.convertDialogData(dialogData, domains[domain])
             dialogFile.write(handler.printXml(xmlData))

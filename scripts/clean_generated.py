@@ -37,7 +37,7 @@ if __name__ == '__main__':
         shutil.rmtree(config.common_generated_dialogs[0])
         if VERBOSE:printf('%s does not exist.',config.common_generated_dialogs[0])
     else:
-        if VERBOSE:printf('%s does not exist.', common_config.generated_dialogs[0])
+        if VERBOSE:printf('%s does not exist.', common.config_generated_dialogs[0])
 
     if os.path.exists(config.common_generated_intents[0]):
         shutil.rmtree(config.common_generated_intents[0])

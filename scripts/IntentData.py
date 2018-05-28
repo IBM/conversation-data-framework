@@ -33,7 +33,7 @@ class IntentData(object):
         self._jumptoTarget = None
         self._jumptoSelector = None
         self._rawOutputs = []  # list of all outputs from the right column of the Excel source
-        self._buttons = OrderedDict()  # key: button label, value: full button value, MUST BE ORDERED!
+        self._buttons = OrderedDict()  # key: button label, value: full button value
 
         
     def addIntentAlternative(self, intentAlternative):
@@ -130,8 +130,7 @@ class IntentData(object):
                 selector = 'condition'
 
         if label not in labelsMap:
-            self.setJumpTo(label, selector)  # label can point at a node name defined externally
-            eprintf('Warning: using jumpto label that was not defined before: %s, expecting that it is external reference to a node name.\n', label)
+            eprintf('Warning: using jumpto label that was not defined before: %s\n', label)
         else:
             self.setJumpTo(labelsMap[label], selector)
 
