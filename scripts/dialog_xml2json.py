@@ -691,7 +691,6 @@ def convertAll(upperNodeJson, nodeXml):
                 upperNodeJson[key] = float(nodeXml.text)
             else:
                 upperNodeJson[key] = unescape(nodeXml.text.strip())
-                printf('\nKey:>' + str(key) + '<        text:>' + unescape(nodeXml.text.strip())+ '<\n')
 
         else:
             upperNodeJson[key] = None
