@@ -17,18 +17,12 @@ from __future__ import absolute_import
 import lxml.etree as XML
 from .wawCommons import eprintf, toIntentName
 
-'''
-Created on Jan 12, 2018
-@author: alukes
-'''
-
-
+# Watson Assistant limits number of options currently to 5, we cut the end of the list of options if it is longer
+MAX_OPTIONS = 5
 class XMLHandler(object):
-
 
     def __init__(self):
         pass
-
 
     def convertDialogData(self, dialogData, intents):
         """ Convert Dialog Data into XML and return pointer to the root XML element. """
@@ -100,15 +94,24 @@ class XMLHandler(object):
                     outputXml.append(self._createXmlElement('url', output))
 
                 else:
-                    eprintf('Warning: Unrecognized channel: %s, value: %s\n', channelName, output)
+                    eprintf('WARNING: Unrecognized channel: %s, value: %s\n', channelName, output)
 
         if buttons:
             genericXml = XML.Element('generic', structure='listItem')
+            genericXml.append(self._createXmlElement('response_type', "option"))
+            genericXml.append(self._createXmlElement('preference', "button"))
+            genericXml.append(self._createXmlElement('title', "Fast selection buttons"))
+
+            buttonIndex=0
             for buttonLabel, buttonValue in buttons.iteritems():
-                optionsXml = XML.Element('options')
-                optionsXml.append(self._createXmlElement('label', buttonLabel))
-                optionsXml.append(self._createXmlElement('value', buttonValue))
-                genericXml.append(optionsXml)
+                if buttonIndex < MAX_OPTIONS :
+                    optionsXml = XML.Element('options')
+                    optionsXml.append(self._createXmlElement('label', buttonLabel))
+                    optionsXml.append(self._createXmlOption('value', buttonValue))
+                    genericXml.append(optionsXml)
+                else:
+                    eprintf('Warning: Number of buttons is larger then %s, ignoring: %s, %s\n', MAX_OPTIONS, buttonLabel, buttonLabel)
+                buttonIndex+=1
             outputXml.append(genericXml)
 
         return outputXml
@@ -135,6 +138,16 @@ class XMLHandler(object):
             xmlElement = XML.Element(name)
         xmlElement.text = value
         return xmlElement
+
+    def _createXmlOption(self, name, value):
+        # optionsXml.append(self._createXmlElement('value', self._createXmlElement('input', self._createXmlElement('text'), buttonValue)))
+        xmlValue = XML.Element(name)
+        xmlInput = XML.Element('input')
+        xmlIext = XML.Element('text')
+        xmlValue.append(xmlInput)
+        xmlInput.append(xmlIext)
+        xmlIext.text = value
+        return xmlValue
 
 
     def _concatenateOutputs(self, channelOutputs):
