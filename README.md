@@ -25,6 +25,6 @@ Scripts use python 2.7
 Python modules to be installed: 
 pip install configparser openpyxl cryptography unidecode requests unicode unidecode lxml requests openpyxl
 
-For brief summary how to run scripts please see scripts.md.
+For brief summary how to run scripts please see 'scripts.md'.
 
 Description of T2C  and xml/csv WAW formats can be found in doc folder.
