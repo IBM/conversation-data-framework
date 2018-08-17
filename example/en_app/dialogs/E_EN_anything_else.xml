@@ -12,7 +12,8 @@
         <output>
             <response>
                 <output>
-                    <text>Sorry, I did not understand. Can you rephrase it please?</text>
+                    <text scope="type-server">Sorry, I did not understand. Can you rephrase it please?</text>
+                    <text scope="type-local">Sorry, I use only local application and I did not understand. Can you rephrase it please?</text>
                 </output>
             </response>
         </output>
