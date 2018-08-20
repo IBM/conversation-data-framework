@@ -241,7 +241,7 @@ def inScope(node):
     if not hasattr(config, 'common_scope'):
         return False # no scope specified -> remove all scoped nodes
     scope = getattr(config, 'common_scope')
-    if scope in node.get('scope'):
+    if scope == node.get('scope'):
         return True
     else:
         return False
