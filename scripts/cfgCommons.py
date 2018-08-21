@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import logging, configparser
+import logging, configparser, sys
 from wawCommons import printf, eprintf
 
 class Cfg:
@@ -114,4 +114,3 @@ class Cfg:
                 outputConfig.write(configFile)
         except IOError:
             eprintf('ERROR: Cannot save config file %s\n', configFileName)
-
