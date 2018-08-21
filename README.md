@@ -20,10 +20,10 @@ Currently supported conversation version is 2017-02-03 except:
 - Missing "slot_in_focus" property.
 - Slots are not supported in json to xml conversion scripts.
 
-Scripts use python 2.7
-
-Please install following python modules: configparser, openpyxl, cryptography, unidecode, requests
-
+Scripts use python 2.7, used modules are listed in the `requirements.txt` file. To satisfy all requirements run
+```
+pip install -r requirements.txt
+```
 For brief summary how to run scripts please see `scripts.md`.
 
 Release notes can be found in 'release_notes.md'
