@@ -26,4 +26,6 @@ pip install -r requirements.txt
 ```
 For brief summary how to run scripts please see `scripts.md`.
 
+Description of T2C  and xml/csv WAW formats can be found in `doc` folder.
+
 Release notes can be found in 'release_notes.md'
