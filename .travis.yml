@@ -13,7 +13,7 @@ script:
 
 notifications:
   email:
-#    recipients:
+    recipients:
 #    - tondrej@cz.ibm.com
 #    - tomas_macek@cz.ibm.com
     - tereza.pytelova@cz.ibm.com
