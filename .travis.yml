@@ -6,7 +6,7 @@ python:
 
 install:
 - pip install flake8 pytest
-- pip install unicode unidecode lxml requests openpyxl
+- pip install -r requirements.txt
 
 script:
 - ./ci/travis.sh
