@@ -273,7 +273,7 @@
     <xs:restriction base="xs:string">
         <xs:enumeration value="not_allowed"/>
         <xs:enumeration value="allow_returning"/>
-        <xs:enumeration value="allow_all_never_return"/>
+        <xs:enumeration value="allow_all"/>
     </xs:restriction>
 </xs:simpleType>
 

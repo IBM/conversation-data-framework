@@ -142,7 +142,7 @@
         <output>
             <text>I will find some friend for you, $name.</text>
         </output>
-        <digress_out_slots>allow_all_never_return</digress_out_slots>
+        <digress_out_slots>allow_returning</digress_out_slots>
     </node>
     <node name="anything_else_chitchat">
         <condition>anything_else</condition>
