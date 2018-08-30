@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import logging, configparser
+import logging, configparser, sys
 from wawCommons import printf, eprintf
 
 class Cfg:
@@ -37,7 +37,6 @@ class Cfg:
         replaceSection = 'replace'
         versionSection = 'version'
         contextSection = 'context'
-        commonSection = 'common'
 
         # List of attributes of framework section to be appended rather then ovewrriden (if the same parameter is defined in more config files)
         frameworkAppend = ['xls', 'intents', 'entities', 'dialogs', 'functions', 'generated_intents',
@@ -115,4 +114,3 @@ class Cfg:
                 outputConfig.write(configFile)
         except IOError:
             eprintf('ERROR: Cannot save config file %s\n', configFileName)
-
