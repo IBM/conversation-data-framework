@@ -15,7 +15,7 @@ limitations under the License.
 from __future__ import print_function
 from __future__ import absolute_import
 
-import logging, configparser
+import logging, configparser, sys
 from .wawCommons import printf, eprintf
 
 class Cfg:
@@ -117,4 +117,3 @@ class Cfg:
                 outputConfig.write(configFile)
         except IOError:
             eprintf('ERROR: Cannot save config file %s\n', configFileName)
-
