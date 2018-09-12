@@ -17,7 +17,7 @@ from __future__ import absolute_import
 import re
 from collections import OrderedDict
 
-from wawCommons import eprintf
+from scripts.wawCommons import eprintf
 
 
 class IntentData(object):
