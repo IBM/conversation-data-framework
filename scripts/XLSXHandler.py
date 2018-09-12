@@ -12,14 +12,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import os, re
 import unidecode
 from openpyxl import load_workbook
-from wawCommons import printf, eprintf, toIntentName
+from .wawCommons import printf, eprintf, toIntentName
 from zipfile import BadZipfile
-import DialogData as Dialog
-from DialogData import DialogData
+from . import DialogData as Dialog
+from .DialogData import DialogData
+
+try:
+    unicode        # Python 2
+except NameError:
+    unicode = str  # Python 3
 
 NAME_POLICY = 'soft'
 
@@ -215,4 +221,3 @@ class XLSXHandler(object):
                 intentData.addIntentAlternative(row[0])  # Collect intent definition
             if row[1]:
                 intentData.addRawOutput(row[1:], self._labelsMap)  # Collect text output
-

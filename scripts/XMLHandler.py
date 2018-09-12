@@ -12,9 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import lxml.etree as XML
-from wawCommons import eprintf, toIntentName
+from .wawCommons import eprintf, toIntentName
 
 # Watson Assistant limits number of options currently to 5, we cut the end of the list of options if it is longer
 MAX_OPTIONS = 5

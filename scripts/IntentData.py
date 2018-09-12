@@ -12,15 +12,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import re
-from wawCommons import eprintf
+from .wawCommons import eprintf
 from collections import OrderedDict
 
 '''
 Created on Jan 15, 2018
 @author: alukes
 '''
+
 
 class IntentData(object):
     """ Represents a data structure containing all necessary information for a single Dialog intent. """
@@ -142,7 +144,7 @@ class IntentData(object):
 
         if isinstance(channel, str):
             channel = channel.decode('utf-8')
-        if unicode.isdigit(channel[0]):
+        if channel[0].isdigit():
             channelName = channel[0]
             channelValue = channel[1:]
 
