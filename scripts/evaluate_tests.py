@@ -12,10 +12,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import json, sys, argparse, requests, os, time, datetime, re
 import lxml.etree as LET
-from wawCommons import printf, eprintf
+from .wawCommons import printf, eprintf
+
+try:
+    basestring            # Python 2
+except NameError:
+    basestring = (str, )  # Python 3
+
 
 
 def areSame(expectedOutputJson, receivedOutputJson, failureData, parentPath):
