@@ -12,12 +12,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
-import json,sys,argparse,os
+import argparse
 import io
-from cfgCommons import Cfg
-from wawCommons import printf, eprintf, toEntityName, getFilesAtPath
+import json
+import os
+import sys
+
+from scripts.cfgCommons import Cfg
+from scripts.wawCommons import getFilesAtPath, printf, toEntityName
+
 
 if __name__ == '__main__':
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
@@ -32,10 +37,9 @@ if __name__ == '__main__':
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('-s', '--common_soft', required=False, help='soft name policy - change intents and entities names without error.', action='store_true', default="")
     args = parser.parse_args(sys.argv[1:])
-    config = Cfg(args);
+    config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
-    if args.common_soft: NAME_POLICY = 'soft'
-    else: NAME_POLICY = 'hard'
+    NAME_POLICY = 'soft' if args.common_soft else 'hard'
 
     if not hasattr(config, 'common_entities'):
         print('entities parameter is not defined.')

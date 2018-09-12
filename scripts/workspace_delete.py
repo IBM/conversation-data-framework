@@ -12,9 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
-import sys, argparse, requests, configparser
-from wawCommons import printf, eprintf
+import argparse
+import configparser
+import sys
+
+import requests
+
+from scripts.wawCommons import eprintf, printf
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Deletes Bluemix conversation service workspace and deletes workspace id from config file.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)

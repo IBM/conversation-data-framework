@@ -15,9 +15,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import sys, re, codecs, os
-import unicodedata, unidecode
+import codecs
+import os
+import re
+import sys
+import unicodedata
+
 import lxml.etree as Xml
+import unidecode
 
 restrictionTextNamePolicy = "NAME_POLICY can be only set to either 'soft', 'soft_verbose' or 'hard'"
 

@@ -12,14 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import os, re
+from __future__ import absolute_import
+
+import os
+import re
+from xml.sax.saxutils import escape
+from zipfile import BadZipfile
+
 import unidecode
 from openpyxl import load_workbook
-from wawCommons import printf, eprintf, toIntentName
-from zipfile import BadZipfile
-from xml.sax.saxutils import escape
-import DialogData as Dialog
-from DialogData import DialogData
+from scripts import DialogData as Dialog
+from scripts.DialogData import DialogData
+from scripts.wawCommons import eprintf, printf, toIntentName
 
 NAME_POLICY = 'soft'
 

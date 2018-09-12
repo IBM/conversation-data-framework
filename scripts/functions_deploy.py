@@ -12,13 +12,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
-import os, json, sys, argparse, requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from cfgCommons import Cfg
-from wawCommons import printf, eprintf, getFilesAtPath
+import argparse
+import json
+import os
+import sys
+
+import requests
 import urllib3
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+from scripts.cfgCommons import Cfg
+from scripts.wawCommons import eprintf, getFilesAtPath, printf
 
 if __name__ == '__main__':
     printf('\nSTARTING: '+ os.path.basename(__file__) + '\n')

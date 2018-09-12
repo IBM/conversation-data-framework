@@ -12,9 +12,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
-import json, sys, argparse, os
-from wawCommons import printf, eprintf, toEntityName
+import argparse
+import json
+import os
+import sys
+
+from scripts.wawCommons import eprintf, printf, toEntityName
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service entities in .json format to entity files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)

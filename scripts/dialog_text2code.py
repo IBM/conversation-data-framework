@@ -12,10 +12,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
-import json,sys,argparse
+import argparse
+import json
+import sys
+
 import lxml.etree as LET
-from wawCommons import printf, eprintf, toCode
+from scripts.wawCommons import eprintf, printf, toCode
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Replaces sentences in text tags with codes and creates resource file with translations from codes to sentences.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)

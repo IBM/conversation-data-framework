@@ -12,12 +12,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
-import os, json, sys, argparse, requests, configparser
-from wawCommons import printf, eprintf
-from cfgCommons import Cfg
+import argparse
+import configparser
 import datetime
+import json
+import os
+import sys
+
+import requests
+
+from scripts.cfgCommons import Cfg
+from scripts.wawCommons import eprintf, printf
 
 try:
     unicode        # Python 2

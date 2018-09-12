@@ -12,16 +12,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
+import argparse
+import codecs
+import os
 # coding: utf-8
-import sys, argparse, os, codecs
-from cfgCommons import Cfg
-from wawCommons import printf
-from XLSXHandler import XLSXHandler
-from XMLHandler import XMLHandler
+import sys
 
-from wawCommons import printf, eprintf
+from scripts.cfgCommons import Cfg
+from scripts.wawCommons import eprintf, printf
+from scripts.XLSXHandler import XLSXHandler
+from scripts.XMLHandler import XMLHandler
+
 
 def saveDialogDataToFileSystem(dialogData, handler, config):
     if hasattr(config, 'common_generated_dialogs') and not os.path.exists(getattr(config, 'common_generated_dialogs')):
@@ -105,4 +108,3 @@ if __name__ == '__main__':
     saveDialogDataToFileSystem(xlsxHandler.getDialogData(), XMLHandler(), config)
 
     printf('\nFINISHING: ' + os.path.basename(__file__) + '\n')
-

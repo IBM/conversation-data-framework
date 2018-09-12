@@ -12,12 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
-import os, json, sys, argparse, codecs
+import argparse
+import codecs
 import io
-from cfgCommons import Cfg
-from wawCommons import printf, eprintf
+import json
+import os
+import sys
+
+from scripts.cfgCommons import Cfg
+from scripts.wawCommons import printf
+
 
 if __name__ == '__main__':
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')

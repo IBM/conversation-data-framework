@@ -12,10 +12,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
-import json, sys, argparse, requests, os, time, datetime, re
+import argparse
+import datetime
+import json
+import os
+import re
+import sys
+import time
+
+import requests
+
 import lxml.etree as LET
-from wawCommons import printf, eprintf
+from scripts.wawCommons import eprintf, printf
 
 try:
     basestring            # Python 2
