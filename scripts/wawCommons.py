@@ -93,7 +93,7 @@ def toIntentName(NAME_POLICY, userReplacements, *intentSubnames):
                     if replacementPair[1] == '\L':
                         uNewIntentSubnameUser = uIntentSubnameUser.lower()
                         triggeredUserRegexToAppend = "intent name should be lowercase"
-                    elif replacementPair[1] == '\U':
+                    elif replacementPair[1] == r'\U':
                         uNewIntentSubnameUser = uIntentSubnameUser.upper()
                         triggeredUserRegexToAppend = "intent name should be uppercase"
                     elif replacementPair[1] == '\A':
@@ -157,7 +157,7 @@ def toEntityName(NAME_POLICY, userReplacements, entityName):
                 if replacementPair[1] == '\L':
                     uNewEntityNameUser = uEntityNameUser.lower()
                     triggeredUserRegexToAppend = "entity name should be lowercase"
-                elif replacementPair[1] == '\U':
+                elif replacementPair[1] == r'\U':
                     uNewEntityNameUser = uEntityNameUser.upper()
                     triggeredUserRegexToAppend = "entity name should be uppercase"
                 elif replacementPair[1] == '\A':

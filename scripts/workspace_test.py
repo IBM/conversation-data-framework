@@ -12,9 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import absolute_import
 
 import json, sys, time, argparse, requests, configparser
-from wawCommons import printf, eprintf
+from .wawCommons import printf, eprintf
 
 CHECK_MESSAGES_TIME_MAX = 5 # in seconds
 CHECK_WORKSPACE_TIME_DELAY = 1 # in seconds
