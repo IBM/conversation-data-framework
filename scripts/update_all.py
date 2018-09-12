@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
 
 import os, sys, logging
 import subprocess, argparse
@@ -37,7 +38,7 @@ if __name__ == '__main__':
             if os.path.isfile(strParamsItem):
                 paramsAll+= ' -c '+strParamsItem
             else:
-                print('ERROR: Configuration file %s not found.', strParamsItem)
+                print(('ERROR: Configuration file %s not found.', strParamsItem))
                 exit(1)
     else:
         # create list of default config files
@@ -45,9 +46,9 @@ if __name__ == '__main__':
             if os.path.isfile(strParamsItem):
                 paramsAll += ' -c ' + strParamsItem
             else:
-                print('WARNING: Default configuration file %s was not found, ignoring.', strParamsItem)
+                print(('WARNING: Default configuration file %s was not found, ignoring.', strParamsItem))
     if len(paramsAll)==0:
-        print('ERROR: Please provide at least one configuration file.', strParamsItem)
+        print(('ERROR: Please provide at least one configuration file.', strParamsItem))
         exit(1)
     if VERBOSE:
         paramsAll+=' -v'

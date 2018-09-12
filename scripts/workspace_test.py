@@ -31,6 +31,7 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
 
     VERBOSE = args.verbose
+    receivedOutputJson = []
 
     # load config file
     conversationSection = 'conversation'
