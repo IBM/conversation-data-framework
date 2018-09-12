@@ -31,7 +31,6 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
 
     VERBOSE = args.verbose
-    receivedOutputJson = []
 
     # load config file
     conversationSection = 'conversation'
@@ -75,6 +74,7 @@ if __name__ == '__main__':
 
     # run tests
     url = workspacesUrl + '/message?version=' + version
+    receivedOutputJson = []
     try:
         with open(args.inputFileName, "r") as inputFile:
             try:
