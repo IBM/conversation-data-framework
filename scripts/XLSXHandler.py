@@ -232,6 +232,9 @@ class XLSXHandler(object):
             node_condition = re.sub(Dialog.X_PLACEHOLDER, row[0], block_header)
             node_name = self._dialogData.createUniqueNodeName(node_condition)  # make it unique
             nodeData = self._dialogData.createNode(node_name, domain)  # create space for new node, remembers node_name
+            if nodeData is None:
+                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                exit()
             nodeData.setCondition(node_condition)
             if row[1]:
                 nodeData.addRawOutput(row[1:], self._dialogData.getLabelsMap())
@@ -251,6 +254,10 @@ class XLSXHandler(object):
         node_name = self._dialogData.createUniqueNodeName(block[0][0])  # derive node name from explicit condition and make it unique
         node_condition = block[0][0]
         nodeData = self._dialogData.createNode(node_name, domain)  # create space for new node, remembers node_name
+        if nodeData is None:
+            eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+            exit()
+
         #nodeData.setName(node_name)
         nodeData.setCondition(node_condition)
 
@@ -280,11 +287,19 @@ class XLSXHandler(object):
             entity_name = self._dialogData.createUniqueEntityName(block[0][0])
 
         entityData = self._dialogData.createEntity(entity_name)  # create space for new entity
+        if entityData is None:
+            eprintf('ERROR: Internal error. entity of the name exists, entity_name:%s\n', entity_name)
+            exit()
+
 
         first_output= block[1][1] if startsWithHeader else block[0][1]  # if we have a header, the first output is in second row
         if first_output :  # if first otput then any output -> we generate a node, assign label ..
             node_name = self._dialogData.createUniqueNodeName(entity_name)  # derive node name from explicit intent name, make it unique
             nodeData = self._dialogData.createNode(node_name, domain) #create space for new node, remembers node_name
+            if nodeData is None:
+                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                exit()
+
             # nodeData.setName(node_name)
             node_condition = entity_name
             nodeData.setCondition(node_condition)
@@ -322,11 +337,17 @@ class XLSXHandler(object):
             intent_name = self._dialogData.createUniqueIntentName(block[0][0])
 
         intentData = self._dialogData.createIntent(intent_name)  # create space for new intent
+        if intentData is None:
+            eprintf('ERROR: Internal error. intent of the name exists, intent_name:%s\n', intentData)
+            exit()
 
         first_output= block[1][1] if startsWithHeader else block[0][1]  # if we have a header, the first output is in second row
         if first_output :  # if first otput then any output -> we generate a node, assign label ..
             node_name = self._dialogData.createUniqueNodeName(intent_name)  # derive node name from explicit intent name, make it unique
             nodeData = self._dialogData.createNode(node_name, domain) #create space for new node, remembers node_name
+            if nodeData is None:
+                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                exit()
             #nodeData.setName(node_name)  #- not needed- set by createNode
             node_condition = '#'+intent_name
             nodeData.setCondition(node_condition)
