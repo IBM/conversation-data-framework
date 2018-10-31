@@ -22,7 +22,7 @@ X_PLACEHOLDER = u'&lt;x&gt;'
 
 class DialogData(object):
     """ DialogData represents complete dialog (intents, entities, nodes, labels).
-    The data are collected across all processed T2C source.
+        The data are collected across all processed T2C source.
         _domains keeps track how domains are affiliated to nodes as we generate separate xls for each domain
         concept of domain correspods to a single Excel Workbook
     """
