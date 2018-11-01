@@ -179,8 +179,8 @@ class DialogData(object):
               :returns unique intent_name or None if not able to create
         """
         #Normalize the string
-        unaccented_name=unicodedata.normalize('NFKD', entity_name).encode('ASCII', 'ignore')  # remove accents
-        unique_entity_name = toIntentName(self._NAME_POLICY, None, unaccented_name).decode('utf-8')
+        #unaccented_name=unicodedata.normalize('NFKD', entity_name).encode('ASCII', 'ignore')  # remove accents
+        unique_entity_name = toIntentName(self._NAME_POLICY, [['$special', '\L']], entity_name).decode('utf-8')
         if unique_entity_name not in self._entities:
             return unique_entity_name
         #try to modify by a number
