@@ -22,14 +22,14 @@ X_PLACEHOLDER = u'&lt;x&gt;'
 
 class DialogData(object):
     """ DialogData represents complete dialog (intents, entities, nodes, labels).
-    The data are collected across all processed T2C source.
-        _domains keeps track how domains are affiliated to nodes as we generate separate xls for each domain
-        concept of domain correspods to a single Excel Workbook
+        The data are collected across all processed T2C source.
+        _domains keeps track of how domains are affiliated to nodes as we generate separate xls for each domain.
+        Concept of domain corresponds to a single Excel Workbook.
     """
 
     def __init__(self, config):
-        # we store on bag of intents and one bag of entities (each results in one file all in corresponding directory
-        self._labelsMap = {} # key: lable, value - node name - translation table for generating jumps
+        # we store onebag of intents and one bag of entities (each results in one file all in corresponding directory)
+        self._labelsMap = {} # key: lable, value: node name - translation table for generating jumps
 
         self._entities = {}  # key: entity name, value: list of all Dialog entity options; entities is a flat list over all the domains
         self._intents = {}   # key: intent name, value: IntentData object; intents is a flat list over all the domains
@@ -38,7 +38,7 @@ class DialogData(object):
         self._nodes = {}     # key: node name, value: list of all associated dialog nodes
         self._domains = {}   # key: domain name, value: list of all associated nodes with the given domain
 
-        self._config= config            #we need config to get NAME_POLICY, verbosity,..
+        self._config = config           # we need config to get NAME_POLICY, verbosity,..
         self._VERBOSE = hasattr(config, 'common_verbose')
         self._NAME_POLICY = 'soft'      # TBD: enable to set the NamePolicy from config file
 
@@ -53,7 +53,7 @@ class DialogData(object):
         return (label in self._labelsMap)
 
     def getLabelsMap(self):
-        """ Return map with GoTo labels as keys and target  node_names as values. """
+        """ Returns map with GoTo labels as keys and target node_names as values. """
         return self._labelsMap
 
     #  ENTITY
@@ -86,8 +86,9 @@ class DialogData(object):
     #******************************************
 
     def createNode(self, node_name, domain_name=None):
-        """ Creates empty node and links it to DialogData.NodeData, returns 0 if already exists
-            - extends _domains if  domainName is not in yet
+        """ Creates an empty node and links it to DialogData.NodeData,
+            returns 0 if the node already exists,
+            extends _domains if domainName is not in yet
         """
         # Update domain structure, add node to corresponding domain
         if domain_name is not None:
@@ -95,7 +96,7 @@ class DialogData(object):
             if domain_name not in self._domains:
                 self._domains[domain_name] = []
             # make sure the nodeName is remembered within the domain
-            #if node_name not in self._nodes[domain_name]:
+            # if node_name not in self._nodes[domain_name]:
             if node_name not in self._domains[domain_name]:
                     self._domains[domain_name].append(node_name)
 
@@ -120,7 +121,7 @@ class DialogData(object):
 
     def updateReferencesNodes(self):
         """
-            Replaces labels by known target node_names
+            Replaces labels by known target node_names.
             This is implementation of the second path through the dialogData.
         """
 
@@ -145,10 +146,10 @@ class DialogData(object):
     def createUniqueIntentName(self, intent_name):
         """
             Creates unique intent_name based on given string
-              intent_name is stripped from not allowed characters, spaces are replaced by _
-              if the result exists a modifier is added at the end of the string
+            intent_name is stripped from not allowed characters, spaces are replaced by _
+            if the result exists a modifier is added at the end of the string
 
-              :returns unique intent_name or None if not able to create
+            :returns unique intent_name or None if not able to create
         """
         #Normalize the string
         unaccented_name=unicodedata.normalize('NFKD', intent_name).encode('ASCII', 'ignore')  # remove accents
@@ -166,10 +167,10 @@ class DialogData(object):
     def createUniqueEntityName(self, entity_name):
         """
             Creates unique entity_name based on given string
-              intent_name is stripped from not allowed characters, spaces are replaced by _
-              if the result exists a modifier is added at the end of the string
+            intent_name is stripped from not allowed characters, spaces are replaced by _
+            if the result exists a modifier is added at the end of the string
 
-              :returns unique intent_name or None if not able to create
+            :returns unique entity_name or None if not able to create
         """
         #Normalize the string
         unaccented_name=unicodedata.normalize('NFKD', entity_name).encode('ASCII', 'ignore')  # remove accents
@@ -187,13 +188,13 @@ class DialogData(object):
     def createUniqueNodeName(self, node_name):
         """
             Creates unique node_name based on given string
-              node_name is stripped from not allowed characters, spaces are replaced by _
-              if the result exists a modifier is added at the end of the string
+            node_name is stripped from not allowed characters, spaces are replaced by _
+            if the result exists a modifier is added at the end of the string
 
-              :returns unique node_name or None if not able to create
+            :returns unique node_name or None if not able to create
         """
         # Normalize the string
-        unaccented_name=unicodedata.normalize('NFKD', node_name).encode('ASCII', 'ignore')  # remove accents
+        unaccented_name = unicodedata.normalize('NFKD', node_name).encode('ASCII', 'ignore')  # remove accents
         unique_node_name = toIntentName(self._NAME_POLICY, None, unaccented_name).decode('utf-8').upper()
         if unique_node_name not in self._nodes:
             return unique_node_name
