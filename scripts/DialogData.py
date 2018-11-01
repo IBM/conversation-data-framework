@@ -60,8 +60,8 @@ class DialogData(object):
     #******************************************
 
     def createEntity(self, entity_name):
-        """ @:returns new empty entity after creating it in self.entities
-            @:returns None if entity of the name already exists
+        """ :return: new empty entity after creating it in self.entities
+            :return: None if entity of the name already exists
         """
         if entity_name not in self._entities:
             self._entities[entity_name] = EntityData()
@@ -76,8 +76,8 @@ class DialogData(object):
     #******************************************
 
     def createIntent(self, intent_name):
-        """ @:returns new empty intent after creating it in self._intents
-            @:returns None if intent of the name already exists
+        """ :return: new empty intent after creating it in self._intents
+            :return: None if intent of the name already exists
         """
         if intent_name not in self._intents:
             self._intents[intent_name] = IntentData()
@@ -92,9 +92,9 @@ class DialogData(object):
     #******************************************
 
     def createNode(self, node_name, domain_name=None):
-        """ @:returns new empty node and links it to DialogData.NodeData,
+        """ :return: new empty node and links it to DialogData.NodeData,
              extends _domains if  domainName is not in yet
-            @:returns None if node of the name already exists
+            :return: None if node of the name already exists
         """
         # Update domain structure, add node to corresponding domain
         if domain_name is not None:
@@ -114,14 +114,14 @@ class DialogData(object):
             return None
 
     def getNode(self, node_name):
-        """  @:returns node of a given name or None
+        """  :return: node of a given name or None
         """
         if node_name not in self._nodes:
             return None
         return self._nodes[node_name]
 
     def getAllNodes(self):
-        """  @:returns list of all nodes
+        """  :return: list of all nodes
         """
         return self._nodes
 
@@ -195,7 +195,7 @@ class DialogData(object):
             node_name is stripped from not allowed characters, spaces are replaced by _
             if the result exists a modifier is added at the end of the string
 
-            :returns unique node_name or None if not able to create
+            :return: unique node_name or None if not able to create
         """
         # Normalize the string
         unique_node_name = toIntentName(self._NAME_POLICY, [['$special', '\A']], node_name).decode('utf-8').upper()

@@ -127,7 +127,7 @@ class XLSXHandler(object):
         self._blocks.append((domain, prefix, block))
 
     def __is_condition_block(self, block):
-        """ Returns true if first cell contains X_PLACEHOLDER
+        """ :return: true if first cell contains X_PLACEHOLDER
             or more then 1 condition indicator (one is just a header)
         """
         no_special=len(re.sub('[^#$@&|]', '', block[0][0]))
@@ -138,12 +138,12 @@ class XLSXHandler(object):
         return False
 
     def __is_header(self, block):
-        """ :returns true if the block has a header i.e. first line has col1 but not col2"""
+        """ :return: true if the block has a header i.e. first line has col1 but not col2"""
         return block[0][0] and not (block[0][1])
 
     def __separate_label_from_block(self, block):
         """ If block has a label (starts with : e.g.  :xxxx) it removes it from the block
-            :returns label or None (if no label was found )
+            :return: label or None (if no label was found )
         """
         label = None
         firstCell = block[0][0]  # firstCell is a header, condition
