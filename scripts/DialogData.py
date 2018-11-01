@@ -185,7 +185,7 @@ class DialogData(object):
         for modifier in range(0, 10000):
             new_unique_entity_name= unique_entity_name + repr(modifier)  #create a modified one
             # Check if the name exists
-            if new_unique_entity_name not in self._intents:
+            if new_unique_entity_name not in self._entities:
                 return new_unique_entity_name
         return None
 
