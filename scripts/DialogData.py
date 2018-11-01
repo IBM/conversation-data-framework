@@ -92,15 +92,9 @@ class DialogData(object):
     #******************************************
 
     def createNode(self, node_name, domain_name=None):
-<<<<<<< HEAD
-        """ Creates an empty node and links it to DialogData.NodeData,
-            returns 0 if the node already exists,
-            extends _domains if domainName is not in yet
-=======
         """ @:returns new empty node and links it to DialogData.NodeData,
              extends _domains if  domainName is not in yet
             @:returns None if node of the name already exists
->>>>>>> 3bd9878b2f186a0ef04272cf60d300286255a39a
         """
         # Update domain structure, add node to corresponding domain
         if domain_name is not None:
