@@ -17,7 +17,7 @@ from IntentData import IntentData
 from EntityData import EntityData
 from NodeData import NodeData
 import unicodedata, unidecode
-from wawCommons import printf, eprintf, toIntentName
+from wawCommons import printf, eprintf, toIntentName, toEntityName
 X_PLACEHOLDER = u'&lt;x&gt;'
 
 class DialogData(object):
