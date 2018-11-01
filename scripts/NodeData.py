@@ -22,8 +22,8 @@ class NodeData(object):
     """
 
     def __init__(self):
-        self._channels = {}             # key: channel name, value: list of all outputs for the channel
-        self._variables = {}            # key: variable name, value: variable value
+        self._channels = {}             # key: channel name, value: list of all outputs for the channel (channel corresponds to modality)
+        self._variables = {}            # key: variable name, value: variable value (request for changes on context)
         self._jumptoTarget = None
         self._jumptoSelector = None
         self._rawOutputs = []           # list of all outputs from the right column of the Excel source
