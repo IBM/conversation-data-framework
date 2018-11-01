@@ -112,9 +112,6 @@ class NodeData(object):
             if rawOutputs[2]:
                 self.__handleJumpToDefinition(rawOutputs[2], labelsMap)
 
-    def generateNodes(self):
-        return self._channels or self._buttons
-
     def __handleVariableDefinition(self, variables):
         for varAssignment in re.split(';', variables):
             keyAndValue = re.split('=', varAssignment)
