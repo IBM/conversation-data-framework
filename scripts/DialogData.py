@@ -60,7 +60,9 @@ class DialogData(object):
     #******************************************
 
     def createEntity(self, entity_name):
-    # Return entity of a given entityName or None, if entity exists
+        """ @:returns new empty entity after creating it in self.entities
+            @:returns None if entity of the name already exists
+        """
         if entity_name not in self._entities:
             self._entities[entity_name] = EntityData()
             return self._entities[entity_name]
@@ -74,10 +76,14 @@ class DialogData(object):
     #******************************************
 
     def createIntent(self, intent_name):
-        # return intent of a given intentName (if it does not exist it creates an empty one )
+        """ @:returns new empty intent after creating it in self._intents
+            @:returns None if intent of the name already exists
+        """
         if intent_name not in self._intents:
             self._intents[intent_name] = IntentData()
-        return self._intents[intent_name]
+            return self._intents[intent_name]
+        else:
+            return None
 
     def getAllIntents(self):
         return self._intents
@@ -86,9 +92,15 @@ class DialogData(object):
     #******************************************
 
     def createNode(self, node_name, domain_name=None):
+<<<<<<< HEAD
         """ Creates an empty node and links it to DialogData.NodeData,
             returns 0 if the node already exists,
             extends _domains if domainName is not in yet
+=======
+        """ @:returns new empty node and links it to DialogData.NodeData,
+             extends _domains if  domainName is not in yet
+            @:returns None if node of the name already exists
+>>>>>>> 3bd9878b2f186a0ef04272cf60d300286255a39a
         """
         # Update domain structure, add node to corresponding domain
         if domain_name is not None:
