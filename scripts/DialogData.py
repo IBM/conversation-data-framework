@@ -68,6 +68,7 @@ class DialogData(object):
             self._entities[entity_name] = EntityData()
             return self._entities[entity_name]
         else:
+            printf('INFO: Entity of given name already exists. entity_name=\n', entity_name)
             return None
 
     def getAllEntities(self):
@@ -84,6 +85,7 @@ class DialogData(object):
             self._intents[intent_name] = IntentData()
             return self._intents[intent_name]
         else:
+            printf('INFO: Intent of given name already exists. intent_name=\n', intent_name)
             return None
 
     def getAllIntents(self):
@@ -112,6 +114,7 @@ class DialogData(object):
             self._nodes[node_name] = NodeData()
             return self._nodes[node_name]
         else:
+            printf('INFO: Node of given name already exists. node_name=\n', node_name)
             return None
 
     def getNode(self, node_name):

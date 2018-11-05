@@ -233,7 +233,7 @@ class XLSXHandler(object):
             node_name = self._dialogData.createUniqueNodeName(node_condition)  # make it unique
             nodeData = self._dialogData.createNode(node_name, domain)  # create space for new node, remembers node_name
             if nodeData is None:
-                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                eprintf('ERROR: Can not create node:%s\n', node_name)
                 exit()
             nodeData.setCondition(node_condition)
             if row[1]:
@@ -256,7 +256,7 @@ class XLSXHandler(object):
         node_condition = node_condition
         nodeData = self._dialogData.createNode(node_name, domain)  # create space for new node, remembers node_name
         if nodeData is None:
-            eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+            eprintf('ERROR: Can not create node:%s\n', node_name)
             exit()
 
         #nodeData.setName(node_name)
@@ -289,7 +289,7 @@ class XLSXHandler(object):
 
         entityData = self._dialogData.createEntity(entity_name)  # create space for new entity
         if entityData is None:
-            eprintf('ERROR: Internal error. entity of the name exists, entity_name:%s\n', entity_name)
+            eprintf('ERROR: Can not create entity:%s\n', entity_name)
             exit()
 
 
@@ -298,7 +298,7 @@ class XLSXHandler(object):
             node_name = self._dialogData.createUniqueNodeName(entity_name)  # derive node name from explicit intent name, make it unique
             nodeData = self._dialogData.createNode(node_name, domain) #create space for new node, remembers node_name
             if nodeData is None:
-                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                eprintf('ERROR: Can not create node:%s\n', node_name)
                 exit()
 
             # nodeData.setName(node_name)
@@ -339,7 +339,7 @@ class XLSXHandler(object):
 
         intentData = self._dialogData.createIntent(intent_name)  # create space for new intent
         if intentData is None:
-            eprintf('ERROR: Internal error. intent of the name exists, intent_name:%s\n', intentData)
+            eprintf('ERROR: Can not create entity:%s\n', intent_name)
             exit()
 
         first_output= block[1][1] if startsWithHeader else block[0][1]  # if we have a header, the first output is in second row
@@ -347,7 +347,7 @@ class XLSXHandler(object):
             node_name = self._dialogData.createUniqueNodeName(intent_name)  # derive node name from explicit intent name, make it unique
             nodeData = self._dialogData.createNode(node_name, domain) #create space for new node, remembers node_name
             if nodeData is None:
-                eprintf('ERROR: Internal error. Node of the name exists, node_name:%s\n', node_name)
+                eprintf('ERROR: Can not create node:%s\n', node_name)
                 exit()
             #nodeData.setName(node_name)  #- not needed- set by createNode
             node_condition = '#'+intent_name
