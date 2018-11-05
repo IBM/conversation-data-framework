@@ -31,7 +31,8 @@ class DialogData(object):
         # we store onebag of intents and one bag of entities (each results in one file all in corresponding directory)
         self._labelsMap = {} # key: lable, value: node name - translation table for generating jumps
 
-        self._entities = {}  # key: entity name, value: list of all Dialog entity options; entities is a flat list over all the domains
+        self._entities = {}  # key: entity name, value: list of all Dialog entity options;
+            # entities are flat list over all the domains, entity value is a semicolumn separated string of synonyms
         self._intents = {}   # key: intent name, value: IntentData object; intents is a flat list over all the domains
 
         # nodes are grouped based on domain
