@@ -71,7 +71,7 @@ def convertNode(nodeJSON):
         convertAll(nodeXML, nodeJSON, 'output')
         if 'text' in nodeJSON['output'] and not isinstance(nodeJSON['output']['text'], basestring):
           outputXML = nodeXML.find('output').find('text').tag = 'textValues'
-        if 'generic' in nodeJSON['output']:
+        if 'generic' in nodeJSON['output']: # generic structure is always a list
             nodeXML.find('output').find('generic').find('values').attrib['structure'] = 'listItem'
     #goto
     if 'next_step' in nodeJSON and nodeJSON['next_step']:
