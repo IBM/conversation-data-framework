@@ -646,7 +646,10 @@ def printNodes(root, parent, dialogJSON):
             if outputNodeXML.find('textValues') is not None: #rename textValues element to text
                 outputNodeTextXML = outputNodeXML.find('textValues')
                 outputNodeTextXML.tag = 'text'
-            convertAll(nodeJSON, outputNodeXML)
+            if len(outputNodeXML.getchildren()) == 0:
+                nodeXML.remove(outputNodeXML)
+            else:
+                convertAll(nodeJSON, outputNodeXML)
         # CONTEXT
         if nodeXML.find('context') is not None:
             convertAll(nodeJSON, nodeXML.find('context'))
