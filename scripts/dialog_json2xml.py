@@ -63,15 +63,16 @@ def convertNode(nodeJSON):
     #condition
     if 'conditions' in nodeJSON:
         conditionXML = LET.Element('condition')
+        nodeXML.append(conditionXML)
         if nodeJSON['conditions'] is None: # null value
             conditionXML.attrib[XSI+'nil'] = "true"
         else:
             conditionXML.text = nodeJSON['conditions']
-        nodeXML.append(conditionXML)
     #context
     if 'context' in nodeJSON and nodeJSON['context']:
         if nodeJSON['context'] is None: # null value
             contextXML = LET.Element('context')
+            nodeXML.append(contextXML)
             contextXML.attrib[XSI+'nil'] = "true"
         else:
             convertAll(nodeXML, nodeJSON, 'context')
@@ -79,6 +80,7 @@ def convertNode(nodeJSON):
     if 'output' in nodeJSON and nodeJSON['output']:
         if nodeJSON['output'] is None: # null value
             outputXML = LET.Element('output')
+            nodeXML.append(outputXML)
             outputXML.attrib[XSI+'nil'] = "true"
         else:
             convertAll(nodeXML, nodeJSON, 'output')
@@ -97,25 +99,23 @@ def convertNode(nodeJSON):
     #goto
     if 'next_step' in nodeJSON:
         nodeGoToXML = LET.Element('goto')
+        nodeXML.append(nodeGoToXML)
         if nodeJSON['next_step'] is None: # null value
             nodeGoToXML.attrib[XSI+'nil'] = "true"
-        else:
-            conditionXML.text = nodeJSON['next_step']
-        nodeXML.append(nodeGoToXML)
-        if 'dialog_node' in nodeJSON['next_step']:
-            nodeGoToTargetXML = LET.Element('target')
-            if nodeJSON['next_step']['dialog_node'] is None:
-                nodeGoToTargetXML.attrib[XSI+'nil'] = "true"
-            else:
-                nodeGoToTargetXML.text = nodeJSON['next_step']['dialog_node']
-            nodeGoToXML.append(nodeGoToTargetXML)
-        if 'selector' in nodeJSON['next_step']:
-            nodeGoToSelectorXML = LET.Element('selector')
-            if nodeJSON['next_step']['selector'] is None:
-                nodeGoToSelectorXML.attrib[XSI+'nil'] = "true"
-            else:
-                nodeGoToSelectorXML.text = nodeJSON['next_step']['selector']
-            nodeGoToXML.append(nodeGoToSelectorXML)
+            if 'dialog_node' in nodeJSON['next_step']:
+                nodeGoToTargetXML = LET.Element('target')
+                nodeGoToXML.append(nodeGoToTargetXML)
+                if nodeJSON['next_step']['dialog_node'] is None:
+                    nodeGoToTargetXML.attrib[XSI+'nil'] = "true"
+                else:
+                    nodeGoToTargetXML.text = nodeJSON['next_step']['dialog_node']
+            if 'selector' in nodeJSON['next_step']:
+                nodeGoToSelectorXML = LET.Element('selector')
+                nodeGoToXML.append(nodeGoToSelectorXML)
+                if nodeJSON['next_step']['selector'] is None:
+                    nodeGoToSelectorXML.attrib[XSI+'nil'] = "true"
+                else:
+                    nodeGoToSelectorXML.text = nodeJSON['next_step']['selector']
         # cant use this because target != dialog_node
         #convertAll(nodeXML, nodeJSON, 'go_to')
     if 'actions' in nodeJSON and nodeJSON['actions']:
