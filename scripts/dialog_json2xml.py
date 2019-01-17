@@ -59,7 +59,8 @@ def convertNode(nodeJSON):
     nodeXML.attrib['name'] = nodeJSON['dialog_node']
     #title
     if 'title' in nodeJSON:
-        nodeXML.attrib['title'] = nodeJSON['title']
+        if nodeJSON['title'] != nodeJSON['dialog_node']: # WA adds title to all uploaded workspaces equal to dialog_name, this is cleanup
+            nodeXML.attrib['title'] = nodeJSON['title']
 
     #condition
     if 'conditions' in nodeJSON and nodeJSON['conditions']:
