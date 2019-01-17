@@ -57,6 +57,7 @@ def expandNode(dialogNodesJSON, upperNodeXML, nodeJSON):
 def convertNode(nodeJSON):
     nodeXML = LET.Element('node')
     nodeXML.attrib['name'] = nodeJSON['dialog_node']
+    #title
     if 'title' in nodeJSON:
         nodeXML.attrib['title'] = nodeJSON['title']
 
