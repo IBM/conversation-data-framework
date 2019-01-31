@@ -3,3 +3,4 @@ lxml
 openpyxl
 requests
 unidecode
+deepdiff
