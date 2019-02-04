@@ -22,7 +22,7 @@ except NameError:
     basestring = (str, )  # Python 3
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Compares dialog JSON before (input) and after (output) the converstion from JSON to WAW and back to JSON', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Compares dialog JSON before (input) and after (output) the conversion from JSON to WAW and back to JSON', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('inputDialogFileName', help='file with original dialog JSON')
     parser.add_argument('outputDialogFileName', help='file with output dialog JSON run through WAW scripts')
@@ -36,18 +36,18 @@ if __name__ == '__main__':
     outputpath = args.outputDialogFileName
 
     if not os.path.isfile(inputpath):
-        print('Input dialog json does not exist.')
+        eprintf("ERROR: Input dialog json '%s' does not exist.", inputpath)
         exit(1)
 
     if not os.path.isfile(outputpath):
-        print('Output dialog json does not exist.')
+        eprintf("ERROR: Output dialog json '%s' does not exist.", outputpath)
         exit(1)
 
     with open(inputpath) as f:
-        dialog_input_unsorted = json.load(f)
+        dialogInputUnsorted = json.load(f)
 
     with open(outputpath) as g:
-        dialog_output_unsorted = json.load(g)
+        dialogOutputUnsorted = json.load(g)
 
     # from https://stackoverflow.com/questions/25851183/how-to-compare-two-json-objects-with-the-same-elements-in-a-different-order-equa
     def ordered(obj):
@@ -58,17 +58,17 @@ if __name__ == '__main__':
         else:
             return obj
     # ^^^
-    
-    dialog_input_Dict = ordered(dialog_input_unsorted)
-    dialog_output_Dict = ordered(dialog_output_unsorted)
 
-    result = json.dumps(DeepDiff(dialog_input_Dict,dialog_output_Dict), indent=4)
+    dialogInputDict = ordered(dialogInputUnsorted)
+    dialogOutputDict = ordered(dialogOutputUnsorted)
+
+    result = json.dumps(DeepDiff(dialogInputDict,dialogOutputDict), indent=4)
     if VERBOSE:
-        print(result)
+        printf("result: %s", result)
 
     if result == '{}':
-        print('Dialog JSON are same.')
+        printf('Dialog JSONs are same.')
         exit(0)
     else:
-        print('Dialog JSONs differ.')
+        printf('Dialog JSONs differ.')
         exit(1)
