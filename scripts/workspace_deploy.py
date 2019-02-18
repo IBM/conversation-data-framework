@@ -133,18 +133,17 @@ if __name__ == '__main__':
                         sameNameWorkspace = workspace
                     else:
                         # if there is more than one workspace with the same name -> error
-                        eprintf('ERROR: There are more than one workspace with this name, do not know which to update.')
+                        eprintf('ERROR: There are more than one workspace with this name, do not know which one to update.\n')
                         exit(1)
             if sameNameWorkspace is None:
                 # workspace with the same name not found
-                eprintf('ERROR: There is no workspace with this name.')
-                exit(1)
-
-            # just one workspace with this name -> get its id
-            workspaceId = sameNameWorkspace['workspace_id']
+                printf('INFO: There is no workspace with this name.\n')
+            else:
+                # just one workspace with this name -> get its id
+                workspaceId = sameNameWorkspace['workspace_id']
 
         else: # workspace name unique and not defined or empty
-            eprintf('ERROR: conversation_workspace_name set to unique and not defined.')
+            eprintf('ERROR: conversation_workspace_name set to unique and not defined.\n')
             exit(1)
 
     else: # workspace name not unique
