@@ -15,6 +15,7 @@ limitations under the License.
 
 import json, sys, os.path, argparse
 from deepdiff import DeepDiff
+from wawCommons import printf, eprintf
 
 try:
     basestring            # Python 2
