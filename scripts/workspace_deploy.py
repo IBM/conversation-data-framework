@@ -15,7 +15,7 @@ limitations under the License.
 from __future__ import print_function
 
 import os, json, sys, argparse, requests, configparser
-from wawCommons import printf, eprintf, getWorkspaceId, checkErrorsInResponse
+from wawCommons import printf, eprintf, getWorkspaceId, checkErrorsInResponse, getOptionalParameter, getRequiredParameter
 from cfgCommons import Cfg
 import datetime
 
