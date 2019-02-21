@@ -15,7 +15,7 @@ limitations under the License.
 from __future__ import print_function
 
 import os, json, sys, argparse, requests, configparser
-from wawCommons import printf, eprintf
+from wawCommons import printf, eprintf, getWorkspaceId, checkErrorsInResponse
 from cfgCommons import Cfg
 import datetime
 
@@ -23,18 +23,6 @@ try:
     unicode        # Python 2
 except NameError:
     unicode = str  # Python 3
-
-def checkErrorsInResponse(responseJson):
-    # check errors
-    if 'error' in responseJson:
-        eprintf('ERROR: %s (code %s)\n', responseJson['error'], responseJson['code'])
-        if 'errors' in responseJson:
-            for errorJson in responseJson['errors']:
-                eprintf('\t path: \'%s\' - %s\n', errorJson['path'], errorJson['message'])
-#        if VERBOSE: eprintf("INFO: WORKSPACE: %s\n", json.dumps(workspace, indent=4))
-        return 1
-    else:
-        return 0
 
 if __name__ == '__main__':
     print('STARTING: ' + os.path.basename(__file__) + '\n')
@@ -69,86 +57,19 @@ if __name__ == '__main__':
         eprintf('ERROR: Cannot load workspace file %s\n', workspaceFilePath)
         sys.exit(1)
     # workspace name
-    if hasattr(config, 'conversation_workspace_name'):
-        workspace['name'] = getattr(config, 'conversation_workspace_name')
-    else:
-        print('WARNING: conversation_workspace_name parameter not defined')
+    workspace['name'] = getOptionalParameter(config, 'conversation_workspace_name')
     # workspace language
-    if hasattr(config, 'conversation_language'):
-        workspace['language'] = getattr(config, 'conversation_language')
-    else:
-        print('WARNING: conversation_language parameter not defined')
+    workspace['language'] = getOptionalParameter(config, 'conversation_language')
 
     # credentials (required)
-    if not hasattr(config, 'conversation_username') or not getattr(config, 'conversation_username'):
-        print('ERROR: conversation_username parameter not defined.')
-        exit(1)
-    username = getattr(config, 'conversation_username')
-    if not hasattr(config, 'conversation_password') or not getattr(config, 'conversation_password'):
-        print('ERROR: conversation_password parameter not defined.')
-        exit(1)
-    password = getattr(config, 'conversation_password')
+    username = getRequiredParameter(config, 'conversation_username')
+    password = getRequiredParameter(config, 'conversation_password')
     # url (required)
-    if not hasattr(config, 'conversation_url') or not getattr(config, 'conversation_url'):
-        print('ERROR: con_url parameter not defined.')
-        exit(1)
-    workspacesUrl = getattr(config, 'conversation_url')
+    workspacesUrl = getRequiredParameter(config, 'conversation_url')
     # version (required)
-    if not hasattr(config, 'conversation_version') or not getattr(config, 'conversation_version'):
-        print('ERROR: conversation_version parameter not defined.')
-        exit(1)
-    version = getattr(config, 'conversation_version')
+    version = getRequiredParameter(config, 'conversation_version')
     # workspace id
-    if not hasattr(config, 'conversation_workspace_id') or not getattr(config, 'conversation_workspace_id'):
-        print('INFO: conversation_workspace_id parameter not defined.')
-        workspaceId = ""
-    else:
-        print('INFO: conversation_workspace_id defined.')
-        workspaceId = getattr(config, 'conversation_workspace_id')
-
-    # workspace name unique
-    if hasattr(config, 'conversation_workspace_name_unique') and getattr(config, 'conversation_workspace_name_unique') in ["true", "True"]:
-        if hasattr(config, 'conversation_workspace_name') and getattr(config, 'conversation_workspace_name'):
-            print('INFO: conversation_workspace_name set to unique')
-            workspaceName = getattr(config, 'conversation_workspace_name')
-
-            # get all workspaces with this name
-            requestUrl = workspacesUrl + '?version=' + version
-            printf("request url: %s\n", requestUrl)
-            response = requests.get(requestUrl, auth=(username, password))
-            responseJson = response.json()
-            if VERBOSE: printf("\nINFO: response: %s\n", responseJson)
-            if checkErrorsInResponse(responseJson) == 0:
-                if VERBOSE: printf('INFO: Workspaces successfully retrieved.\n')
-            else:
-                eprintf('ERROR: Cannot retrieve workspaces.\n')
-                sys.exit(1)
-
-            sameNameWorkspace = None
-            for workspace in responseJson['workspaces']:
-                print("workspace name: " + workspace['name'] + "\n")
-                if workspace['name'] == workspaceName:
-                    print("same\n")
-                    if sameNameWorkspace is None:
-                        sameNameWorkspace = workspace
-                    else:
-                        # if there is more than one workspace with the same name -> error
-                        eprintf('ERROR: There are more than one workspace with this name, do not know which one to update.\n')
-                        exit(1)
-            if sameNameWorkspace is None:
-                # workspace with the same name not found
-                printf('INFO: There is no workspace with this name.\n')
-            else:
-                # just one workspace with this name -> get its id
-                workspaceId = sameNameWorkspace['workspace_id']
-
-        else: # workspace name unique and not defined or empty
-            eprintf('ERROR: conversation_workspace_name set to unique and not defined.\n')
-            exit(1)
-
-    else: # workspace name not unique
-        print("INFO: Workspace name doesn't have to be unique")
-
+    workspaceId = getWorkspaceId(config, workspacesUrl, version, username, password)
     if workspaceId:
         print('INFO: Updating existing workspace.')
     else:
