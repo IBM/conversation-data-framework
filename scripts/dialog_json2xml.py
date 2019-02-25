@@ -127,12 +127,11 @@ def convertNode(nodeJSON):
                 if len(nodeXML.find('output').findall('generic')) == 1 and nodeXML.find('output').find('generic').attrib['structure'] is None:
                      # generic nodes has to be of type array - set if not defined
                     nodeXML.find('output').find('generic').attrib['structure'] = 'listItem'
-                    print("setting listitem to generic")
 
                 # generic is not none or empty
                 for genericItemXML in nodeXML.find('output').findall('generic'):
                     if genericItemXML.find('response_type') is None:
-                        eprintf("WARNING: 'response_type' is missing in the output of the node " + nodeJSON['dialog_node'] + "\n")
+                        eprintf("ERROR: 'response_type' is missing in the output of the node " + nodeJSON['dialog_node'] + "\n")
                     elif genericItemXML.find('response_type').text == 'text': # TODO check other response_types
                         if genericItemXML.findall('values') is not None:
                             if len(genericItemXML.findall('values')) == 1:
