@@ -59,7 +59,7 @@ def expandNode(dialogNodesJSON, upperNodeXML, nodeJSON):
 def convertNode(nodeJSON):
     nodeXML = LET.Element('node')
     nodeXML.attrib['name'] = nodeJSON['dialog_node']
-    print("node " + nodeXML.attrib['name'])
+    if VERBOSE: printf("DEBUG: node '%s'\n", nodeXML.attrib['name'])
 
     #title
     if 'title' in nodeJSON:
@@ -90,7 +90,7 @@ def convertNode(nodeJSON):
             contextXML = LET.Element('context')
             nodeXML.append(contextXML)
             contextXML.attrib[XSI+'nil'] = "true"
-        elif not nodeJSON['context']:
+        elif not nodeJSON['context']: # not None but empty
              contextXML = LET.Element('context')
              nodeXML.append(contextXML)
              if isinstance(nodeJSON['context'], dict):
@@ -107,7 +107,7 @@ def convertNode(nodeJSON):
             outputXML = LET.Element('output')
             nodeXML.append(outputXML)
             outputXML.attrib[XSI+'nil'] = "true"
-        elif not nodeJSON['output']:
+        elif not nodeJSON['output']: # not None but empty
             outputXML = LET.Element('output')
             nodeXML.append(outputXML)
             if isinstance(nodeJSON['output'], dict):
@@ -117,7 +117,6 @@ def convertNode(nodeJSON):
             else:
                 outputXML.text = ""
         else:
-            print("convert all output")
             convertAll(nodeXML, nodeJSON, 'output')
             if 'text' in nodeJSON['output'] and not isinstance(nodeJSON['output']['text'], basestring):
               outputXML = nodeXML.find('output').find('text').tag = 'textValues'
@@ -138,7 +137,7 @@ def convertNode(nodeJSON):
                                 if not 'structure' in genericItemXML.find('values').attrib: # structure is not specified yet
                                     # values has to be of type array
                                     genericItemXML.find('values').attrib['structure'] = 'listItem'
-                                    print("setting listitem to values")
+                                    if VERBOSE: printf("DEBUG: setting 'listitem' attribute to 'values' tag\n")
 
     #goto
     if 'next_step' in nodeJSON:
@@ -198,7 +197,7 @@ def convertNode(nodeJSON):
             metadataXML = LET.Element('metadata')
             nodeXML.append(metadataXML)
             metadataXML.attrib[XSI+'nil'] = "true"
-        elif not nodeJSON['metadata']:
+        elif not nodeJSON['metadata']: # not None but empty
             metadataXML = LET.Element('metadata')
             nodeXML.append(metadataXML)
             if isinstance(nodeJSON['metadata'], dict):
@@ -215,7 +214,7 @@ def convertNode(nodeJSON):
             actionsXML = LET.Element('actions')
             nodeXML.append(actionsXML)
             actionsXML.attrib[XSI+'nil'] = "true"
-        elif nodeJSON['actions']:
+        elif nodeJSON['actions']: # not None but empty
             convertAll(nodeXML, nodeJSON, 'actions')
             # action -> actions - action
             actionsXML = LET.Element('actions')
@@ -248,82 +247,83 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
         nameXML = keyJSON
     else:
         structure = "listItem"
-        print(" structure listitem")
-    print("name " + nameXML)
+        if VERBOSE: printf("DEBUG: structure 'listItem'\n")
+    if VERBOSE: printf("DEBUG: name '%s'\n", nameXML)
 
     # None
     if nodeJSON[keyJSON] is None:
+        if VERBOSE: printf("DEBUG: node is None\n")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
         if structure is not None and nameXML != "action" and nameXML != "actions":
             nodeXML.attrib['structure'] = "listItem"
-            print(" add structure listitem")
+            if VERBOSE: printf("DEBUG: adding structure 'listItem' to node\n")
         nodeXML.attrib[XSI+'nil'] = "true"
-        print("is none")
     # list
     elif isinstance(nodeJSON[keyJSON], list):
-        print("is list")
+        if VERBOSE: printf("DEBUG: node is list\n")
         if len(nodeJSON[keyJSON]) == 0:
             nodeXML = LET.Element(str(nameXML))
             upperNodeXML.append(nodeXML)
             nodeXML.attrib['structure'] = "emptyList"
-            print("isemptylist")
-            print("set emptylist to " + nodeXML.tag)
+            if VERBOSE: printf("DEBUG: node is 'emptyList'\n")
+            if VERBOSE: printf("DEBUG: node '%s' is 'emptyList'\n", nodeXML.tag)
 
         else:
             if upperNodeXML.tag != "output" and upperNodeXML.tag != "context" and upperNodeXML.tag != "node":
                 pass
 #                upperNodeXML.attrib['structure'] = "listItem"
-#                print("setting listitem")
+#                if VERBOSE: printf("DEBUG: setting listItem\n")
             for i in range(len(nodeJSON[keyJSON])):
                 listItemJSON = nodeJSON[keyJSON][i]
                 convertAll(upperNodeXML, nodeJSON[keyJSON], i, keyJSON)
     # dict
     elif isinstance(nodeJSON[keyJSON], dict):
-        print("is dict")
+        if VERBOSE: printf("DEBUG: node is dict\n")
         if not nodeJSON[keyJSON]: #empty dict
             nodeXML = LET.Element(str(nameXML))
             upperNodeXML.append(nodeXML)
             nodeXML.attrib['structure'] = "emptyDict"
-            print("isemptydict")
-            print("set emptydict to " + nodeXML.tag)
+            if VERBOSE: printf("DEBUG: node '%s' is 'emptyDict'\n", nodeXML.tag)
         else:
             nodeXML = LET.Element(str(nameXML))
             upperNodeXML.append(nodeXML)
             if structure is not None and nameXML != "action" and nameXML != "actions":
                 nodeXML.attrib['structure'] = "listItem"
-                print(" add structure listitem for " + nameXML)
+                if VERBOSE: printf("DEBUG: add structure 'listItem' for '%s'\n", nameXML)
             for subKeyJSON in nodeJSON[keyJSON]:
                 convertAll(nodeXML, nodeJSON[keyJSON], subKeyJSON)
     # string
     elif isinstance(nodeJSON[keyJSON], basestring):
-        print("is string")
+        if VERBOSE: printf("DEBUG: node is string\n")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
         if structure is not None and nameXML != "action" and nameXML != "actions":
             nodeXML.attrib['structure'] = "listItem"
-            print(" add structure listitem")
+            if VERBOSE: printf("DEBUG: add structure 'listItem' for '%s'\n", nameXML)
         nodeXML.text = nodeJSON[keyJSON]
     # bool
     elif isinstance(nodeJSON[keyJSON], bool):
+        if VERBOSE: printf("DEBUG: node is boolean\n")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
         if structure is not None and nameXML != "action" and nameXML != "actions":
             nodeXML.attrib['structure'] = "listItem"
-            print(" add structure listitem")
+            if VERBOSE: printf("DEBUG: add structure 'listItem' for '%s'\n", nameXML)
         nodeXML.text = str(nodeJSON[keyJSON])
         nodeXML.attrib['type'] = "boolean"
     # int, long, float, complex
     elif isNumber(nodeJSON[keyJSON]):
+        if VERBOSE: printf("DEBUG: node is number\n")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
         if structure is not None and nameXML != "action" and nameXML != "actions":
             nodeXML.attrib['structure'] = "listItem"
-            print(" add structure listitem")
+            if VERBOSE: printf("DEBUG: add structure 'listItem' for '%s'\n", nameXML)
         nodeXML.text = str(nodeJSON[keyJSON])
         nodeXML.attrib['type'] = "number"
     else:
-        eprintf("ERROR: Unknown value type")
+        eprintf("ERROR: Unknown value type\n")
 
 # find and return node with specific parent and previous sibling
 # removing it from the list
