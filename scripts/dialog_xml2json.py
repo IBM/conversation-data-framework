@@ -663,8 +663,6 @@ def printNodes(root, parent, dialogJSON):
             if outputNodeXML.find('textValues') is not None:
                 outputNodeTextXML = outputNodeXML.find('textValues')
                 if outputNodeTextXML.get('structure') is not None:
-                    for outputNodeTextValueXML in outputNodeTextXML.getchildren():
-#                    for outputNodeTextValueXML in outputNodeTextXML.find('values'):
                     for outputNodeTextValueXML in outputNodeTextXML.findall('values'):
                         outputNodeTextValueXML.attrib['structure'] = outputNodeTextXML.get('structure')
                     outputNodeTextXML.attrib.pop('structure')
