@@ -90,14 +90,11 @@ if __name__ == '__main__':
                                 inputJson['context'] = receivedOutputJson['context'] # use context from last dialog turn
                         dialogId = loadedJson['dialog_id']
                         response = requests.post(url, auth=(username, password), headers={'Content-Type': 'application/json'}, data=json.dumps(inputJson, indent=4, ensure_ascii=False).encode('utf8'))
-                        if response.status_code == 200:
-                            receivedOutputJson = response.json()
-                            if not first:
-                                outputFile.write("\n")
-                            outputFile.write(json.dumps(receivedOutputJson, ensure_ascii=False).encode('utf8'))
-                            first = False
-                        eprintf('ERROR: WA not available.\n')
-                        sys.exit(1)
+                        receivedOutputJson = response.json()
+                        if not first:
+                            outputFile.write("\n")
+                        outputFile.write(json.dumps(receivedOutputJson, ensure_ascii=False).encode('utf8'))
+                        first = False
             except IOError:
                 eprintf('ERROR: Cannot open test output file %s\n', args.outputFileName)
                 sys.exit(1)
