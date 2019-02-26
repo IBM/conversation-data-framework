@@ -9,7 +9,7 @@
             <build_date_time><replace>build_date_time</replace></build_date_time>
             <welcome_msg> </welcome_msg>
         </context>
-        <output structure='emptyDict'>
+        <output structure="emptyDict">
             <response>
                 <output>
                     <text scope="type-server">Sorry, I did not understand. Can you rephrase it please?</text>

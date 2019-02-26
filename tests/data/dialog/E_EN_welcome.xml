@@ -10,7 +10,7 @@
             <welcome_msg> </welcome_msg>
             <capabilities_msg>My name is Bob and I serve as example of using WAW and T2C. </capabilities_msg>
         </context>
-        <output structure='emptyDict'>
+        <output structure="emptyDict">
             <response>
                 <condition> now().before('12:00:00')</condition>
                 <output>
