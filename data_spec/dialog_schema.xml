@@ -294,7 +294,6 @@
 
 <xs:complexType name="actionSchema">
     <xs:all>
-        <xs:element name="credentials" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element name="name" type="actionNameSchema" minOccurs="1" maxOccurs="1"/>
         <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
         <xs:element name="parameters" type="parametersSchema" minOccurs="0" maxOccurs="1"/>
