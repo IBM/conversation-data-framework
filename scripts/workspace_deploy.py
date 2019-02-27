@@ -15,7 +15,7 @@ limitations under the License.
 from __future__ import print_function
 
 import os, json, sys, argparse, requests, configparser
-from wawCommons import printf, eprintf, getWorkspaceId, checkErrorsInResponse, getOptionalParameter, getRequiredParameter
+from wawCommons import printf, eprintf, getWorkspaceId, errorsInResponse, getOptionalParameter, getRequiredParameter
 from cfgCommons import Cfg
 import datetime
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     responseJson = response.json()
 
     if VERBOSE: printf("\nINFO: response: %s\n", responseJson)
-    if checkErrorsInResponse(responseJson) == 0:
+    if not errorsInResponse(responseJson):
         printf('INFO: Workspace successfully uploaded.\n')
     else:
         printf('ERROR: Cannot upload workspace.\n')

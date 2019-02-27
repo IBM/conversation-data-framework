@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import json, sys, os, time, argparse, requests, configparser
-from wawCommons import printf, eprintf, getWorkspaceId, getRequiredParameter, checkErrorsInResponse
+from wawCommons import printf, eprintf, getWorkspaceId, getRequiredParameter, errorsInResponse
 from cfgCommons import Cfg
 
 CHECK_MESSAGES_TIME_MAX = 5 # in seconds
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         response = requests.get(requestUrl, auth=(username, password))
         if response.status_code == 200:
             responseJson = response.json()
-            if checkErrorsInResponse(responseJson) == 1:
+            if errorsInResponse(responseJson):
                 sys.exit(1)
             if VERBOSE: printf("\nINFO: response: %s\n", responseJson)
             status = responseJson['status']
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                             first = False
                         elif response.status_code == 400:
                             eprintf('ERROR: error while testing.\n')
-                            checkErrorsInResponse(response.json())
+                            errorsInResponse(response.json())
                             sys.exit(1)
                         else:
                             printf('ERROR: Unknown status code:%s.\n', response.status_code)

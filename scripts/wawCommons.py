@@ -249,7 +249,7 @@ def getWorkspaceId(config, workspacesUrl, version, username, password):
                 response = requests.get(workspacesUrl + '?version=' + version, auth=(username, password))
                 responseJson = response.json()
                 printf("\nINFO: response: %s\n", responseJson)
-                if checkErrorsInResponse(responseJson) == 0:
+                if not errorsInResponse(responseJson):
                     printf('INFO: Workspaces successfully retrieved.\n')
                 else:
                     eprintf('ERROR: Cannot retrieve workspaces.\n')
@@ -281,7 +281,7 @@ def getWorkspaceId(config, workspacesUrl, version, username, password):
 
     return workspaceId
 
-def checkErrorsInResponse(responseJson):
+def errorsInResponse(responseJson):
     # check errors
     if 'error' in responseJson:
         eprintf('ERROR: %s (code %s)\n', responseJson['error'], responseJson['code'])
@@ -289,9 +289,9 @@ def checkErrorsInResponse(responseJson):
             for errorJson in responseJson['errors']:
                 eprintf('\t path: \'%s\' - %s\n', errorJson['path'], errorJson['message'])
 #        if VERBOSE: eprintf("INFO: WORKSPACE: %s\n", json.dumps(workspace, indent=4))
-        return 1
+        return True
     else:
-        return 0
+        return False
 
 def getOptionalParameter(config, parameterName):
     if hasattr(config, parameterName) and getattr(config, parameterName):
