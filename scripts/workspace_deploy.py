@@ -73,7 +73,7 @@ if __name__ == '__main__':
     # workspace id
     workspaceId = getWorkspaceId(config, workspacesUrl, version, username, password)
     if workspaceId:
-        printf("INFO: Updating existing workspace.\n", workspaceId)
+        printf("INFO: Updating existing workspace.\n")
     else:
         printf("INFO: Creating new workspace.\n")
 
