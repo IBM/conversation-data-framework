@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('inputFileName', help='file with test jsons to be sent to conversation service. (One at each line at key \'input\'.)')
     parser.add_argument('outputFileName', help='file where to store received data from conversation service. (One response at each line.)')
     # optional arguments
-    parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
+    parser.add_argument('-c', '--common_configfile_paths', help='configuaration file', action='append')
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     args = parser.parse_args(sys.argv[1:])
 
