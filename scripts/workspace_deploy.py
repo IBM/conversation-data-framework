@@ -57,9 +57,11 @@ if __name__ == '__main__':
         eprintf('ERROR: Cannot load workspace file %s\n', workspaceFilePath)
         sys.exit(1)
     # workspace name
-    workspace['name'] = getOptionalParameter(config, 'conversation_workspace_name')
+    workspaceName = getOptionalParameter(config, 'conversation_workspace_name')
+    if workspaceName: workspace['name'] = workspaceName
     # workspace language
-    workspace['language'] = getOptionalParameter(config, 'conversation_language')
+    workspaceLanguage = getOptionalParameter(config, 'conversation_language')
+    if workspaceLanguage: workspace['language'] = workspaceLanguage
 
     # credentials (required)
     username = getRequiredParameter(config, 'conversation_username')
