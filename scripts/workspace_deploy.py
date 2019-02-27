@@ -73,9 +73,9 @@ if __name__ == '__main__':
     # workspace id
     workspaceId = getWorkspaceId(config, workspacesUrl, version, username, password)
     if workspaceId:
-        print('INFO: Updating existing workspace.')
+        printf("INFO: Updating existing workspace.\n", workspaceId)
     else:
-        print('INFO: Creating new workspace.')
+        printf("INFO: Creating new workspace.\n")
 
     requestUrl = workspacesUrl + '/' + workspaceId + '?version=' + version
 

@@ -47,6 +47,7 @@ if __name__ == '__main__':
     checkWorkspaceTime = 0
     requestUrl = workspacesUrl + '/' + workspaceId + '?version=' + version
     while True:
+        if VERBOSE: printf("INFO: requestUrl: %s\n", requestUrl)
         response = requests.get(requestUrl, auth=(username, password))
         if response.status_code == 200:
             responseJson = response.json()
@@ -68,7 +69,7 @@ if __name__ == '__main__':
             eprintf('ERROR: WA not available.\n')
             sys.exit(1)
         else:
-            printf('INFO: Unknown status code:%s.\n', response.status_code)
+            printf('ERROR: Unknown status code:%s.\n', response.status_code)
 
     # run tests
     url = workspacesUrl + '/' + workspaceId + '/message?version=' + version
@@ -100,7 +101,8 @@ if __name__ == '__main__':
                             checkErrorsInResponse(response.json())
                             sys.exit(1)
                         else:
-                            printf('INFO: Unknown status code:%s.\n', response.status_code)
+                            printf('ERROR: Unknown status code:%s.\n', response.status_code)
+                            sys.exit(1)
             except IOError:
                 eprintf('ERROR: Cannot open test output file %s\n', args.outputFileName)
                 sys.exit(1)
