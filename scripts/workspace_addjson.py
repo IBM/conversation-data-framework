@@ -41,6 +41,7 @@ def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
 
 
 if __name__ == '__main__':
+    printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
     parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in first one', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('workspaceFileName', help='file with original workspace JSON')
@@ -73,4 +74,7 @@ if __name__ == '__main__':
     includeJson(workspaceInput, "dialog_nodes", targetElement, jsonInclude)
 
     with open(inputpath, 'w') as outfile:
+        print('Writing workspaces with added JSON.')
         json.dump(workspaceInput, outfile, indent=4)
+
+    print('\nFINISHING: ' + os.path.basename(__file__) + '\n')
