@@ -69,8 +69,7 @@ if __name__ == '__main__':
         code = open(os.path.join(config.common_functions, functionFileName), 'r').read()
         payload = {"exec": {"kind": "nodejs:default", "code": code}}
 
-        response = requests.put(function_url, auth=(config.cloudfunctions_username, config.cloudfunctions_password),
-                                headers={'Content-Type': 'application/json'}, data=json.dumps(payload), verify=False)
+        response = requests.put(function_url, auth=(config.cloudfunctions_username, config.cloudfunctions_password), headers={'Content-Type': 'application/json'}, data=json.dumps(payload).encode('utf8'), verify=False)
         responseJson = response.json()
         if 'error' in responseJson:
             eprintf('Cannot create cloud function\nERROR: %s\n', responseJson['error'])

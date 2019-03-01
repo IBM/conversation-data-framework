@@ -78,6 +78,10 @@ if __name__ == '__main__':
     if VERBOSE:print(cmd)
     retValue = os.system(cmd)
 
+    cmd = 'python ' + scriptsPath + '/workspace_addjson.py outputs/workspace.json inspection_data.json inspection_object'
+    if VERBOSE:print(cmd)
+    retValue = os.system(cmd)
+
     cmd = 'python ' + scriptsPath + '/workspace_deploy.py ' + paramsAll
     if VERBOSE:print(cmd)
     retValue = os.system(cmd)
