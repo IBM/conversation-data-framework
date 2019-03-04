@@ -23,7 +23,7 @@ except NameError:
     basestring = (str, )  # Python 3
 
 
-
+    # function to find a desired variable in complex json and add other part of json
 def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
     if keyJSON == keySearch:
         nodeJSON[keyJSON] = includeJSON
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     # optional arguments
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     args = parser.parse_args(sys.argv[1:])
-
+    #init the parameters
     VERBOSE = args.verbose
 
     inputpath = args.workspaceFileName
@@ -64,15 +64,15 @@ if __name__ == '__main__':
     if not os.path.isfile(jsonincludepath):
         eprintf("ERROR: to include JSON file '%s' does not exist.", jsonincludepath)
         exit(1)
-
+    #open the workspace file and json to add
     with open(inputpath) as f:
         workspaceInput = json.load(f)
 
     with open(jsonincludepath) as g:
         jsonInclude = json.load(g)
-
+    #find the target variable and add the json
     includeJson(workspaceInput, "dialog_nodes", targetElement, jsonInclude)
-
+    #writing the file
     with open(inputpath, 'w') as outfile:
         print('Writing workspaces with added JSON.')
         json.dump(workspaceInput, outfile, indent=4)
