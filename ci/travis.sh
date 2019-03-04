@@ -29,59 +29,26 @@ echo "--------------------------------------------------------------------------
 
 mkdir -p outputs/test_dialog
 
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 1 from JSON to XML";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_json2xml.py tests/test_data/dialog_1.json  > outputs/test_dialog/dialog_1.xml
-stopIfFailed $?;
+for i in 1 2 3
+do
+    echo "--------------------------------------------------------------------------------";
+    echo "-- Test-dialog $i from JSON to XML";
+    echo "--------------------------------------------------------------------------------";
+    python scripts/dialog_json2xml.py tests/test_data/dialog_$i.json  > outputs/test_dialog/dialog_$i.xml
+    stopIfFailed $?;
 
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 1 from XML to JSON";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_xml2json.py -dm outputs/test_dialog/dialog_1.xml -of outputs/test_dialog -od dialog_1.json -s ../data_spec/dialog_schema.xml -c "tests/data/build.cfg";
-stopIfFailed $?;
+    echo "--------------------------------------------------------------------------------";
+    echo "-- Test-dialog $i from XML to JSON";
+    echo "--------------------------------------------------------------------------------";
+    python scripts/dialog_xml2json.py -dm outputs/test_dialog/dialog_$i.xml -of outputs/test_dialog -od dialog_$i.json -s ../data_spec/dialog_schema.xml -c "tests/data/build.cfg";
+    stopIfFailed $?;
 
-echo "--------------------------------------------------------------------------------";
-echo "-- Compare test-dialog 1";
-echo "--------------------------------------------------------------------------------";
-python scripts/compare_dialogs.py tests/test_data/dialog_1.json outputs/test_dialog/dialog_1.json -v;
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 2 from JSON to XML";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_json2xml.py tests/test_data/dialog_2.json  > outputs/test_dialog/dialog_2.xml
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 2 from XML to JSON";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_xml2json.py -dm outputs/test_dialog/dialog_2.xml -of outputs/test_dialog -od dialog_2.json -s ../data_spec/dialog_schema.xml -c "tests/data/build.cfg";
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Compare test-dialog 2";
-echo "--------------------------------------------------------------------------------";
-python scripts/compare_dialogs.py tests/test_data/dialog_2.json outputs/test_dialog/dialog_2.json -v;
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 3 from JSON to XML";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_json2xml.py tests/test_data/dialog_3.json  > outputs/test_dialog/dialog_3.xml
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Test-dialog 3 from XML to JSON";
-echo "--------------------------------------------------------------------------------";
-python scripts/dialog_xml2json.py -dm outputs/test_dialog/dialog_3.xml -of outputs/test_dialog -od dialog_3.json -s ../data_spec/dialog_schema.xml -c "tests/data/build.cfg";
-stopIfFailed $?;
-
-echo "--------------------------------------------------------------------------------";
-echo "-- Compare test-dialog 3";
-echo "--------------------------------------------------------------------------------";
-python scripts/compare_dialogs.py tests/test_data/dialog_3.json outputs/test_dialog/dialog_3.json -v;
-stopIfFailed $?;
+    echo "--------------------------------------------------------------------------------";
+    echo "-- Compare test-dialog $i";
+    echo "--------------------------------------------------------------------------------";
+    python scripts/compare_dialogs.py tests/test_data/dialog_$i.json outputs/test_dialog/dialog_$i.json -v;
+    stopIfFailed $?;
+done
 
 ./ci/artifactory-deploy.sh "outputs/test_dialog/*";
 
