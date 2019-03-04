@@ -28,8 +28,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This script executes all the steps needed for building and deployment of the WeatherFrog application.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
-    parser.add_argument('-aj','--addJSON', required=False, help='external json to add')
-    parser.add_argument('-tn','--targetNode', required=False, help='target node where to add the json')
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     args = parser.parse_args(sys.argv[1:])
     config = Cfg(args)
@@ -82,8 +80,8 @@ if __name__ == '__main__':
     if VERBOSE:print(cmd)
     retValue = os.system(cmd)
 
-    if hasattr(args, 'addJSON') and hasattr(args, 'targetNode'):
-        cmd = 'python ' + scriptsPath + '/workspace_addjson.py '+ getattr(config, 'common_outputs_directory') + '/' + getattr(config, 'common_outputs_workspace') + ' ' + args.addJSON + ' ' + args.targetNode
+    if hasattr(config, 'includejsondata_jsonfile') and hasattr(config, 'includejsondata_targetnode'):
+        cmd = 'python ' + scriptsPath + '/workspace_addjson.py '+ getattr(config, 'common_outputs_directory') + '/' + getattr(config, 'common_outputs_workspace') + ' ' + getattr(config, 'includejsondata_jsonfile') + ' ' + getattr(config, 'includejsondata_targetnode')
         if VERBOSE:print(cmd)
         retValue = os.system(cmd)
 
