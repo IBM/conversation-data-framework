@@ -74,6 +74,21 @@ stopIfFailed $?;
 ./ci/artifactory-deploy.sh "tests/data/dialog/g_dialogs/*";
 
 echo "--------------------------------------------------------------------------------";
+echo "-- Testing entities in T2C (@entity:(<x>) blocks)";
+echo "--------------------------------------------------------------------------------";
+
+echo "TEST @entity:(<x>) blocks"
+grep "\#CO_JE.*@PREDMET:(Z.vada)" tests/data/dialog/g_dialogs/cond_x_test.xml
+stopIfFailed $?;
+grep "\#CO_JE.*@PREDMET:(V.stra.n. stav)" tests/data/dialog/g_dialogs/cond_x_test.xml
+stopIfFailed $?;
+grep "\#CO_JE.*@PREDMET:(Vyrovn.vac. trh)" tests/data/dialog/g_dialogs/cond_x_test.xml
+stopIfFailed $?;
+echo "TEST buttons in @entity:(<x>) blocks"
+grep "\#CO_JE.*@PREDMET:(Buttons do not belong here)" tests/data/dialog/g_dialogs/cond_x_test.xml
+stopIfFailed $?;
+
+echo "--------------------------------------------------------------------------------";
 echo "-- Dialog from XML to JSON";
 echo "--------------------------------------------------------------------------------";
 mkdir -p outputs;
