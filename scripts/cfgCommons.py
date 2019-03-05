@@ -40,7 +40,8 @@ class Cfg:
         contextSection = 'context'
 
         # List of attributes of framework section to be appended rather then ovewrriden (if the same parameter is defined in more config files)
-        frameworkAppend = ['xls', 'intents', 'entities', 'dialogs', 'functions']
+        frameworkAppend = ['xls', 'intents', 'entities', 'dialogs', 'functions', 'generated_intents',
+                           'generated_entities', 'generated_dialog']
 
         if args.common_configFilePaths:
             try:

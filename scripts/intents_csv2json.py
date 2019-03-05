@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     pathList = getattr(config, 'common_intents')
     if hasattr(config, 'common_generated_intents'):
-        pathList = pathList + [getattr(config, 'common_generated_intents')]
+        pathList = pathList + getattr(config, 'common_generated_intents')
 
     filesAtPath = getFilesAtPath(pathList)
     for intentFileName in sorted(filesAtPath):
