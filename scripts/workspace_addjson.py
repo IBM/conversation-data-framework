@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os.path, argparse, random, string, re, codecs
+import json, sys, os.path, argparse, codecs
 from cfgCommons import Cfg
 from wawCommons import printf, eprintf
 
@@ -60,20 +60,20 @@ if __name__ == '__main__':
         with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
             workspaceInput = json.load(inputpath)
     else:
-        print('the workspace not specified.')
+        eprintf('ERROR: the workspace not specified.')
         exit(1)
 
     if hasattr(config, 'includejsondata_jsonfile'):
         with codecs.open(os.path.join(getattr(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
             jsonInclude = json.load(jsonincludepath)
     else:
-        print('include json file not specified.')
+        eprintf('ERROR: include json file not specified.')
         exit(1)
 
     if hasattr(config, 'includejsondata_targetnode'):
         targetElement = getattr(config, 'includejsondata_targetnode')
     else:
-        print('target node not specified.')
+        eprintf('ERROR:target node not specified.')
         exit(1)
 
     #find the target variable and add the json
