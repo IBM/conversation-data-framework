@@ -69,26 +69,14 @@ if __name__ == '__main__':
         code = open(os.path.join(config.common_functions, functionFileName), 'r').read()
         payload = {"exec": {"kind": "nodejs:default", "code": code}}
 
-        for attempt in range(4, -1, -1):
-            response = requests.put(function_url, auth=(config.cloudfunctions_username, config.cloudfunctions_password),
-                                    headers={'Content-Type': 'application/json'}, data=json.dumps(payload), verify=False)
-            try:
-                responseJson = response.json()
-            except:
-                if not response.ok:
-                    if attempt == 0:
-                        eprintf('Cannot create cloud function %s\nERROR: %s\n', fname, response.content)
-                        sys.exit(1)
-                    eprintf('\tRequest failed for cloud function %s, trying again, attempts left: %s\n', fname, attempt)
-                    import time; time.sleep(1)
-                    continue
-
-            if 'error' in responseJson:
-                eprintf('Cannot create cloud function %s\nERROR: %s\n', fname, responseJson['error'])
-                if VERBOSE: printf("%s", responseJson)
-                sys.exit(1)
-            else:
-                printf('Cloud functions %s successfully uploaded.\n', fname)
-                break
+        response = requests.put(function_url, auth=(config.cloudfunctions_username, config.cloudfunctions_password),
+                                headers={'Content-Type': 'application/json'}, data=json.dumps(payload), verify=False)
+        responseJson = response.json()
+        if 'error' in responseJson:
+            eprintf('Cannot create cloud function\nERROR: %s\n', responseJson['error'])
+            if VERBOSE: printf("%s", responseJson)
+            sys.exit(1)
+        else:
+            printf('Cloud functions %s successfully uploaded.\n', functionFileName)
 
     printf('\nFINISHING: ' + os.path.basename(__file__) + '\n')
