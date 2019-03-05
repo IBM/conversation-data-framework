@@ -93,7 +93,7 @@ if __name__ == '__main__':
                         representativeValue = rawSynonyms[0]
                         synonyms = sorted(list(set(rawSynonyms[1:])))
                         # remove value from synonyms, so that duplicity with value is not possible
-                        synonyms.remove(representativeValue)
+                        if representativeValue in synonyms: synonyms.remove(representativeValue)
                         valueJSON = {}
                         if representativeValue[0] in '~':
                             # all patterns are represented by the first value without first char (~)
