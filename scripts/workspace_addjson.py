@@ -61,17 +61,20 @@ if __name__ == '__main__':
             workspaceInput = json.load(inputpath)
     else:
         print('the workspace not specified.')
+        exit(1)
 
     if hasattr(config, 'includejsondata_jsonfile'):
         with codecs.open(os.path.join(getattr(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
             jsonInclude = json.load(jsonincludepath)
     else:
         print('include json file not specified.')
+        exit(1)
 
     if hasattr(config, 'includejsondata_targetnode'):
         targetElement = getattr(config, 'includejsondata_targetnode')
     else:
         print('target node not specified.')
+        exit(1)
 
     #find the target variable and add the json
     includeJson(workspaceInput, "dialog_nodes", targetElement, jsonInclude)

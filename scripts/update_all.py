@@ -17,7 +17,6 @@ from __future__ import print_function
 import os, sys, logging
 import subprocess, argparse
 from wawCommons import printf, eprintf
-from cfgCommons import Cfg
 
 if __name__ == '__main__':
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
@@ -27,16 +26,15 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='This script executes all the steps needed for building and deployment of the WeatherFrog application.',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
+    parser.add_argument('-c', '--config', help='configuaration file', action='append')
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     args = parser.parse_args(sys.argv[1:])
-    config = Cfg(args)
     VERBOSE = args.verbose
 
     #Assemble command line parameters out of parameters or defaults
     paramsAll = ''
-    if hasattr(args, 'common_configFilePaths') and args.common_configFilePaths != None: # if config files provided - ignore defaults
-        for strParamsItem in args.common_configFilePaths:
+    if hasattr(args, 'config') and args.config != None: # if config files provided - ignore defaults
+        for strParamsItem in args.config:
             if os.path.isfile(strParamsItem):
                 paramsAll += ' -c ' + strParamsItem
             else:
@@ -79,10 +77,10 @@ if __name__ == '__main__':
     cmd = 'python ' + scriptsPath + '/workspace_compose.py ' + paramsAll
     if VERBOSE:print(cmd)
     retValue = os.system(cmd)
-    if hasattr(config, 'includejsondata_jsonfile') and hasattr(config, 'includejsondata_targetnode'):
-        cmd = 'python ' + scriptsPath + '/workspace_addjson.py ' + paramsAll
-        if VERBOSE:print(cmd)
-        retValue = os.system(cmd)
+    cmd = 'python ' + scriptsPath + '/workspace_addjson.py ' + paramsAll
+    if VERBOSE:print(cmd)
+    retValue = os.system(cmd)
+
     cmd = 'python ' + scriptsPath + '/workspace_deploy.py ' + paramsAll
     if VERBOSE:print(cmd)
     retValue = os.system(cmd)
