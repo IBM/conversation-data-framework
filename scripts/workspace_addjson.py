@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os.path, argparse, random, string, re
+import json, sys, os.path, argparse, random, string, re, codecs
+from cfgCommons import Cfg
 from wawCommons import printf, eprintf
 
 
@@ -43,38 +44,41 @@ def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
 if __name__ == '__main__':
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
     parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in first one', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # positional arguments
-    parser.add_argument('workspaceFileName', help='file with original workspace JSON')
-    parser.add_argument('jsonInclude', help='file with JSON you want to include')
-    parser.add_argument('targetElement', help='the element, where you want to add your JSON, i.e., "data_structure" : null; where you want to replace null, you would put "data_strucute" as this parameter')
+    # arguments
+    parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
+    parser.add_argument('-w','--common_outputs_workspace', required=False, help='file with original workspace JSON')
+    parser.add_argument('-j','--includejsondata_jsonfile', required=False, help='file with JSON you want to include')
+    parser.add_argument('-t','--includejsondata_targetnode', required=False, help='the element, where you want to add your JSON, i.e., "data_structure" : null; where you want to replace null, you would put "data_strucute" as this parameter')
     # optional arguments
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
-    args = parser.parse_args(sys.argv[1:])
     #init the parameters
-    VERBOSE = args.verbose
+    args = parser.parse_args(sys.argv[1:])
+    config = Cfg(args)
+    VERBOSE = hasattr(config, 'common_verbose')
 
-    inputpath = args.workspaceFileName
-    jsonincludepath = args.jsonInclude
-    targetElement = args.targetElement
+    if hasattr(config, 'common_outputs_workspace'):
+        with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
+            workspaceInput = json.load(inputpath)
+    else:
+        print('the workspace not specified.')
 
-    if not os.path.isfile(inputpath):
-        eprintf("ERROR: Input workspace json '%s' does not exist.", inputpath)
-        exit(1)
+    if hasattr(config, 'includejsondata_jsonfile'):
+        with codecs.open(os.path.join(getattr(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
+            jsonInclude = json.load(jsonincludepath)
+    else:
+        print('include json file not specified.')
 
-    if not os.path.isfile(jsonincludepath):
-        eprintf("ERROR: to include JSON file '%s' does not exist.", jsonincludepath)
-        exit(1)
-    #open the workspace file and json to add
-    with open(inputpath) as f:
-        workspaceInput = json.load(f)
+    if hasattr(config, 'includejsondata_targetnode'):
+        targetElement = getattr(config, 'includejsondata_targetnode')
+    else:
+        print('target node not specified.')
 
-    with open(jsonincludepath) as g:
-        jsonInclude = json.load(g)
     #find the target variable and add the json
     includeJson(workspaceInput, "dialog_nodes", targetElement, jsonInclude)
+
     #writing the file
-    with open(inputpath, 'w') as outfile:
-        print('Writing workspaces with added JSON.')
+    with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'w', encoding='utf8')  as outfile:
+        print('Writing workspaces with added JSON successfull.')
         json.dump(workspaceInput, outfile, indent=4)
 
     print('\nFINISHING: ' + os.path.basename(__file__) + '\n')
