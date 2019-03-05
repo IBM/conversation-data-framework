@@ -63,13 +63,13 @@ echo "--------------------------------------------------------------------------
 echo "-- Dialog, intents from XLS to XML, CSV";
 echo "--------------------------------------------------------------------------------";
 mkdir -p "tests/data/dialog/g_dialogs";
-python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_master.xlsx" -gd tests/data/dialog/g_dialogs -gi "tests/data/intents" -ge "tests/data/entities" -v;
+python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_master.xlsx" -gd "tests/data/dialog/g_dialogs" -gi "tests/data/intents" -ge "tests/data/entities" -v;
 stopIfFailed $?;
-python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_tests.xlsx" -gd tests/data/dialog/g_dialogs -gi "tests/data/intents" -ge "tests/data/entities" -v;
+python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_tests.xlsx" -gd "tests/data/dialog/g_dialogs" -gi "tests/data/intents" -ge "tests/data/entities" -v;
 stopIfFailed $?;
-python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_T2C_authoring.xlsx" -gd tests/data/dialog/g_dialogs -gi "tests/data/intents" -ge "tests/data/entities" -v;
+python scripts/dialog_xls2xml.py -x "tests/data/xls/E_EN_T2C_authoring.xlsx" -gd "tests/data/dialog/g_dialogs" -gi "tests/data/intents" -ge "tests/data/entities" -v;
 stopIfFailed $?;
-python scripts/dialog_xls2xml.py -x "tests/data/xls/E_CZ_T2C_authoring.xlsx" -gd tests/data/dialog/g_dialogs -gi "tests/data/intents" -ge "tests/data/entities" -v;
+python scripts/dialog_xls2xml.py -x "tests/data/xls/E_CZ_T2C_authoring.xlsx" -gd "tests/data/dialog/g_dialogs" -gi "tests/data/intents" -ge "tests/data/entities" -v;
 stopIfFailed $?;
 ./ci/artifactory-deploy.sh "tests/data/dialog/g_dialogs/*";
 
