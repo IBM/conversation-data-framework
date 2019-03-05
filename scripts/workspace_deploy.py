@@ -79,29 +79,13 @@ if __name__ == '__main__':
 
     requestUrl = workspacesUrl + '/' + workspaceId + '?version=' + version
 
-    # Make sure intents, entities and dialog_nodes fields are present even when empty to make sure the old items get erased.
-    if 'intents' not in workspace: workspace['intents'] = []
-    if 'entities' not in workspace: workspace['entities'] = []
-    if 'dialog_nodes' not in workspace: workspace['dialog_nodes'] = []
-
     # create/update workspace
     response = requests.post(requestUrl, auth=(username, password), headers={'Content-Type': 'application/json'}, data=json.dumps(workspace, indent=4))
     responseJson = response.json()
 
-<<<<<<< HEAD
-    # check errors during upload
-    if 'error' in responseJson:
-        eprintf('Cannot upload conversation workspace\nERROR: %s\n', responseJson['error'])
-        if 'errors' in responseJson and len(responseJson['errors']) > 0:
-            eprintf('\t explanation: %s\n', responseJson['errors'][0])
-        if VERBOSE: eprintf("INFO: RESPONSE: %s\n", responseJson)
-#        if VERBOSE: eprintf("INFO: WORKSPACE: %s\n", json.dumps(workspace, indent=4))
-        sys.exit(1)
-=======
     if VERBOSE: printf("\nINFO: response: %s\n", responseJson)
     if not errorsInResponse(responseJson):
         printf('INFO: Workspace successfully uploaded.\n')
->>>>>>> devel
     else:
         printf('ERROR: Cannot upload workspace.\n')
         sys.exit(1)

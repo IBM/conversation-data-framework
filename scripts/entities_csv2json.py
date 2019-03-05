@@ -50,7 +50,7 @@ if __name__ == '__main__':
     pathList = getattr(config, 'common_entities')
     if hasattr(config, 'common_generated_entities'):
         pathList = pathList + getattr(config, 'common_generated_entities')
-    filesAtPath = getFilesAtPath(pathList, ['*.csv'])
+    filesAtPath = getFilesAtPath(pathList)
     for entityFileName in sorted(filesAtPath):
 
         with io.open(entityFileName, mode='r', encoding='utf8') as entityFile:

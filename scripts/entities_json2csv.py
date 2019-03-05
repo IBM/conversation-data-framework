@@ -14,7 +14,6 @@ limitations under the License.
 """
 
 import json, sys, argparse, os
-import unidecode
 from wawCommons import printf, eprintf, toEntityName
 
 if __name__ == '__main__':
