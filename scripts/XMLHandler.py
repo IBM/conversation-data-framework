@@ -14,7 +14,6 @@ limitations under the License.
 """
 
 import lxml.etree as XML
-import unicodedata
 from wawCommons import eprintf, toIntentName, printf
 NAME_POLICY = 'soft'
 
@@ -156,13 +155,9 @@ class XMLHandler(object):
 
     def _createGotoElement(self, target, selector):
         gotoXml = XML.Element('goto')
-        gotoXml.append(self._createXmlElement('target', self._make_node_id(target))) # apply the same normalization for target as for node id, so that they realy do match
+        gotoXml.append(self._createXmlElement('target', target))
         gotoXml.append(self._createXmlElement('selector', selector))
         return gotoXml
-
-    def _make_node_id(self, condition):
-        condition = unicodedata.normalize('NFD', condition if isinstance(condition, unicode) else unicode(condition, 'utf-8')).encode('ascii', 'ignore')
-        return re.compile("[^a-zA-Z\d\s\-\_]").sub("_", condition)
 
     def _createXmlElement(self, name, value):
         if name=='values':
