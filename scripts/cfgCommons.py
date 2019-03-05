@@ -12,8 +12,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
 
-import logging, configparser
+import logging, configparser, sys
 from wawCommons import printf, eprintf
 
 class Cfg:
@@ -37,7 +38,6 @@ class Cfg:
         replaceSection = 'replace'
         versionSection = 'version'
         contextSection = 'context'
-        commonSection = 'common'
 
         # List of attributes of framework section to be appended rather then ovewrriden (if the same parameter is defined in more config files)
         frameworkAppend = ['xls', 'intents', 'entities', 'dialogs', 'functions']
@@ -56,24 +56,21 @@ class Cfg:
                             optionUniqueName = self.toOptionName(section, option)
                             # value can be list
                             newValueList = configPart.get(section, option).split(',')
-                            if len(newValueList) > 1: # create list
-                                newValue = newValueList
-                            else: # only single value
+                            if (len(newValueList) < 2) and not(option in frameworkAppend): # only single value not in framework append
                                 newValue = newValueList[0]
+                            else: # multiple values
+                                newValue = newValueList
                             if hasattr(self, optionUniqueName):
                                 warning = "WARNING: '" + optionUniqueName + " already exists. "
                                 if (section == commonSection) and (option in frameworkAppend): # appended
-                                    logging.debug(warning + "Appending '[" + ' '.join(newValue) +"]' to [" + ' '.join(getattr(self, optionUniqueName)) + "]");
+                                    logging.debug(warning + "Appending '[" + ' '.join(newValue) +"]' to [" + ' '.join(getattr(self, optionUniqueName)) + "]")
                                     setattr(self, optionUniqueName, newValue)
                                 else: # replace
                                     oldValue = getattr(self, optionUniqueName)
-                                    logging.debug(warning + "Replacing '" + oldValue + "' by '[" + ' '.join(newValue) +"]'");
+                                    logging.debug(warning + "Replacing '" + oldValue + "' by '[" + ' '.join(newValue) +"]'")
                                     setattr(self, optionUniqueName, newValue)
                             else:
-                                if (section == commonSection) and (option in frameworkAppend): # create list
-                                    setattr(self, optionUniqueName, [newValue])
-                                else: # set value
-                                    setattr(self, optionUniqueName, newValue)
+                                setattr(self, optionUniqueName, newValue)
             except IOError:
                 eprintf('ERROR: Cannot load config file %s\n', args.configFileName)
                 sys.exit(1)
@@ -114,4 +111,3 @@ class Cfg:
                 outputConfig.write(configFile)
         except IOError:
             eprintf('ERROR: Cannot save config file %s\n', configFileName)
-

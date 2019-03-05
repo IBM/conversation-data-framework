@@ -1,6 +1,6 @@
 # Scripts
 This file shows how to run scripts to create and upload workspace and how to convert it back to WAW representation.
-Part of this pipeline is covered by update_all.py script (see below) Except update_all.py script all scripts are ran from the root directory.
+Part of this pipeline is covered by `update_all.py` script (see below) Except `update_all.py` script, all scripts are ran from the root directory.
 
 
 ## Convert dialog from T2C xlsx to WAW xml
@@ -73,7 +73,7 @@ python scripts/workspace_delete.py example/en_app/private.cfg -v
 ```
 
 ## Decompose workspace
-Decomposes WCS .json workspace to intents, entities, dialogs and counterexamples files in WCS .json format 
+Decomposes WCS .json workspace to intents, entities, dialogs and counterexamples files in WCS .json format
 
 ```
 python scripts/workspace_decompose.py example/en_app/outputs/workspace.json -i example/en_app/outputs/intentsNew.json -e example/en_app/outputs/entitiesNew.json -d example/en_app/outputs/dialogNew.json -c counterexamplesNew.json -v
@@ -127,7 +127,7 @@ python scripts/dialog_json2xml.py example/en_app/outputs/dialogNew.json -d examp
 ```
 
 ## Update all
-Cleans folders for generated and output files, converts dialogs from T2C and WAW xml format and intents and entities from csv format to WCS .json workspace and deploys it to the Watson Conversation Service (Cleans folders specified in config files as "outputs" and "generated" and runs all scripts from dialog_xls2xml.py to workspace_deploy.py)
+Cleans folders for generated and output files, converts dialogs from T2C and WAW xml format and intents and entities from csv format to WCS .json workspace and deploys it to the Watson Conversation Service (Cleans folders specified in config files as "outputs" and "generated" and runs all scripts from `dialog_xls2xml.py` to `workspace_deploy.py`)
 
 _You have to run update\_all script from app directory:_
 
@@ -138,5 +138,5 @@ cd example/en_app/
 _Don't forget to create an example/en\_app/private.cfg file with your WCS credentials (you can use example/en\_app/private.cfg.template file as a template). You will probably need to change paths in your config files to not contain "example/en\_app/" part._
 
 ```
-python ../../scripts/update_all.py -c common.cfg -c private.cfg
+python ../../scripts/update_all.py -c common.cfg -c private.cfg - c build.cfg
 ```

@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
 
 import json, sys, argparse, os, glob, codecs
 from wawCommons import printf, eprintf, getFilesAtPath, toIntentName
@@ -62,7 +63,7 @@ if __name__ == '__main__':
                 if line and not line in examples:
                     examples.append(line)
                 elif line in examples:
-                    printf('Example used twice for the intent %s, omitting:%s /n', intentName, line )
+                    printf('Example used twice for the intent %s, omitting:%s \n', intentName, line )
             intent['examples'] = [{'text':i} for i in examples]
             intents.append(intent)
 

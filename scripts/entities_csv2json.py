@@ -12,9 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
 
 import json,sys,argparse,os
-
+import io
 from cfgCommons import Cfg
 from wawCommons import printf, eprintf, toEntityName, getFilesAtPath
 
@@ -31,11 +32,9 @@ if __name__ == '__main__':
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('-s', '--common_soft', required=False, help='soft name policy - change intents and entities names without error.', action='store_true', default="")
     args = parser.parse_args(sys.argv[1:])
-    config = Cfg(args);
+    config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
-
-    if args.common_soft: NAME_POLICY = 'soft'
-    else: NAME_POLICY = 'hard'
+    NAME_POLICY = 'soft' if args.common_soft else 'hard'
 
     if not hasattr(config, 'common_entities'):
         print('entities parameter is not defined.')
@@ -50,12 +49,11 @@ if __name__ == '__main__':
 
     pathList = getattr(config, 'common_entities')
     if hasattr(config, 'common_generated_entities'):
-        pathList = pathList + [getattr(config, 'common_generated_entities')]
-
-    filesAtPath = getFilesAtPath(pathList)
+        pathList = pathList + getattr(config, 'common_generated_entities')
+    filesAtPath = getFilesAtPath(pathList, ['*.csv'])
     for entityFileName in sorted(filesAtPath):
 
-        with open(entityFileName, "r") as entityFile:
+        with io.open(entityFileName, mode='r', encoding='utf8') as entityFile:
 
             entityName = os.path.splitext(os.path.basename(entityFileName))[0]
 
@@ -70,7 +68,10 @@ if __name__ == '__main__':
                         entityJSON = {}
                         entityJSON['entity'] = line
                         entityJSON['values'] = []
-                        entitiesJSON.append(entityJSON)
+                        if entityJSON not in entitiesJSON: #we do not want system entities duplicated, e.g., when composing more projects together
+                            entitiesJSON.append(entityJSON)
+                        else:
+                            printf("Skipping duplicated '%s' system entity.\n", line)
 
             # other entities
             else:
@@ -87,13 +88,14 @@ if __name__ == '__main__':
                     line = line.strip()
                     if line:
                         rawSynonyms = line.split(';')
-                        representativeValue = rawSynonyms[0].strip() # keep the value as it is to match in conditions
-                        rawSynonyms = [x for x in [x.strip().lower() for x in rawSynonyms] if len(x) > 0] # strip and lower all items in line
-                        synonyms = set(rawSynonyms) # remove duplicities
-                        synonyms.remove(representativeValue.lower()) # remove value from synonyms, so that duplicity with value is not possible
-                        synonyms = sorted(list(synonyms))
+                        # strip and lower all items in line
+                        [x.strip().lower() for x in rawSynonyms]
+                        representativeValue = rawSynonyms[0]
+                        synonyms = sorted(list(set(rawSynonyms[1:])))
+                        # remove value from synonyms, so that duplicity with value is not possible
+                        synonyms.remove(representativeValue)
                         valueJSON = {}
-                        if representativeValue[0] is '~':
+                        if representativeValue[0] in '~':
                             # all patterns are represented by the first value without first char (~)
                             valueJSON['type'] = 'patterns'
                             valueJSON['value'] = representativeValue[1:]
@@ -114,11 +116,11 @@ if __name__ == '__main__':
         if not os.path.exists(getattr(config, 'common_outputs_directory')):
             os.makedirs(getattr(config, 'common_outputs_directory'))
             print('Created new output directory ' + getattr(config, 'common_outputs_entities'))
-        with open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')), 'w') as outputFile:
-            outputFile.write(json.dumps(entitiesJSON, indent=4).encode('utf8'))
+        with io.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')), mode='w', encoding='utf-8') as outputFile:
+            outputFile.write(json.dumps(entitiesJSON, indent=4, ensure_ascii=False, encoding='utf8'))
         if VERBOSE: printf("Entities json '%s' was successfully created\n", os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')))
     else:
-        print json.dumps(entitiesJSON, indent=4, ensure_ascii=False).encode('utf8')
+        print(json.dumps(entitiesJSON, indent=4, ensure_ascii=False).encode('utf8'))
         if VERBOSE: printf("Entities json was successfully created\n", os.path.basename(__file__))
 
     printf('\nFINISHING: ' + os.path.basename(__file__) + '\n')

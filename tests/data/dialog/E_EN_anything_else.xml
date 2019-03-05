@@ -7,12 +7,13 @@
             <ws_img_flag><replace>ws_img_flag</replace></ws_img_flag>
             <version_name><replace>version_name</replace></version_name>
             <build_date_time><replace>build_date_time</replace></build_date_time>
-            <welcome_msg> </welcome_msg> 
+            <welcome_msg> </welcome_msg>
         </context>
-        <output>
+        <output structure="emptyDict">
             <response>
                 <output>
-                    <text>Promiňte, nerozumněl jsem vám, můžete svou otázku formulovat jinak?</text>
+                    <text scope="type-server">Sorry, I did not understand. Can you rephrase it please?</text>
+                    <text scope="type-local">Sorry, I use only local application and I did not understand. Can you rephrase it please?</text>
                 </output>
             </response>
         </output>

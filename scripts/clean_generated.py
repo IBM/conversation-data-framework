@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import print_function
 
 import sys, argparse, os
 import wawCommons
@@ -30,14 +31,14 @@ if __name__ == '__main__':
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('-s', '--common_soft', required=False, help='soft name policy - change intents and entities names without error.', action='store_true', default="")
     args = parser.parse_args(sys.argv[1:])
-    config=Cfg(args);
+    config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
 
     if os.path.exists(config.common_generated_dialogs[0]):
         shutil.rmtree(config.common_generated_dialogs[0])
-        if VERBOSE:printf('%s does not exist.',config.common_generated_dialogs[0])
+        if VERBOSE:printf('%s does not exist.', config.common_generated_dialogs[0])
     else:
-        if VERBOSE:printf('%s does not exist.', common.config_generated_dialogs[0])
+        if VERBOSE:printf('%s does not exist.', config.common_generated_dialogs[0])
 
     if os.path.exists(config.common_generated_intents[0]):
         shutil.rmtree(config.common_generated_intents[0])
@@ -53,6 +54,6 @@ if __name__ == '__main__':
         shutil.rmtree(config.common_outputs_directory)
         if VERBOSE:printf('%s has been removed.', config.common_outputs_directory)
     else:
-        if VERBOSE:printg('%s does not exist.', config.common_outputs_directory)
+        if VERBOSE:printf('%s does not exist.', config.common_outputs_directory)
 
     printf('\nFINISHING: ' + os.path.basename(__file__) + '\n')
