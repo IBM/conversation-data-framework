@@ -100,7 +100,7 @@ class NodeData(object):
         if len(rawOutputs) >= 1 and isinstance(rawOutputs[0], (str, unicode)):
             items = re.split('%%', rawOutputs[0])
             self.__handleChannelDefinition('1'+items[0])
-            for for item in items[1:]:
+            for item in items[1:]:
                 if not item: continue
                 # @marek-danel: Original behavior: process 'B', '$' modifiers
                 # for all chunks separated by %%. New behavior: process them
