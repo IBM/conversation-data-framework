@@ -40,19 +40,19 @@ def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
         for subKeyJSON in nodeJSON[keyJSON]:
             includeJson(nodeJSON[keyJSON], subKeyJSON, keySearch, includeJSON)
 
-
-if __name__ == '__main__':
+def main(args):
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
     parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in first one', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # arguments
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
-    parser.add_argument('-w','--common_outputs_workspace', required=False, help='file with original workspace JSON')
+    parser.add_argument('-w','--common_outputs_workspace', required=False, help='filename of the original workspace JSON')
+    parser.add_argument('-d','--common_outputs_directory', required=False, help='directory, where the workspace is located')
     parser.add_argument('-j','--includejsondata_jsonfile', required=False, help='file with JSON you want to include')
     parser.add_argument('-t','--includejsondata_targetnode', required=False, help='the element, where you want to add your JSON, i.e., "data_structure" : null; where you want to replace null, you would put "data_strucute" as this parameter')
     # optional arguments
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     #init the parameters
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(args)
     config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
 
@@ -75,3 +75,6 @@ if __name__ == '__main__':
         json.dump(workspaceInput, outfile, indent=4)
 
     print('\nFINISHING: ' + os.path.basename(__file__) + '\n')
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
