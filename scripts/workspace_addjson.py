@@ -15,7 +15,7 @@ limitations under the License.
 
 import json, sys, os.path, argparse, codecs
 from cfgCommons import Cfg
-from wawCommons import printf, eprintf
+from wawCommons import printf, eprintf, getRequiredParameter
 
 
 try:
@@ -56,30 +56,20 @@ if __name__ == '__main__':
     config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
 
-    if hasattr(config, 'common_outputs_workspace'):
-        with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
-            workspaceInput = json.load(inputpath)
-    else:
-        eprintf('ERROR: the workspace not specified.')
-        exit(1)
+    # get required parameters
+    # workspace
+    with codecs.open(os.path.join(getRequiredParameter(config, 'common_outputs_directory'), getRequiredParameter(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
+        workspaceInput = json.load(inputpath)
+    # json to add
+    with codecs.open(os.path.join(getRequiredParameter(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
+        jsonInclude = json.load(jsonincludepath)
+    # target element
+    targetElement = getRequiredParameter(config, 'includejsondata_targetnode')
 
-    if hasattr(config, 'includejsondata_jsonfile'):
-        with codecs.open(os.path.join(getattr(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
-            jsonInclude = json.load(jsonincludepath)
-    else:
-        eprintf('ERROR: include json file not specified.')
-        exit(1)
-
-    if hasattr(config, 'includejsondata_targetnode'):
-        targetElement = getattr(config, 'includejsondata_targetnode')
-    else:
-        eprintf('ERROR:target node not specified.')
-        exit(1)
-
-    #find the target variable and add the json
+    # find the target variable and add the json
     includeJson(workspaceInput, "dialog_nodes", targetElement, jsonInclude)
 
-    #writing the file
+    # writing the file
     with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'w', encoding='utf8')  as outfile:
         print('Writing workspaces with added JSON successfull.')
         json.dump(workspaceInput, outfile, indent=4)
