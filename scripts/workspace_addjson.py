@@ -42,7 +42,7 @@ def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
 
 def main(args):
     printf('\nSTARTING: ' + os.path.basename(__file__) + '\n')
-    parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in first one', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in the first one. This happens inplace.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # arguments
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
     parser.add_argument('-w','--common_outputs_workspace', required=False, help='filename of the original workspace JSON')
