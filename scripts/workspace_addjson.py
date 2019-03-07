@@ -23,11 +23,14 @@ try:
 except NameError:
     basestring = (str, )  # Python 3
 
+nothingFound = True
 
     # function to find a desired variable in complex json and add other part of json
 def includeJson(nodeJSON, keyJSON, keySearch, includeJSON):
+    global nothingFound
     if keyJSON == keySearch:
         nodeJSON[keyJSON] = includeJSON
+        nothingFound = False
     # None
     if nodeJSON[keyJSON] is None:
         pass
@@ -71,8 +74,12 @@ def main(args):
 
     # writing the file
     with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'w', encoding='utf8')  as outfile:
-        print('Writing workspaces with added JSON successfull.')
         json.dump(workspaceInput, outfile, indent=4)
+
+    if nothingFound is True:
+        eprintf('\nWARNING: target node not found.')
+    else:
+        printf('\nWriting workspaces with added JSON successfull.')
 
     print('\nFINISHING: ' + os.path.basename(__file__) + '\n')
 
