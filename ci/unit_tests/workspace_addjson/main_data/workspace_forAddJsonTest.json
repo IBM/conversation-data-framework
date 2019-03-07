@@ -2578,7 +2578,7 @@
         }, 
         {
             "dialog_node": "generalContext_musicSearch", 
-            "conditions": "#ui-musicSearch", 
+            "conditions": null, 
             "previous_sibling": "generalContext_musicPlay", 
             "output": {
                 "sa": ""
@@ -2669,10 +2669,7 @@
             "previous_sibling": "generalContext_musicFragment", 
             "dialog_node": "generalContext_musicShuffle", 
             "conditions": "#ui-musicShuffle", 
-            "go_to": {
-                "dialog_node": "musicPlayingSong", 
-                "selector": "user_input"
-            }
+            "go_to": {}
         }, 
         {
             "dialog_node": "welcome_chitchat", 
@@ -2697,11 +2694,7 @@
             "previous_sibling": "welcome_chitchat", 
             "output": {
                 "text": {
-                    "values": [
-                        "Have you checked a book of cooking recipes I came up with?", 
-                        "I like to analyze Bob Dylan songs. I think my analysis helped with his Nobel prize.", 
-                        "Have you seen my work on locating the various characters in Pokemon Go?"
-                    ], 
+                    "values": [], 
                     "selection_policy": "random"
                 }, 
                 "sa": "sacko"
@@ -2716,10 +2709,7 @@
             "dialog_node": "node_10", 
             "output": {
                 "text": {
-                    "values": [
-                        "My name is $botName. What is your name?", 
-                        "I'm $botName, and you?"
-                    ], 
+                    "values": [], 
                     "selection_policy": "sequential"
                 }
             }, 

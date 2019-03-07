@@ -5,7 +5,6 @@ import workspace_addjson
 
 class TestMain(unittest.TestCase):
 
-
     def test_addingJsonDictionary(self):
         ''' Tests for including additional json dictionary to arbitrary location in dialog nodes '''
 
@@ -31,7 +30,6 @@ class TestMain(unittest.TestCase):
         newWorkspaceString = json.dumps(newWorkspace)
 
         assert referenceWorkspaceString == newWorkspaceString
-
 
     def test_addingJsonArray(self):
         ''' Tests for including additional json array to arbitrary location in dialog nodes '''

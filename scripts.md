@@ -127,10 +127,10 @@ python scripts/dialog_json2xml.py example/en_app/outputs/dialogNew.json -d examp
 ```
 
 ## Add additional json to the workspace
-The `workspace_addjson.py` script takes the workspace as the -w parameter, JSON file to be added as the -j, and the target varible as the -t parameter. The script finds all occurences of the target variable in the workspace and adds the JSON file there.
+The `workspace_addjson.py` script takes the workspace as the -w parameter, directory with the workspace as the -d parameter, JSON file to be added as the -j parameter, and the target variable as the -t parameter. The script finds all occurrences of the target variable in the workspace and adds the JSON file there.
 
 ```
-python script/workspace_addjson.py -w workspace.json -j complex_context_object.json -t my_context_data_object
+python scripts/workspace_addjson.py -w workspace.json -d ./outputs/ -j complex_context_object.json -t my_context_data_object
 ```
 
 It can be also used in the update_all.py script. The `[includejsondata]` section has to be added to the common.cfg where the JSON file and the target node are defined followingly (the workspace is the one defined in the `[outputs]` section):
