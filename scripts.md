@@ -126,8 +126,8 @@ mkdir -p example/en_app/outputs/dialog
 python scripts/dialog_json2xml.py example/en_app/outputs/dialogNew.json -d example/en_app/outputs/dialog/ -v
 ```
 
-## Add additional json to the workspace
-The `workspace_addjson.py` script takes the workspace as the -w parameter, directory with the workspace as the -d parameter, JSON file to be added as the -j parameter, and the target variable as the -t parameter. The script finds all occurrences of the target variable in the workspace and adds the JSON file there.
+## Add additional json to the workspace dialog_nodes part
+The `workspace_addjson.py` script takes the workspace as the -w parameter, directory with the workspace as the -d parameter, JSON file to be added as the -j parameter, and the target variable as the -t parameter. The script finds all occurrences of the target variable in the workspace["dialog_nodes"] and adds the JSON file there.
 
 ```
 python scripts/workspace_addjson.py -w workspace.json -d ./outputs/ -j complex_context_object.json -t my_context_data_object
