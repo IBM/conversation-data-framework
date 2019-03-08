@@ -5,8 +5,8 @@ import workspace_addjson
 
 class TestIncludeJson(unittest.TestCase):
 
-    def test_addingJsonDictionary(self):
-        ''' Tests for including additional json dictionary to arbitrary location in dialog nodes '''
+    def test_checkingNotExistingKey(self):
+        ''' Tests for checking missing JSON key when calling includeJson function '''
 
         nodeJSON = {
             "a" : "b"
