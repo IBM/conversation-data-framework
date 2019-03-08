@@ -20,7 +20,12 @@
                 "text": [
                     "Good morning. $welcome_msg",
                     "$capabilities_msg"
-                ]
+                ],
+                "emtpyarray": [],
+                "empydictionary": {},
+                "number": 1,
+                "bool": false,
+                "null": null
             }
         },
         {
@@ -34,6 +39,11 @@
                     "$capabilities_msg"
                 ]
             },
+            "emtpyarray": [],
+            "empydictionary": {},
+            "number": 1,
+            "bool": false,
+            "null": null,
             "type": "response_condition"
         },
         {

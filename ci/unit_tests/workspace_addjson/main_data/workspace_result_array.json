@@ -6,7 +6,12 @@
                 "text": [
                     "Good morning. $welcome_msg", 
                     "$capabilities_msg"
-                ]
+                ], 
+                "number": 1, 
+                "bool": false, 
+                "empydictionary": {}, 
+                "emtpyarray": [], 
+                "null": null
             }, 
             "conditions": " now().before('12:00:00')", 
             "parent": [
@@ -27,6 +32,7 @@
             "type": "parent"
         }, 
         {
+            "null": null, 
             "parent": [
                 {
                     "example data": [
@@ -42,9 +48,11 @@
                     "something_more": false
                 }
             ], 
-            "conditions": " now().after('12:00:00')", 
+            "type": "response_condition", 
             "dialog_node": "node_8", 
+            "number": 1, 
             "previous_sibling": "node_7", 
+            "empydictionary": {}, 
             "output": {
                 "parent": [
                     {
@@ -62,7 +70,9 @@
                     }
                 ]
             }, 
-            "type": "response_condition"
+            "emtpyarray": [], 
+            "bool": false, 
+            "conditions": " now().after('12:00:00')"
         }, 
         {
             "conditions": "$as:as-musicPlayingSong", 
