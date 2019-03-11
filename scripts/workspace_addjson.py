@@ -73,10 +73,18 @@ def main(args):
     # get required parameters
     # workspace
     with codecs.open(os.path.join(getRequiredParameter(config, 'common_outputs_directory'), getRequiredParameter(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
-        workspaceInput = json.load(inputpath)
+        try:
+            workspaceInput = json.load(inputpath)
+        except:
+            eprintf('ERROR: Workspace JSON is not valid JSON.')
+            exit(1)
     # json to add
     with codecs.open(os.path.join(getRequiredParameter(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
-        jsonInclude = json.load(jsonincludepath)
+        try:
+            jsonInclude = json.load(jsonincludepath)
+        except:
+            eprintf('ERROR: Inluded JSON is not valid JSON.')
+            exit(1)
     # target element
     targetKey = getRequiredParameter(config, 'includejsondata_targetkey')
 
