@@ -23,14 +23,7 @@ script:
 
 after_script:
   # deploy all 'outputs' folders to Artifactory
-  - for folder in `find ci -name outputs`; \
-    do \
-        echo "Deploying ${folder} to Artifactory"; \
-        for file in `find ${folder} -name '*'`; \
-        do \
-            ./scripts/artifactory/artifactory-deploy.sh ${file}; \
-        done \
-    done
+  - ./scripts/artifactory/artifactory-deploy-tests-outputs.sh
 
 notifications:
   email:
