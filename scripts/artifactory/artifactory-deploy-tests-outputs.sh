@@ -11,15 +11,17 @@ do
     if [ -e "${TAR_NAME}" ]
     then
         echo "Adding ${folder} to ${TAR_NAME}";
-        tar -uvf ${TAR_NAME} ${folder};
+        tar --xform s:'./':: -uvf ${TAR_NAME} ${folder};
     else
         echo "Creating ${TAR_NAME} from ${folder}";
-        tar -cvf ${TAR_NAME} ${folder};
+        tar --xform s:'./':: -cvf ${TAR_NAME} ${folder};
     fi
 done
 
 gzip ${TAR_NAME}
 
+mv ${TAR_GZ_NAME} outputs.x
+
 cd ../
-./scripts/artifactory/artifactory-deploy.sh ci/${TAR_GZ_NAME}
+./scripts/artifactory/artifactory-deploy.sh ci/outputs.x
 
