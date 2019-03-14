@@ -4,6 +4,7 @@ TAR_NAME=outputs.tar
 TAR_GZ_NAME=${TAR_NAME}.gz
 
 cd ./ci
+ls -lR .
 
 for folder in `find . -name outputs`;
 do
