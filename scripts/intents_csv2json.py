@@ -14,7 +14,7 @@ limitations under the License.
 """
 from __future__ import print_function
 
-import json, sys, argparse, os, glob, codecs
+import json, sys, argparse, os, glob, codecs, re
 from wawCommons import printf, eprintf, getFilesAtPath, toIntentName
 from cfgCommons import Cfg
 
@@ -60,11 +60,33 @@ if __name__ == '__main__':
                 # remove comments
                 line = line.split('#')[0]
                 line = line.rstrip().lower()
-                if line and not line in examples:
-                    examples.append(line)
-                elif line in examples:
-                    printf('Example used twice for the intent %s, omitting:%s \n', intentName, line )
-            intent['examples'] = [{'text':i} for i in examples]
+                if line:
+                    example = {}
+                    #find all matches of contextual entities
+                    matches = re.findall(r'<(.*?)>(.*?)<\/\1>', line)
+                    #strip the tags
+                    line = re.sub(r'<(.*?)>', '', line)
+
+                    #isn't it already in example?
+                    for example in examples:
+                        if line == example['text']
+                        printf('Example used twice for the intent %s, omitting:%s \n', intentName, line )
+                        pass
+
+                    example['text'] = line
+                    if len(matches) > 0:
+                        example['mentions'] = []
+                        #locate
+                        for match in matches:
+                            start = line.index(match[1])
+                            end = start + len(match[1])
+                            entity = match[0]
+                            example['mentions'].append({'entity': entity, 'location':[start, end]})
+                            print(example)
+
+                    examples.append(example)
+                    
+            intent['examples'] = examples
             intents.append(intent)
 
 
