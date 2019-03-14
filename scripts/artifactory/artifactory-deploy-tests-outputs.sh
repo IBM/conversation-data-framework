@@ -20,8 +20,5 @@ done
 
 gzip ${TAR_NAME}
 
-mv ${TAR_GZ_NAME} outputs.x
-
-cd ../
-./scripts/artifactory/artifactory-deploy.sh ci/outputs.x
+./scripts/artifactory/artifactory-deploy.sh ${TAR_NAME}
 
