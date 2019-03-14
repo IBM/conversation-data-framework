@@ -13,6 +13,6 @@ fi
 # TODO It does not work with nested folders
 for FILENAME in ${PATH_TO_FILE}; do
     echo "Artifactory: deploy ${FILENAME} to ${DIR_URL}/${FILENAME}";
-    curl -H 'X-JFrog-Art-Api: '${ARTIFACTORY_API_KEY} -T ${FILENAME} ${DIR_URL}/${FILENAME};
+    curl -v -H 'X-JFrog-Art-Api: '${ARTIFACTORY_API_KEY} -T ${FILENAME} ${DIR_URL}/${FILENAME};
     echo "\n";
 done
