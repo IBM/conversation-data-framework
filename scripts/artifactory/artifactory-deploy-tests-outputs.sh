@@ -20,5 +20,5 @@ done
 
 gzip ${TAR_NAME}
 
-./scripts/artifactory/artifactory-deploy.sh ${TAR_NAME}
+./scripts/artifactory/artifactory-deploy.sh ${TAR_GZ_NAME}
 
