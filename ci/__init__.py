@@ -13,3 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import pytest
+
+# we want to have pytest assert introspection in the unit_utils
+pytest.register_assert_rewrite('ci.unit_utils')

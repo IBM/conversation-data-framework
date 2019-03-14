@@ -16,11 +16,11 @@ limitations under the License.
 import os, pytest, json
 
 import compare_dialogs
-from .. import unit_utils
+from ...unit_utils import BaseTestCaseCapture
 
-class TestMain(unit_utils.BaseTestCaseCapture):
+class TestMain(BaseTestCaseCapture):
 
-    dataBasePath = './ci/unit_tests/compare_dialogs/compare_dialogs_data/'
+    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data/')
 
     complexDictDifferentEmptyJsonPath = os.path.abspath(os.path.join(dataBasePath, 'complex_dict_different_empty.json'))
     complexDictDifferentKeyJsonPath = os.path.abspath(os.path.join(dataBasePath, 'complex_dict_different_key.json'))
