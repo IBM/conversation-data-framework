@@ -11,6 +11,10 @@ do
 done
 
 ZIP_NUMBER=`zipinfo -1 outputs.zip | wc -l`
+
+unzip ${ZIP_NAME} -d outputs/
+ls -Rl outputs/
+
 echo "Total number of files and folder in ${ZIP_NAME} is ${ZIP_NUMBER}"
 
 cd ../
