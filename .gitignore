@@ -12,5 +12,6 @@ test.junit.xml
 data/intents/WEATHER-FAQ-CZ*
 log.log
 tests/data/dialog/g_dialogs
+.DS_Store
 **/.pytest_cache/
 ci/outputs.zip
