@@ -1,11 +1,15 @@
 #!/bin/sh
 
-for folder in `find ci -name outputs`;
+ZIP_NAME=outputs.zip
+
+cd ./ci
+
+for folder in `find . -name outputs`;
 do
-    echo "Deploying ${folder} to Artifactory";
-    for file in `find ${folder} -name '*'`;
-    do
-        ./scripts/artifactory/artifactory-deploy.sh ${file};
-    done
+    echo "Adding ${folder} to ${ZIP_NAME}";
+    zip -ru ${ZIP_NAME} ${folder}
 done
+
+cd ../
+./scripts/artifactory/artifactory-deploy.sh ci/${ZIP_NAME}
 
