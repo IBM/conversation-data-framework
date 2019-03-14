@@ -1,22 +1,24 @@
 #!/bin/sh
 
-ZIP_NAME=outputs.zip
+TAR_NAME=outputs.tar
+TAR_GZ_NAME=${TAR_NAME}.gz
 
 cd ./ci
 
 for folder in `find . -name outputs`;
 do
-    echo "Adding ${folder} to ${ZIP_NAME}";
-    zip -ru ${ZIP_NAME} ${folder};
+    if [ -e "${TAR_NAME}" ]
+    then
+        echo "Adding ${folder} to ${TAR_NAME}";
+        tar -uvf ${TAR_NAME} ${folder};
+    else
+        echo "Creating ${TAR_NAME} from ${folder}";
+        tar -cvf ${TAR_NAME} ${folder};
+    fi
 done
 
-ZIP_NUMBER=`zipinfo -1 outputs.zip | wc -l`
-
-unzip ${ZIP_NAME} -d outputs/
-ls -Rl outputs/
-
-echo "Total number of files and folder in ${ZIP_NAME} is ${ZIP_NUMBER}"
+gzip ${TAR_NAME}
 
 cd ../
-./scripts/artifactory/artifactory-deploy.sh ci/${ZIP_NAME}
+./scripts/artifactory/artifactory-deploy.sh ci/${TAR_GZ_NAME}
 
