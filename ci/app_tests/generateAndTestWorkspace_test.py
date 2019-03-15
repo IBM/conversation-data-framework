@@ -80,11 +80,11 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolders([dialogsDecomposedFolderPath, entitiesDecomposedFolderPath, intentsDecomposedFolderPath])
 
         # convert xls files to xml dialogs, intents and entities
-        self.tf(dialog_xls2xml.main, ['-x', xlsEnMasterPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
-        self.tf(dialog_xls2xml.main, ['-x', xlsEnTestsPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
-        self.tf(dialog_xls2xml.main, ['-x', xlsEnT2CAuthoringPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
-        self.tf(dialog_xls2xml.main, ['-x', xlsCzT2CAuthoringPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
-        self.tf(dialog_xls2xml.main, ['-x', xlsCondXTestPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
+        self.t_fun_noException(dialog_xls2xml.main, ['-x', xlsEnMasterPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
+        self.t_fun_noException(dialog_xls2xml.main, ['-x', xlsEnTestsPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
+        self.t_fun_noException(dialog_xls2xml.main, ['-x', xlsEnT2CAuthoringPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
+        self.t_fun_noException(dialog_xls2xml.main, ['-x', xlsCzT2CAuthoringPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
+        self.t_fun_noException(dialog_xls2xml.main, ['-x', xlsCondXTestPath, '-gd', generatedDialogsFolderPath, '-gi', generatedIntentsFolderPath, '-ge', generatedEntitiesFolderPath, '-v'])
 
         # testing entities in T2C (@entity:(<x>) blocks)
         xmlCondXTestPath = os.path.abspath(os.path.join(generatedDialogsFolderPath, 'cond_x_test.xml'))
@@ -97,31 +97,31 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
             assert re.compile('#CO_JE.*@PREDMET:\(Buttons do not belong here\)').search(fileContent)
 
         # convert dialog from xml to json
-        self.tf(dialog_xml2json.main, ['-dm', dialogMainPath, '-of', self.testOutputPath, '-od', jsonDialogFilename, '-s', self.dialogSchemaPath, '-c', configBuildPath, '-v'])
+        self.t_fun_noException(dialog_xml2json.main, ['-dm', dialogMainPath, '-of', self.testOutputPath, '-od', jsonDialogFilename, '-s', self.dialogSchemaPath, '-c', configBuildPath, '-v'])
 
         # convert entities from csv to json
-        self.tf(entities_csv2json.main, ['-ie', entitiesFolderPath, '-od', self.testOutputPath, '-oe', jsonEntitiesFilename, '-v'])
+        self.t_fun_noException(entities_csv2json.main, ['-ie', entitiesFolderPath, '-od', self.testOutputPath, '-oe', jsonEntitiesFilename, '-v'])
 
         # convert intents from csv to json
-        self.tf(intents_csv2json.main, ['-ii', intentsFolderPath, '-od', self.testOutputPath, '-oi', jsonIntentsFilename, '-v'])
+        self.t_fun_noException(intents_csv2json.main, ['-ii', intentsFolderPath, '-od', self.testOutputPath, '-oi', jsonIntentsFilename, '-v'])
 
         # compose dialog, intent and entity json files to one workspace
-        self.tf(workspace_compose.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-od', jsonDialogFilename, '-oe', jsonEntitiesFilename, '-oi', jsonIntentsFilename, '-v'])
+        self.t_fun_noException(workspace_compose.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-od', jsonDialogFilename, '-oe', jsonEntitiesFilename, '-oi', jsonIntentsFilename, '-v'])
 
         # decompose workspace to dialog, intent and entity json files
-        self.tf(workspace_decompose.main, [jsonWorkspacePath, '-d', jsonDecomposedDialogPath, '-e', jsonDecomposedEntitiesPath, '-i', jsonDecomposedIntentsPath, '-v'])
+        self.t_fun_noException(workspace_decompose.main, [jsonWorkspacePath, '-d', jsonDecomposedDialogPath, '-e', jsonDecomposedEntitiesPath, '-i', jsonDecomposedIntentsPath, '-v'])
 
         # convert dialog from json to xml
-        self.tf(dialog_json2xml.main, [jsonDecomposedDialogPath, '-d', dialogsDecomposedFolderPath, '-v'])
+        self.t_fun_noException(dialog_json2xml.main, [jsonDecomposedDialogPath, '-d', dialogsDecomposedFolderPath, '-v'])
 
         # convert entities from json to csv
-        self.tf(entities_json2csv.main, [jsonDecomposedEntitiesPath, entitiesDecomposedFolderPath, '-v'])
+        self.t_fun_noException(entities_json2csv.main, [jsonDecomposedEntitiesPath, entitiesDecomposedFolderPath, '-v'])
 
         # convert intents from json to csv 
-        self.tf(intents_json2csv.main, [jsonDecomposedIntentsPath, intentsDecomposedFolderPath, '-v'])
+        self.t_fun_noException(intents_json2csv.main, [jsonDecomposedIntentsPath, intentsDecomposedFolderPath, '-v'])
 
         # deploy test workspace
-        self.tf(workspace_deploy.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-c', configTestPath, '-cn', os.environ['WA_USERNAME'], '-cp', os.environ['WA_PASSWORD'], '-cid', os.environ['WA_WORKSPACE_ID'], '-v'])
+        self.t_fun_noException(workspace_deploy.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-c', configTestPath, '-cn', os.environ['WA_USERNAME'], '-cp', os.environ['WA_PASSWORD'], '-cid', os.environ['WA_WORKSPACE_ID'], '-v'])
 
         # test against test workspace
         with open(configTestPath, 'r') as configTest, open(configTmpPath, 'w') as configTmp:
@@ -129,10 +129,10 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
             configTmp.write('username = ' + os.environ['WA_USERNAME'] + '\n')
             configTmp.write('password = ' + os.environ['WA_PASSWORD'] + '\n')
             configTmp.write('workspace_id = ' + os.environ['WA_WORKSPACE_ID'] + '\n')
-        self.tf(workspace_test.main, [testMoreOutputsRefPath, testMoreOutputsHypPath, '-c', configTmpPath, '-v'])
+        self.t_fun_noException(workspace_test.main, [testMoreOutputsRefPath, testMoreOutputsHypPath, '-c', configTmpPath, '-v'])
 
         # evaluate tests
-        self.tf(evaluate_tests.main, [testMoreOutputsRefPath, testMoreOutputsHypPath, '-o', testMoreOutputsJUnitPath, '-v'])
+        self.t_fun_noException(evaluate_tests.main, [testMoreOutputsRefPath, testMoreOutputsHypPath, '-o', testMoreOutputsJUnitPath, '-v'])
         testMoreOutputsJUnitXmlThree = LET.parse(testMoreOutputsJUnitPath)
         for element in testMoreOutputsJUnitXmlThree.getroot():
             assert element.tag == 'testsuites'

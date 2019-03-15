@@ -21,35 +21,35 @@ class BaseTestCaseCapture(object):
     dialogSchemaPath = '../data_spec/dialog_schema.xml'
     captured = None
 
-    def tTooFewArgs(self, *args, **kwargs):
+    def t_tooFewArgs(self, *args, **kwargs):
         ''' Runs predefined function (callfunc) with given arguments and tests if it fails and error message contains \'too few arguments\' '''
-        self.tfTooFewArgs(self.callfunc, *args, **kwargs)
+        self.t_fun_tooFewArgs(self.callfunc, *args, **kwargs)
 
-    def tfTooFewArgs(self, function, *args, **kwargs):
+    def t_fun_tooFewArgs(self, function, *args, **kwargs):
         ''' Runs function with given arguments and tests if it fails and error message contains \'too few arguments\' '''
-        self.tfExitCodeAndErrMessage(function, 2, 'too few arguments', *args, **kwargs)
+        self.t_fun_exitCodeAndErrMessage(function, 2, 'too few arguments', *args, **kwargs)
 
-    def tUnrecognizedArgs(self, *args, **kwargs):
+    def t_unrecognizedArgs(self, *args, **kwargs):
         ''' Runs predefined function (callfunc) with given arguments and tests if it fails and error message contains \'unrecognized arguments\' '''
-        self.tfUnrecognizedArgs(self.callfunc, *args, **kwargs)
+        self.t_fun_unrecognizedArgs(self.callfunc, *args, **kwargs)
 
-    def tfUnrecognizedArgs(self, function, *args, **kwargs):
+    def t_fun_unrecognizedArgs(self, function, *args, **kwargs):
         ''' Runs function with given arguments and tests if it fails and error message contains \'unrecognized arguments\' '''
-        self.tfExitCodeAndErrMessage(function, 2, 'unrecognized arguments', *args, **kwargs)
+        self.t_fun_exitCodeAndErrMessage(function, 2, 'unrecognized arguments', *args, **kwargs)
 
-    def tExitCode(self, exitCode, *args, **kwargs):
+    def t_exitCode(self, exitCode, *args, **kwargs):
         ''' Runs predefined function (callfunc) with given arguments and tests exit code '''
-        self.tfExitCode(self.callfunc, exitCode, *args, **kwargs)
+        self.t_fun_exitCode(self.callfunc, exitCode, *args, **kwargs)
 
-    def tfExitCode(self, function, exitCode, *args, **kwargs):
+    def t_fun_exitCode(self, function, exitCode, *args, **kwargs):
         ''' Runs function with given arguments and tests exit code '''
-        self.tfExitCodeAndErrMessage(function, exitCode, '', *args, **kwargs)
+        self.t_fun_exitCodeAndErrMessage(function, exitCode, '', *args, **kwargs)
 
-    def tExitCodeAndErrMessage(self, exitCode, errMessage, *args, **kwargs):
+    def t_exitCodeAndErrMessage(self, exitCode, errMessage, *args, **kwargs):
         ''' (Generic) Runs predefined function (callfunc) with given arguments and tests exit code and error message '''
-        self.tfExitCodeAndErrMessage(self.callfunc, exitCode, errMessage, *args, **kwargs)
+        self.t_fun_exitCodeAndErrMessage(self.callfunc, exitCode, errMessage, *args, **kwargs)
 
-    def tfExitCodeAndErrMessage(self, function, exitCode, errMessage, *args, **kwargs):
+    def t_fun_exitCodeAndErrMessage(self, function, exitCode, errMessage, *args, **kwargs):
         ''' (Generic) Runs function with given arguments and tests exit code and error message '''
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             function(*args, **kwargs)
@@ -57,21 +57,21 @@ class BaseTestCaseCapture(object):
         assert pytest_wrapped_e.value.code == exitCode
         assert errMessage in self.captured.err
 
-    def tRaiseError(self, errorType, errMessage, *args, **kwargs):
+    def t_raiseError(self, errorType, errMessage, *args, **kwargs):
         ''' (Generic) Runs predefined function (callfunc) with given arguments and tests exception '''
-        self.tfRaiseError(self.callfunc, errorType, errMessage, *args, **kwargs)
+        self.t_fun_raiseError(self.callfunc, errorType, errMessage, *args, **kwargs)
 
-    def tfRaiseError(self, function, errorType, errMessage, *args, **kwargs):
+    def t_fun_raiseError(self, function, errorType, errMessage, *args, **kwargs):
         ''' (Generic) Runs function with given arguments and tests exception '''
         with pytest.raises(errorType, match=errMessage) as pytest_wrapped_e:
             function(*args, **kwargs)
         self.captured = self.capfd.readouterr()
 
-    def t(self, *args, **kwargs):
+    def t_noException(self, *args, **kwargs):
         ''' (Generic) Runs predefined function (callfunc) with given arguments and checks that no exception was raised '''
-        self.tf(self.callfunc, *args, **kwargs)
+        self.t_fun_noException(self.callfunc, *args, **kwargs)
 
-    def tf(self, function, *args, **kwargs):
+    def t_fun_noException(self, function, *args, **kwargs):
         ''' (Generic) Runs function with given arguments and checks that no exception was raised '''
         try:
             function(*args, **kwargs)
