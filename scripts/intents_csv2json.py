@@ -60,35 +60,36 @@ if __name__ == '__main__':
                 # remove comments
                 line = line.split('#')[0]
                 line = line.rstrip().lower()
+                #non-ascii characters fix
+                line = line.encode('utf-8')
                 if line:
                     example = {}
                     #find all matches of contextual entities
-                    matches = re.findall(r'<(.*?)>(.*?)<\/\1>', line)
+                    matches = re.findall(r'<(.*)>(.[^</>]*?)<\/\1>', line)
                     #strip the tags
                     line = re.sub(r'<(.*?)>', '', line)
-
                     #isn't it already in example?
-                    for example in examples:
-                        if line == example['text']
-                        printf('Example used twice for the intent %s, omitting:%s \n', intentName, line )
-                        pass
-
+                    alreadyin = False
+                    for prevexample in examples:
+                        if line == str(prevexample['text']):
+                            printf('Example used twice for the intent %s, omitting: %s \n', intentName, line)
+                            alreadyin = True
+                    if alreadyin or len(line) == 0:
+                        continue
+                    # locating the match
                     example['text'] = line
                     if len(matches) > 0:
                         example['mentions'] = []
-                        #locate
                         for match in matches:
                             start = line.index(match[1])
                             end = start + len(match[1])
                             entity = match[0]
                             example['mentions'].append({'entity': entity, 'location':[start, end]})
-                            print(example)
-
+                    #adding to the list
                     examples.append(example)
-                    
+
             intent['examples'] = examples
             intents.append(intent)
-
 
     if hasattr(config, 'common_outputs_directory') and hasattr(config, 'common_outputs_intents'):
         if not os.path.exists(getattr(config, 'common_outputs_directory')):

@@ -1,5 +1,17 @@
 <flower>roses</flower> are <color>red</color>
 i like <color>blue</color> and <color>green</color>
 <color>green</color>
+<empty></empty>
+<letter>a</letter>
+<plant>very tall <color>green</color> tree</plant>
+<plant><size>small</size> <color>brown</color> pine</plant>
+
 nothing like the above
 nothing like the above
+nothing <test>like</test> the above
+
+
+
+nothing like the <where>above</where>
+Hello World +ěščřžýáíé='
+Doing $some <tags> # which ~ are <not> </in> </not> correct @what?
