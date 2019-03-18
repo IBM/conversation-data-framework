@@ -19,7 +19,7 @@ before_script:
 script:
   # TEMPORARILY allow Python 3.6 to fail the ./ci/travis.sh tests
   # TODO: Once Python 3 passes the tests, revert the next lines to remove " || test ${TRAVIS_PYTHON_VERSION} == 3.6"
-  - WA_WORKSPACE_ID=${WA_WORKSPACE_ID_TEST} pytest ci -v || test ${TRAVIS_PYTHON_VERSION} == 3.6
+  - pytest ci -v || test ${TRAVIS_PYTHON_VERSION} == 3.6
 
 after_script:
   # deploy all 'outputs' folders to Artifactory

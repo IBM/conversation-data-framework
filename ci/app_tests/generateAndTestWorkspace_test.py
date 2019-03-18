@@ -39,11 +39,12 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
         BaseTestCaseCapture.createFolder(TestGenerateAndTestWorkspace.testOutputPath)
 
-    def test_basic(self):
-        ''' Tests whole WAW pipeline. Test expects that WA_USERNAME, WA_PASSWORD and WA_WORKSPACE_ID are set in environment variables.'''
+    @pytest.mark.parametrize('envVarNameUsername', 'envVarNamePassword', 'envVarNameWorkspaceId', [('WA_USERNAME', 'WA_PASSWORD', 'WA_WORKSPACE_ID_TEST')])
+    def test_basic(self, envVarNameUsername, envVarNamePassword, envVarNameWorkspaceId):
+        ''' Tests whole WAW pipeline. Test expects that envVarNameUsername, envVarNamePassword and envVarNameWorkspaceId are set in environment variables. '''
 
-        # waUsername, waPassword, waWorkspaceId
-        BaseTestCaseCapture.checkEnvironmentVariables(['WA_USERNAME', 'WA_PASSWORD', 'WA_WORKSPACE_ID'])
+        # check environment variables
+        BaseTestCaseCapture.checkEnvironmentVariables([envVarNameUsername, envVarNamePassword, envVarNameWorkspaceId])
 
         # define and create all filenames, paths and folders
         jsonDialogFilename = 'dialog.json'
@@ -121,14 +122,14 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         self.t_fun_noException(intents_json2csv.main, [jsonDecomposedIntentsPath, intentsDecomposedFolderPath, '-v'])
 
         # deploy test workspace
-        self.t_fun_noException(workspace_deploy.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-c', configTestPath, '-cn', os.environ['WA_USERNAME'], '-cp', os.environ['WA_PASSWORD'], '-cid', os.environ['WA_WORKSPACE_ID'], '-v'])
+        self.t_fun_noException(workspace_deploy.main, ['-of', self.testOutputPath, '-ow', jsonWorkspaceFilename, '-c', configTestPath, '-cn', os.environ[envVarNameUsername], '-cp', os.environ[envVarNamePassword], '-cid', os.environ[envVarNameWorkspaceId], '-v'])
 
         # test against test workspace
         with open(configTestPath, 'r') as configTest, open(configTmpPath, 'w') as configTmp:
             configTmp.write(configTest.read())
-            configTmp.write('username = ' + os.environ['WA_USERNAME'] + '\n')
-            configTmp.write('password = ' + os.environ['WA_PASSWORD'] + '\n')
-            configTmp.write('workspace_id = ' + os.environ['WA_WORKSPACE_ID'] + '\n')
+            configTmp.write('username = ' + os.environ[envVarNameUsername] + '\n')
+            configTmp.write('password = ' + os.environ[envVarNamePassword] + '\n')
+            configTmp.write('workspace_id = ' + os.environ[envVarNameWorkspaceId] + '\n')
         self.t_fun_noException(workspace_test.main, [testMoreOutputsRefPath, testMoreOutputsHypPath, '-c', configTmpPath, '-v'])
 
         # evaluate tests
