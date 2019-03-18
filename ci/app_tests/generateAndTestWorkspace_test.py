@@ -39,7 +39,7 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
         BaseTestCaseCapture.createFolder(TestGenerateAndTestWorkspace.testOutputPath)
 
-    @pytest.mark.parametrize('envVarNameUsername', 'envVarNamePassword', 'envVarNameWorkspaceId', [('WA_USERNAME', 'WA_PASSWORD', 'WA_WORKSPACE_ID_TEST')])
+    @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword, envVarNameWorkspaceId', [('WA_USERNAME', 'WA_PASSWORD', 'WA_WORKSPACE_ID_TEST')])
     def test_basic(self, envVarNameUsername, envVarNamePassword, envVarNameWorkspaceId):
         ''' Tests whole WAW pipeline. Test expects that envVarNameUsername, envVarNamePassword and envVarNameWorkspaceId are set in environment variables. '''
 
