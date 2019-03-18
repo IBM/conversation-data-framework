@@ -39,13 +39,13 @@ class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
         dialogXmlPath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(dialogFilename)[0] + '.xml'))
 
         # convert json to xml (we need to take captured.out because xml is printed to output)
-        self.t_fun_noException(dialog_json2xml.main, [dialogJsonRefPath])
+        self.t_fun_noException(dialog_json2xml.main, [[dialogJsonRefPath]])
         with open(dialogXmlPath, 'w') as f:
             f.write(self.captured.out)
 
         # convert xml back to json
-        self.t_fun_noException(dialog_xml2json.main, ['-dm', dialogXmlPath, '-of', self.testOutputPath, '-od', dialogFilename, '-s', self.dialogSchemaPath, '-c', configPath, '-v'])
+        self.t_fun_noException(dialog_xml2json.main, [['-dm', dialogXmlPath, '-of', self.testOutputPath, '-od', dialogFilename, '-s', self.dialogSchemaPath, '-c', configPath, '-v']])
 
         # compare dialogs if they are same
-        self.t_fun_exitCode(compare_dialogs.main, 0, [dialogJsonRefPath, dialogJsonHypPath])
+        self.t_fun_exitCode(compare_dialogs.main, 0, [[dialogJsonRefPath, dialogJsonHypPath]])
 
