@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import json, sys, argparse
-from wawCommons import printf, eprintf
+from logger import logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service workspace in .json format to intents json, entities json and dialog json', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -56,4 +56,4 @@ if __name__ == '__main__':
             counterexamplesJSON.append(counterexampleIntentJSON)
             counterexamplesFile.write(json.dumps(counterexamplesJSON, indent=4, ensure_ascii=False).encode('utf8'))
 
-    if VERBOSE: printf("Workspace %s was successfully decomposed\n", args.workspace)
+    if VERBOSE: logger.info("Workspace %s was successfully decomposed", args.workspace)

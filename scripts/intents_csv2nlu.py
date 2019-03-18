@@ -14,7 +14,8 @@ limitations under the License.
 """
 
 import sys, argparse, os, re
-from wawCommons import printf, eprintf, toIntentName, toEntityName
+from wawCommons import toIntentName, toEntityName
+from logger import logger
 
 def getEntities(entityDir, NAME_POLICY):
     """Retrieves entity value to entity name mapping from the directory with entity lists"""
@@ -77,13 +78,13 @@ if __name__ == '__main__':
                         line = tagEntities(line, entities)
                     if line:
                         outputFile.write("1\t" + intentName + "\t" + line)
-    if VERBOSE: printf("Intents file '%s' was successfully created\n", args.output)
+    if VERBOSE: logger.info("Intents file '%s' was successfully created", args.output)
 
     if args.list:
         with open(args.list, 'w') as intentsListFile:
             for intentName in intentNames:
                 intentsListFile.write(intentName + "\n")
-    if VERBOSE: printf("Intents list '%s' was successfully created\n", args.list)
+    if VERBOSE: logger.info("Intents list '%s' was successfully created", args.list)
 
     if args.map:
         domIntMap = {}
@@ -98,4 +99,4 @@ if __name__ == '__main__':
         with open(args.map, 'w') as intentsMapFile:
             for domainPart in domIntMap.keys():
                 intentsMapFile.write(domainPart + domIntMap[domainPart] + "\n")
-        if VERBOSE: printf("Domain-intent map '%s' was successfully created\n", args.output)
+        if VERBOSE: logger.info("Domain-intent map '%s' was successfully created", args.output)

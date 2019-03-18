@@ -15,7 +15,8 @@ limitations under the License.
 
 import sys, argparse, os, re
 from collections import defaultdict
-from wawCommons import printf, eprintf, toIntentName, toEntityName
+from wawCommons import toIntentName, toEntityName
+from logger import logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='convert NLU tsv files into domain-entity and intent-entity mappings.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -59,7 +60,7 @@ if __name__ == '__main__':
                 for entity in sorted(domEntMap[domain].keys()):
                     entities += entity + ";"
                 domEntFile.write(domain + ";" + entities + "\n")
-        if VERBOSE: printf("Domain-entity map '%s' was successfully created\n", args.domEnt)
+        if VERBOSE: logger.info("Domain-entity map '%s' was successfully created", args.domEnt)
 
     if args.domEnt:
         with open(args.intEnt, 'w') as intEntFile:
@@ -68,7 +69,7 @@ if __name__ == '__main__':
                 for entity in sorted(intEntMap[intent].keys()):
                     entities += entity + ";"
                 intEntFile.write(intent + ";" + entities + "\n")
-        if VERBOSE: printf("Intent-entity map '%s' was successfully created\n", args.domEnt)
+        if VERBOSE: logger.info("Intent-entity map '%s' was successfully created", args.domEnt)
 
     if args.list:
         with open(args.list, 'w') as listFile:
@@ -80,4 +81,4 @@ if __name__ == '__main__':
                     entityNames.append(entityName)
             for entityName in entityNames:
                 listFile.write(entityName + ";\n")
-        if VERBOSE: printf("Entities list '%s' was successfully created\n", args.list)
+        if VERBOSE: logger.info("Entities list '%s' was successfully created", args.list)

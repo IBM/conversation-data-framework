@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import sys, argparse, requests, configparser
-from wawCommons import printf, eprintf
+from logger import logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Deletes Bluemix conversation service workspace and deletes workspace id from config file.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -34,14 +34,14 @@ if __name__ == '__main__':
         workspacesUrl = config.get(conversationSection, 'url')
         version = config.get(conversationSection, 'version')
         username = config.get(conversationSection, 'username')
-        printf('WCS USERNAME: %s\n', username)
+        logger.info('WCS USERNAME: %s', username)
         password = config.get(conversationSection, 'password')
-        printf('WCS PASSWORD: %s\n', password)
+        logger.info('WCS PASSWORD: %s', password)
         workspaceId = config.get(conversationSection, 'workspace_id')
-        printf('WCS WORKSPACE_ID: %s\n', workspaceId)
+        logger.info('WCS WORKSPACE_ID: %s', workspaceId)
         workspacesUrl += '/' + workspaceId
     except IOError:
-        eprintf('ERROR: Cannot load config file %s\n', args.config)
+        logger.error('Cannot load config file %s', args.config)
         sys.exit(1)
 
     # delete workspace
@@ -51,12 +51,12 @@ if __name__ == '__main__':
 
     # check errors during upload
     if 'error' in responseJson:
-        eprintf('Cannot delete conversation workspace\nERROR: %s\n', responseJson['error'])
+        logger.error('Cannot delete conversation workspace - ERROR: %s', responseJson['error'])
         sys.exit(1)
     if response.status_code == 200:
-        printf('Workspace was successfully deleted\n')
+        logger.info('Workspace was successfully deleted')
     else:
-        eprintf('ERROR: Error while deleting workspace, status code %s\n', response.status_code)
+        logger.error('Error while deleting workspace, status code %s', response.status_code)
         sys.exit(1)
 
     # delete workspaceId from config file

@@ -14,7 +14,8 @@ limitations under the License.
 """
 
 import json, sys, argparse, os
-from wawCommons import printf, eprintf, toEntityName
+from wawCommons import toEntityName
+from logger import logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service entities in .json format to entity files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -74,4 +75,4 @@ if __name__ == '__main__':
         for systemEntity in systemEntities:
             systemEntitiesFile.write(systemEntity + "\n")
 
-    if VERBOSE: printf("Entities from file '%s' were successfully extracted\n", args.entities)
+    if VERBOSE: logger.info("Entities from file '%s' were successfully extracted", args.entities)

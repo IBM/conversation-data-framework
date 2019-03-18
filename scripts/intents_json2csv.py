@@ -14,7 +14,8 @@ limitations under the License.
 """
 
 import json, sys, argparse, os
-from wawCommons import printf, eprintf, toIntentName
+from wawCommons import toIntentName
+from logger import logger
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service intents in .json format to intent files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -45,4 +46,4 @@ if __name__ == '__main__':
             for example in examples:
                 intentFile.write((example + "\n").encode('utf8'))
 
-    if VERBOSE: printf("Intents from file '%s' were successfully extracted\n", args.intents)
+    if VERBOSE: logger.info("Intents from file '%s' were successfully extracted", args.intents)

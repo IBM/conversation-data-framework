@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import re
-from wawCommons import eprintf
+from logger import logger
 from collections import OrderedDict
 
 try:
@@ -95,7 +95,7 @@ class NodeData(object):
         if not isinstance(rawOutputs, tuple) or sum([1 if x else 0 for x in rawOutputs]) == 0:
         # @marek-danel: This checks for an empty output. Changed from length to scan
         # of all items in array. An empty output can also be an array of 3 Nones.
-            eprintf('Warning: rawOutput does not contain any data: %s\n', rawOutputs)
+            logger.warning('rawOutput does not contain any data: %s', rawOutputs)
 
         if len(rawOutputs) >= 1 and isinstance(rawOutputs[0], (str, unicode)):
             items = re.split('%%', rawOutputs[0])

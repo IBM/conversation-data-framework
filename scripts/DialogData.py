@@ -17,7 +17,8 @@ from IntentData import IntentData
 from EntityData import EntityData
 from NodeData import NodeData
 import unicodedata, unidecode
-from wawCommons import printf, eprintf, toIntentName, toEntityName
+from wawCommons import toIntentName, toEntityName
+from logger import logger
 X_PLACEHOLDER = u'&lt;x&gt;'
 
 class DialogData(object):
@@ -68,7 +69,7 @@ class DialogData(object):
             self._entities[entity_name] = EntityData()
             return self._entities[entity_name]
         else:
-            printf('INFO: Entity of given name already exists. entity_name=\n', entity_name)
+            logger.info('Entity of given name already exists. entity_name=', entity_name)
             return None
 
     def getAllEntities(self):
@@ -85,7 +86,7 @@ class DialogData(object):
             self._intents[intent_name] = IntentData()
             return self._intents[intent_name]
         else:
-            printf('INFO: Intent of given name already exists. intent_name=\n', intent_name)
+            logger.info('Intent of given name already exists. intent_name=', intent_name)
             return None
 
     def getAllIntents(self):
@@ -114,7 +115,7 @@ class DialogData(object):
             self._nodes[node_name] = NodeData()
             return self._nodes[node_name]
         else:
-            printf('INFO: Node of given name already exists. node_name=\n', node_name)
+            logger.info('Node of given name already exists. node_name=', node_name)
             return None
 
     def getNode(self, node_name):
@@ -142,9 +143,9 @@ class DialogData(object):
                 if label in self._labelsMap:
                     node_target= self._labelsMap[label]
                     nodeData._jumptoTarget= node_target
-                    printf('INFO: Resolving cross reference label:%s -> node_name:%s)\n', label, node_name)
+                    logger.info('Resolving cross reference label:%s -> node_name:%s)', label, node_name)
                 else:
-                    printf('INFO: Label:%s not resolved, expecting that label is external node_name\n', label)
+                    logger.info('Label:%s not resolved, expecting that label is external node_name', label)
 
 #   DOMAINS
 #******************************************
