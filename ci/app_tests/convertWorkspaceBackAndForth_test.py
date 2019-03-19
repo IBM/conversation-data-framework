@@ -22,7 +22,7 @@ from ..unit_utils import BaseTestCaseCapture
 
 class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
 
-    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'convertWorkspaceBackAndForth_data/')
+    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'convertWorkspaceBackAndForth_data' + os.sep)
     testOutputPath = os.path.join(dataBasePath, 'outputs')
 
     def setup_class(cls):
