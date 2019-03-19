@@ -32,7 +32,7 @@ from ..unit_utils import BaseTestCaseCapture
 
 class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
 
-    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'generateAndTestWorkspace_data/')
+    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'generateAndTestWorkspace_data' + os.sep)
     testOutputPath = os.path.join(dataBasePath, 'outputs')
 
     def setup_class(cls):
@@ -77,6 +77,9 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         testMoreOutputsRefPath = os.path.abspath(os.path.join(self.dataBasePath, 'test_more_outputs.test'))
         testMoreOutputsHypPath = os.path.abspath(os.path.join(self.testOutputPath, 'test_more_outputs.out'))
         testMoreOutputsJUnitPath = os.path.abspath(os.path.join(self.testOutputPath, 'test_more_outputs.junit.xml'))
+        testNillRefPath = os.path.abspath(os.path.join(self.dataBasePath, 'test_nill.test'))
+        testNillHypPath = os.path.abspath(os.path.join(self.testOutputPath, 'test_nill.out'))
+        testNillJUnitPath = os.path.abspath(os.path.join(self.testOutputPath, 'test_nill.junit.xml'))
         BaseTestCaseCapture.createFolders([generatedDialogsFolderPath, generatedIntentsFolderPath, generatedEntitiesFolderPath])
         BaseTestCaseCapture.createFolders([dialogsDecomposedFolderPath, entitiesDecomposedFolderPath, intentsDecomposedFolderPath])
 
@@ -131,11 +134,18 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
             configTmp.write('password = ' + os.environ[envVarNamePassword] + '\n')
             configTmp.write('workspace_id = ' + os.environ[envVarNameWorkspaceId] + '\n')
         self.t_fun_noException(workspace_test.main, [[testMoreOutputsRefPath, testMoreOutputsHypPath, '-c', configTmpPath, '-v']])
+        self.t_fun_noException(workspace_test.main, [[testNillRefPath, testNillHypPath, '-c', configTmpPath, '-v']])
 
         # evaluate tests
         self.t_fun_noException(evaluate_tests.main, [[testMoreOutputsRefPath, testMoreOutputsHypPath, '-o', testMoreOutputsJUnitPath, '-v']])
-        testMoreOutputsJUnitXmlThree = LET.parse(testMoreOutputsJUnitPath)
-        for element in testMoreOutputsJUnitXmlThree.getroot():
+        self.t_fun_noException(evaluate_tests.main, [[testNillRefPath, testNillHypPath, '-o', testNillJUnitPath, '-v']])
+        testMoreOutputsJUnitXmlTree = LET.parse(testMoreOutputsJUnitPath)
+        testNillJUnitXmlTree = LET.parse(testNillJUnitPath)
+        for element in testMoreOutputsJUnitXmlTree.getroot():
+            assert element.tag == 'testsuites'
+            assert 'failures' in element
+            assert element.get('failures') == '0'
+        for element in testNillJUnitXmlTree.getroot():
             assert element.tag == 'testsuites'
             assert 'failures' in element
             assert element.get('failures') == '0'
