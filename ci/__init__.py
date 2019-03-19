@@ -15,5 +15,5 @@ limitations under the License.
 
 import pytest
 
-# we want to have pytest assert introspection in the unit_utils
-pytest.register_assert_rewrite('ci.unit_utils')
+# we want to have pytest assert introspection in the test_utils
+pytest.register_assert_rewrite('ci.test_utils')

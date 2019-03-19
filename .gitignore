@@ -15,3 +15,4 @@ tests/data/dialog/g_dialogs
 .DS_Store
 **/.pytest_cache/
 ci/outputs.zip
+ci/unit_tests/workspace_addjson/main_data/workspace_forAddJsonTest.json

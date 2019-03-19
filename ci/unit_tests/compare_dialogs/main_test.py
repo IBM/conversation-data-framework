@@ -16,7 +16,7 @@ limitations under the License.
 import os, pytest, json
 
 import compare_dialogs
-from ...unit_utils import BaseTestCaseCapture
+from ...test_utils import BaseTestCaseCapture
 
 class TestMain(BaseTestCaseCapture):
 

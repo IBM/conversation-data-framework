@@ -28,7 +28,7 @@ import workspace_compose
 import workspace_decompose
 import workspace_deploy
 import workspace_test
-from ..unit_utils import BaseTestCaseCapture
+from ..test_utils import BaseTestCaseCapture
 
 class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
 

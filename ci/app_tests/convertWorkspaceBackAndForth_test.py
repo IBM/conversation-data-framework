@@ -18,7 +18,7 @@ import os, pytest
 import compare_dialogs
 import dialog_json2xml
 import dialog_xml2json
-from ..unit_utils import BaseTestCaseCapture
+from ..test_utils import BaseTestCaseCapture
 
 class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
 
