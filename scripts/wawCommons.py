@@ -337,7 +337,6 @@ def getRequiredParameter(config, parameterName):
         exit(1)
 
 def setLoggerConfig():
-    print(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
 
 def getScriptLogger(script):
