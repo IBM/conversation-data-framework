@@ -19,7 +19,7 @@ import logging
 from logging.config import fileConfig
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
 
 def getEntities(entityDir, NAME_POLICY):
     """Retrieves entity value to entity name mapping from the directory with entity lists"""

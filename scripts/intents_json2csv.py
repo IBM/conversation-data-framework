@@ -19,7 +19,7 @@ import logging
 from logging.config import fileConfig
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service intents in .json format to intent files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)

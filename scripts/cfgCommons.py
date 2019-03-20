@@ -17,8 +17,7 @@ import configparser, sys, os
 import logging
 from logging.config import fileConfig
 
-
-logger = logging.getLogger()
+logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
 
 class Cfg:
 

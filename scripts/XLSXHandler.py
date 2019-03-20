@@ -46,7 +46,7 @@ import logging
 from logging.config import fileConfig
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
 
 class XLSXHandler(object):
     """ Converts Excel spreadsheet forom multiple fles to an internal data representation in DialogData.

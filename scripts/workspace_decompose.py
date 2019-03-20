@@ -18,7 +18,7 @@ import logging
 from logging.config import fileConfig
 
 
-logger = logging.getLogger()
+logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
 def main(argv):
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service workspace in .json format to intents json, entities json and dialog json', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
