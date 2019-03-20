@@ -13,12 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import os
 from IntentData import IntentData
 from EntityData import EntityData
 from NodeData import NodeData
 import unicodedata, unidecode
 from wawCommons import toIntentName, toEntityName
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
+
 X_PLACEHOLDER = u'&lt;x&gt;'
 
 class DialogData(object):
@@ -69,7 +75,7 @@ class DialogData(object):
             self._entities[entity_name] = EntityData()
             return self._entities[entity_name]
         else:
-            logger.info('Entity of given name already exists. entity_name=', entity_name)
+            logger.info('Entity of given name already exists. entity_name=%s', entity_name)
             return None
 
     def getAllEntities(self):
@@ -86,7 +92,7 @@ class DialogData(object):
             self._intents[intent_name] = IntentData()
             return self._intents[intent_name]
         else:
-            logger.info('Intent of given name already exists. intent_name=', intent_name)
+            logger.info('Intent of given name already exists. intent_name=%s', intent_name)
             return None
 
     def getAllIntents(self):
@@ -115,7 +121,7 @@ class DialogData(object):
             self._nodes[node_name] = NodeData()
             return self._nodes[node_name]
         else:
-            logger.info('Node of given name already exists. node_name=', node_name)
+            logger.info('Node of given name already exists. node_name=%s', node_name)
             return None
 
     def getNode(self, node_name):

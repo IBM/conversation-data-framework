@@ -15,7 +15,10 @@ limitations under the License.
 
 import json, sys, argparse, os
 from wawCommons import toEntityName
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+logger = logging.getLogger()
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service entities in .json format to entity files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -78,5 +81,6 @@ def main(argv):
     if VERBOSE: logger.info("Entities from file '%s' were successfully extracted\n", args.entities)
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
 

@@ -18,7 +18,11 @@ limitations under the License.
 import sys, re, codecs, os, fnmatch
 import unicodedata, unidecode, requests
 import lxml.etree as Xml
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 restrictionTextNamePolicy = "NAME_POLICY can be only set to either 'soft', 'soft_verbose' or 'hard'"
 

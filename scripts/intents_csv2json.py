@@ -16,8 +16,12 @@ from __future__ import print_function
 
 import json, sys, argparse, os, glob, codecs
 from wawCommons import getFilesAtPath, toIntentName
-from logger import logger
 from cfgCommons import Cfg
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 def main(argv):
     logger.info('STARTING: ' + os.path.basename(__file__))
@@ -81,5 +85,6 @@ def main(argv):
     logger.info('FINISHING: ' + os.path.basename(__file__))
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
 

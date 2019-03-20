@@ -15,7 +15,11 @@ limitations under the License.
 
 import sys, argparse, os, re
 from wawCommons import toIntentName, toEntityName
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 def getEntities(entityDir, NAME_POLICY):
     """Retrieves entity value to entity name mapping from the directory with entity lists"""
@@ -41,6 +45,7 @@ def tagEntities(line, entities):
     return line
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     parser = argparse.ArgumentParser(description='Converts intents files to one file in NLU tsv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('intentsDir', help='directory with intents files - all of them will be included in output file')

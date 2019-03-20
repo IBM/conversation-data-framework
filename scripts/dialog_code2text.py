@@ -13,12 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json,sys,argparse, re
+import json,sys,argparse, re, os
 import lxml.etree as LET
 from wawCommons import toCode
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     parser = argparse.ArgumentParser(description='Replaces codes in text tags with sentences specified in the resource file.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('dialog', help='dialog nodes in xml format.')

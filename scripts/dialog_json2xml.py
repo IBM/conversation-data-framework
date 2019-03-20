@@ -15,7 +15,11 @@ limitations under the License.
 
 import json, sys, argparse, os
 import lxml.etree as LET
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 try:
     basestring            # Python 2
@@ -386,6 +390,5 @@ def main(argv):
         print(LET.tostring(dialogsXML, pretty_print=True, encoding='utf8'))
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
-
-

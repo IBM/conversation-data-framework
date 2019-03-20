@@ -18,7 +18,11 @@ import sys, argparse, os, codecs
 from cfgCommons import Cfg
 from XLSXHandler import XLSXHandler
 from XMLHandler import XMLHandler
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 def saveDialogDataToFileSystem(dialogData, handler, config):
     # Create directory for dialogs (if it does not exist already)
@@ -117,4 +121,5 @@ def main(argv):
     logger.info('FINISHING: ' + os.path.basename(__file__))
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])

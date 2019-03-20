@@ -16,9 +16,14 @@ from __future__ import print_function
 
 import os, sys
 import subprocess, argparse
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     logger.info('STARTING: ' + os.path.basename(__file__))
     logger.info('Using WAW directory: ' + os.path.dirname(__file__))
     scriptsPath=os.path.dirname(__file__)

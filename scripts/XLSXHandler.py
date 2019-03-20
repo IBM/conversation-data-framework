@@ -38,11 +38,15 @@ import os, re
 import unicodedata, unidecode
 from openpyxl import load_workbook
 from wawCommons import toIntentName
-from logger import logger
 from zipfile import BadZipfile
 from xml.sax.saxutils import escape
 import DialogData as Dialog
 from DialogData import DialogData
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 class XLSXHandler(object):
     """ Converts Excel spreadsheet forom multiple fles to an internal data representation in DialogData.

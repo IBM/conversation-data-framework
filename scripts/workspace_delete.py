@@ -13,10 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import sys, argparse, requests, configparser
-from logger import logger
+import sys, argparse, requests, configparser, os
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     parser = argparse.ArgumentParser(description='Deletes Bluemix conversation service workspace and deletes workspace id from config file.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('config', help='file containing section \'[conversation]\' with workspaces url=\'<url>\', conversation version=\'<version>\', username=\'<username>\', password=\'<password>\' and workspace_id=\'<workspace_id>\' ')

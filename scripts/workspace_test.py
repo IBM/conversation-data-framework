@@ -15,8 +15,12 @@ limitations under the License.
 
 import json, sys, os, time, argparse, requests, configparser
 from wawCommons import getWorkspaceId, getRequiredParameter, errorsInResponse
-from logger import logger
 from cfgCommons import Cfg
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 CHECK_MESSAGES_TIME_MAX = 5 # in seconds
 CHECK_WORKSPACE_TIME_DELAY = 1 # in seconds
@@ -114,5 +118,6 @@ def main(argv):
     logger.info('FINISHING: '+ os.path.basename(__file__))
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
 

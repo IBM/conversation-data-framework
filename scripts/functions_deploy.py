@@ -17,11 +17,16 @@ import os, json, sys, argparse, requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
 from wawCommons import getFilesAtPath
-from logger import logger
 import urllib3
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     logger.info('STARTING: '+ os.path.basename(__file__))
     parser = argparse.ArgumentParser(description='Concatenate intents, entities and dialogue jsons to Watson Conversation Service workspace .json format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')

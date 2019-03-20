@@ -15,7 +15,11 @@ limitations under the License.
 
 import json, sys, argparse, os
 from wawCommons import toIntentName
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service intents in .json format to intent files in .csv format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -49,5 +53,6 @@ def main(argv):
     if VERBOSE: logger.info("Intents from file '%s' were successfully extracted\n", args.intents)
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
 

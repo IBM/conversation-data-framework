@@ -13,8 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import configparser, sys
-from logger import logger
+import configparser, sys, os
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 class Cfg:
 

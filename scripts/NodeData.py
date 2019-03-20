@@ -13,9 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import re
-from logger import logger
+import re, os
 from collections import OrderedDict
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 try:
     unicode        # Python 2

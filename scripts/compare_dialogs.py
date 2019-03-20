@@ -13,9 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os.path, argparse
+import json, sys, os, os.path, argparse
 from deepdiff import DeepDiff
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 try:
     basestring            # Python 2
@@ -62,5 +66,6 @@ def main(argv):
         exit(1)
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
 

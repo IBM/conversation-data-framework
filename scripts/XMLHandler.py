@@ -15,7 +15,13 @@ limitations under the License.
 
 import lxml.etree as XML
 from wawCommons import toIntentName
-from logger import logger
+import os
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
+
 NAME_POLICY = 'soft'
 
 # Watson Assistant limits number of options currently to 5, we cut the end of the list of options if it is longer

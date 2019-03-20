@@ -16,10 +16,15 @@ limitations under the License.
 import sys, argparse, os
 import wawCommons
 from cfgCommons import Cfg
-from logger import logger
 import shutil
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     logger.info('STARTING: ' + os.path.basename(__file__))
     parser = argparse.ArgumentParser(description='Clean generated directories.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')

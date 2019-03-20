@@ -13,10 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os.path, argparse, codecs
+import json, sys, os, os.path, argparse, codecs
 from cfgCommons import Cfg
 from wawCommons import getRequiredParameter
-from logger import logger
+import logging
+from logging.config import fileConfig
+
+
+logger = logging.getLogger()
 
 
 try:
@@ -104,4 +108,5 @@ def main(args):
     logger.info('FINISHING: ' + os.path.basename(__file__))
 
 if __name__ == '__main__':
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
     main(sys.argv[1:])
