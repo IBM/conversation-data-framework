@@ -15,11 +15,11 @@ limitations under the License.
 
 import re, os
 from collections import OrderedDict
+from wawCommons import setLoggerConfig, getScriptLogger
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 try:
     unicode        # Python 2

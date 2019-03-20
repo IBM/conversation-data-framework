@@ -17,13 +17,13 @@ from __future__ import print_function
 import os, sys
 import subprocess, argparse
 import logging
-from logging.config import fileConfig
+from wawCommons import setLoggerConfig, getScriptLogger
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     logger.info('STARTING: ' + os.path.basename(__file__))
     logger.info('Using WAW directory: ' + os.path.dirname(__file__))
     scriptsPath=os.path.dirname(__file__)

@@ -22,8 +22,6 @@ import logging
 from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
-
 restrictionTextNamePolicy = "NAME_POLICY can be only set to either 'soft', 'soft_verbose' or 'hard'"
 
 def toCode(NAME_POLICY, code):
@@ -337,3 +335,12 @@ def getRequiredParameter(config, parameterName):
     else:
         logger.error("required '%s' parameter not defined", parameterName)
         exit(1)
+
+def setLoggerConfig():
+    print(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+
+def getScriptLogger(script):
+    return logging.getLogger("common."+os.path.splitext(os.path.basename(script))[0])
+
+logger = getScriptLogger(__file__)

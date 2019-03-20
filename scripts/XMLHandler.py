@@ -14,13 +14,12 @@ limitations under the License.
 """
 
 import lxml.etree as XML
-from wawCommons import toIntentName
+from wawCommons import setLoggerConfig, getScriptLogger,  toIntentName
 import os
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 NAME_POLICY = 'soft'
 

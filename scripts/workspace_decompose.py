@@ -14,11 +14,12 @@ limitations under the License.
 """
 
 import json, sys, argparse, os
+from wawCommons import setLoggerConfig, getScriptLogger
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
+
 def main(argv):
     parser = argparse.ArgumentParser(description='Decompose Bluemix conversation service workspace in .json format to intents json, entities json and dialog json', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
@@ -62,6 +63,6 @@ def main(argv):
     if VERBOSE: logger.info("Workspace %s was successfully decomposed", args.workspace)
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     main(sys.argv[1:])
 

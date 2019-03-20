@@ -15,15 +15,14 @@ limitations under the License.
 
 import sys, argparse, os, re
 from collections import defaultdict
-from wawCommons import toIntentName, toEntityName
+from wawCommons import setLoggerConfig, getScriptLogger,  toIntentName, toEntityName
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     parser = argparse.ArgumentParser(description='convert NLU tsv files into domain-entity and intent-entity mappings.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('entitiesDir', help='directory with entities files - all of them will be included in output list if specified')

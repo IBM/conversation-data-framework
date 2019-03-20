@@ -15,15 +15,14 @@ limitations under the License.
 
 import json,sys,argparse, re, os
 import lxml.etree as LET
-from wawCommons import toCode
+from wawCommons import setLoggerConfig, getScriptLogger,  toCode
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     parser = argparse.ArgumentParser(description='Replaces codes in text tags with sentences specified in the resource file.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('dialog', help='dialog nodes in xml format.')

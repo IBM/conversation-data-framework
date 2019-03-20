@@ -16,14 +16,14 @@ import json,sys,argparse,os,re,csv,io,copy
 import lxml.etree as LET
 from xml.sax.saxutils import unescape
 from cfgCommons import Cfg
+from wawCommons import setLoggerConfig, getScriptLogger
 import time
 import datetime
 import io
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 try:
     unicode        # Python 2
@@ -934,6 +934,6 @@ def main(argv):
     logger.info('FINISHING: ' + os.path.basename(__file__))
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     main(sys.argv[1:])
 

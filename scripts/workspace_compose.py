@@ -15,11 +15,11 @@ limitations under the License.
 import os, json, sys, argparse, codecs
 import io
 from cfgCommons import Cfg
+from wawCommons import setLoggerConfig, getScriptLogger
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 def main(argv):
     logger.info('STARTING: ' + os.path.basename(__file__))
@@ -106,6 +106,6 @@ def main(argv):
     logger.info('FINISHING: ' + os.path.basename(__file__))
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     main(sys.argv[1:])
 

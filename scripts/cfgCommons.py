@@ -14,10 +14,10 @@ limitations under the License.
 """
 
 import configparser, sys, os
+from wawCommons import setLoggerConfig, getScriptLogger
 import logging
-from logging.config import fileConfig
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 class Cfg:
 

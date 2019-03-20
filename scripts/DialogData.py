@@ -18,12 +18,11 @@ from IntentData import IntentData
 from EntityData import EntityData
 from NodeData import NodeData
 import unicodedata, unidecode
-from wawCommons import toIntentName, toEntityName
+from wawCommons import setLoggerConfig, getScriptLogger,  toIntentName, toEntityName
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 X_PLACEHOLDER = u'&lt;x&gt;'
 

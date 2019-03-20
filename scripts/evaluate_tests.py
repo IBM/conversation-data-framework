@@ -15,11 +15,11 @@ limitations under the License.
 
 import json, sys, argparse, requests, os, time, datetime, re
 import lxml.etree as LET
+from wawCommons import setLoggerConfig, getScriptLogger
 import logging
-from logging.config import fileConfig
 
 
-logger = logging.getLogger("common."+os.path.splitext(os.path.basename(__file__))[0])
+logger = getScriptLogger(__file__)
 
 try:
     basestring            # Python 2
@@ -266,6 +266,6 @@ def main(argv):
         outputFile.write(LET.tostring(outputXml, pretty_print=True, encoding='utf8'))
 
 if __name__ == '__main__':
-    fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    setLoggerConfig()
     main(sys.argv[1:])
 
