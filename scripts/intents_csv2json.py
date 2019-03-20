@@ -76,6 +76,6 @@ if __name__ == '__main__':
         with codecs.open(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_intents')), 'w', encoding='utf8') as outputFile:
             outputFile.write(json.dumps(intents, indent=4, ensure_ascii=False, encoding='utf8'))
     else:
-        logger.info(json.dumps(intents, indent=4, ensure_ascii=False, encoding='utf8'))
+        print(json.dumps(intents, indent=4, ensure_ascii=False, encoding='utf8'))
 
     logger.info('FINISHING: ' + os.path.basename(__file__))

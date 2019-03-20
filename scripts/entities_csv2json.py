@@ -120,7 +120,7 @@ if __name__ == '__main__':
             outputFile.write(json.dumps(entitiesJSON, indent=4, ensure_ascii=False, encoding='utf8'))
         if VERBOSE: logger.info("Entities json '%s' was successfully created", os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')))
     else:
-        logger.info(json.dumps(entitiesJSON, indent=4, ensure_ascii=False).encode('utf8'))
+        print(json.dumps(entitiesJSON, indent=4, ensure_ascii=False).encode('utf8'))
         if VERBOSE: logger.info("Entities json was successfully created", os.path.basename(__file__))
 
     logger.info('FINISHING: ' + os.path.basename(__file__))

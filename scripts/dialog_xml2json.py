@@ -912,7 +912,7 @@ if __name__ == '__main__':
             outputFile.write(json.dumps(dialogNodes, indent=4, ensure_ascii=False, encoding='utf8'))
         logger.info("File %s created", os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_dialogs')))
     else:
-        logger.info(json.dumps(dialogNodes, indent=4))
+        print(json.dumps(dialogNodes, indent=4))
 
     if hasattr(config, 'common_output_config'):
         config.saveConfiguration(getattr(config, 'common_output_config'))
