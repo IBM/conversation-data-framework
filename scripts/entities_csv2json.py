@@ -19,7 +19,7 @@ from cfgCommons import Cfg
 from wawCommons import toEntityName, getFilesAtPath
 from logger import logger
 
-if __name__ == '__main__':
+def main(argv):
     logger.info('STARTING: ' + os.path.basename(__file__))
     parser = argparse.ArgumentParser(description='Conversion entity csv files to .json.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('-ne', '--common_entities_nameCheck', action='append', nargs=2, help="regex and replacement for entity name check, e.g. '-' '_' for to replace hyphens for underscores or '$special' '\L' for lowercase")
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('-s', '--common_soft', required=False, help='soft name policy - change intents and entities names without error.', action='store_true', default="")
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(argv)
     config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
     NAME_POLICY = 'soft' if args.common_soft else 'hard'
@@ -121,6 +121,10 @@ if __name__ == '__main__':
         if VERBOSE: logger.info("Entities json '%s' was successfully created", os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')))
     else:
         print(json.dumps(entitiesJSON, indent=4, ensure_ascii=False).encode('utf8'))
-        if VERBOSE: logger.info("Entities json was successfully created", os.path.basename(__file__))
+        if VERBOSE: logger.info("Entities json was successfully created %s", os.path.basename(__file__))
 
     logger.info('FINISHING: ' + os.path.basename(__file__))
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+

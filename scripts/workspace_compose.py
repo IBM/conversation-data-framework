@@ -17,7 +17,7 @@ import io
 from cfgCommons import Cfg
 from logger import logger
 
-if __name__ == '__main__':
+def main(argv):
     logger.info('STARTING: ' + os.path.basename(__file__))
     parser = argparse.ArgumentParser(description='Concatenate intents, entities and dialogue jsons to Watson Conversation Service workspace .json format', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     parser.add_argument('-wl','--conversation_language', required=False, help='language of generated workspace')
     parser.add_argument('-wd','--conversation_description', required=False, help='description')
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(argv)
     config = Cfg(args)
     VERBOSE = hasattr(config, 'common_verbose')
 
@@ -100,3 +100,7 @@ if __name__ == '__main__':
         logger.info('output_workspace not specified, generating to console.')
 
     logger.info('FINISHING: ' + os.path.basename(__file__))
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+
