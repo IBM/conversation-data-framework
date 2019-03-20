@@ -378,4 +378,4 @@ if __name__ == '__main__':
             dialogFile.write(LET.tostring(dialogsXML, pretty_print=True, encoding='utf8'))
     else:
         # print to standard output
-        logger.info(LET.tostring(dialogsXML, pretty_print=True, encoding='utf8'))
+        print(LET.tostring(dialogsXML, pretty_print=True, encoding='utf8'))

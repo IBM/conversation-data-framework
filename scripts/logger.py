@@ -1,5 +1,4 @@
 import logging
-import sys
 
 # Configuration ---------------------------------------------------
 LOGLEVEL = "debug"
@@ -20,17 +19,10 @@ logger = logging.getLogger()
 
 logger.setLevel(LEVELS[LOGLEVEL])
 
-stdoutHandler = logging.StreamHandler(sys.stdout)
-stdoutHandler.setFormatter(formatter)
-stdoutHandler.setLevel(LEVELS[LOGLEVEL])
-logger.addHandler(stdoutHandler)
-
-stderrHandler = logging.StreamHandler(sys.stderr)
-stderrHandler.setLevel(logging.WARNING)
-stderrHandler.setFormatter(formatter)
-logger.addHandler(stderrHandler)
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(formatter)
+logger.addHandler(consoleHandler)
 
 fileHandler = logging.FileHandler(LOGFILE)
 fileHandler.setFormatter(formatter)
-fileHandler.setLevel(logging.INFO)
 logger.addHandler(fileHandler)
