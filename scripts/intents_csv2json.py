@@ -65,23 +65,42 @@ if __name__ == '__main__':
                 if line:
                     example = {}
                     #find all matches of contextual entities
-                    matches = re.findall(r'<(.*)>(.[^</>]*?)<\/\1>', line)
+                    matches = re.findall(r'<(.*)>([^</>]*?)<\/\1>', line)
+
                     #strip the tags
-                    line = re.sub(r'<(.*?)>', '', line)
+                    lineRemovedInnerAnnotation = line
+                    while True:
+                        lineRemovedInnerAnnotation = re.sub(r'<(.*)>([^</>]*?)<\/\1>', r'\2', lineRemovedInnerAnnotation)
+                        outerTagsMatches = re.findall(r'<(.*)>([^</>]*?)<\/\1>', lineRemovedInnerAnnotation)
+                        if len(outerTagsMatches) > 0:
+                            for match in outerTagsMatches:
+                                printf('WARNING: For the intent %s, omitting outer tag annotation: <%s> \n', intentName, match[0])
+                        else:
+                            break
+                    invalidAnnotation = re.findall(r'<.*?>', lineRemovedInnerAnnotation)
+                    if len(invalidAnnotation) > 0:
+                        for match in invalidAnnotation:
+                            printf('ERROR: Invalid annotation tag for the intent %s, %s \n', intentName, match)
+                        exit(1)
+
                     #isn't it already in example?
                     alreadyin = False
                     for prevexample in examples:
-                        if line == str(prevexample['text']):
-                            printf('Example used twice for the intent %s, omitting: %s \n', intentName, line)
+                        if lineRemovedInnerAnnotation == str(prevexample['text']):
+                            printf('WARNING: Example used twice for the intent %s, omitting: %s \n', intentName, lineRemovedInnerAnnotation)
                             alreadyin = True
-                    if alreadyin or len(line) == 0:
+                    if alreadyin:
                         continue
+                    if not lineRemovedInnerAnnotation:
+                        printf('WARNING: Omitting empty line for intent %s after annotation tags are removed: %s \n', intentName, line)
+                        continue
+
                     # locating the match
-                    example['text'] = line
+                    example['text'] = lineRemovedInnerAnnotation
                     if len(matches) > 0:
                         example['mentions'] = []
                         for match in matches:
-                            start = line.index(match[1])
+                            start = lineRemovedInnerAnnotation.index(match[1])
                             end = start + len(match[1])
                             entity = match[0]
                             example['mentions'].append({'entity': entity, 'location':[start, end]})
