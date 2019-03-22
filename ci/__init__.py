@@ -15,7 +15,7 @@ limitations under the License.
 
 import pytest
 
-from wawCommons import setLoggerConfig, getScriptLogger
+from wawCommons import setLoggerConfig
 
 # we want to have pytest assert introspection in the test_utils
 pytest.register_assert_rewrite('ci.test_utils')
