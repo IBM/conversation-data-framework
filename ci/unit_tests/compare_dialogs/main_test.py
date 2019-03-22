@@ -47,7 +47,7 @@ class TestMain(BaseTestCaseCapture):
         ''' Tests if the first file does not exist '''
         self.t_exitCodeAndErrMessage(
             1, # exit code
-            'Input dialog json \'/some/random/path\' does not exist.', # error message substring
+            'X Input dialog json \'/some/random/path\' does not exist.', # error message substring
             [[
                 '/some/random/path',
                 ''
