@@ -12,14 +12,12 @@ before_script:
   # add scripts to PYTHONPATH
   - export PYTHONPATH=./scripts:$PYTHONPATH
   # stop the build if there are Python syntax errors or undefined names
-  - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+  - flake8 . --count --select=E9,F63,F72,F82 --show-source --statistics
   # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
   - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
 script:
-  # TEMPORARILY allow Python 3.6 to fail the ./ci/travis.sh tests
-  # TODO: Once Python 3 passes the tests, revert the next lines to remove " || test ${TRAVIS_PYTHON_VERSION} == 3.6"
-  - pytest ci -v || test ${TRAVIS_PYTHON_VERSION} == 3.6
+  - pytest ci -v
 
 after_script:
   # deploy all 'outputs' folders to Artifactory
