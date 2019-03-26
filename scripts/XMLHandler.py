@@ -66,11 +66,11 @@ class XMLHandler(object):
         """ Converts output channels into XML structure. """
         outputXml = XML.Element('output')
         elementNames = {'2': 'timeout',
-                        '3': 'sound'
-                        '4': 'tts'
-                        '5': 'talking_head'
-                        '6': 'paper_head'
-                        '7': 'graphics'
+                        '3': 'sound',
+                        '4': 'tts',
+                        '5': 'talking_head',
+                        '6': 'paper_head',
+                        '7': 'graphics',
                         '8': 'url'}
         if channels:
             for channelName, channelValues in channels.items():
