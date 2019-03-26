@@ -29,7 +29,7 @@ def toCode(NAME_POLICY, code):
     restrictionTextCode = "The code can only contain uppercase letters (in Unicode), numbers, underscores, and hyphens."
     code = code.strip()
     newCode = re.sub(' ', '_', code, re.UNICODE).upper()
-    if isinstance(newCode, str):
+    if isinstance(newCode, bytes):
         newIntentSubname = newCode.decode('utf-8')
         # use unidecode.unidecode ?
         newCode = unicodedata.normalize('NFKD', newCode.decode('utf-8')).encode('ASCII', 'ignore')  # remove accents
@@ -68,7 +68,7 @@ def toIntentName(NAME_POLICY, userReplacements, *intentSubnames):
     for intentSubname in intentSubnames:
         if not intentSubname: continue
         intentSubname = intentSubname.strip()
-        uIntentSubname = intentSubname.decode('utf-8') if isinstance(intentSubname, str) else intentSubname
+        uIntentSubname = intentSubname.decode('utf-8') if isinstance(intentSubname, bytes) else intentSubname
         # apply WA restrictions (https://console.bluemix.net/docs/services/conversation/intents.html#defining-intents)
         uIntentSubnameWA = re.sub(' ;', '_', uIntentSubname, re.UNICODE) # replace space and ; by underscore
         uIntentSubnameWA = re.sub(u'[^\wÀ-ÖØ-öø-ÿĀ-ž-\.]', '', uIntentSubnameWA, re.UNICODE) # remove everything that is not unicode letter, hyphen or period
@@ -150,7 +150,7 @@ def toEntityName(NAME_POLICY, userReplacements, entityName):
     global restrictionTextNamePolicy
     restrictionTextEntityName = []
     entityName = entityName.strip()
-    uEntityName = entityName.decode('utf-8') if isinstance(entityName, str) else entityName
+    uEntityName = entityName.decode('utf-8') if isinstance(entityName, bytes) else entityName
     # apply WA restrictions (https://console.bluemix.net/docs/services/conversation/entities.html#defining-entities)
     uEntityNameWA = re.sub(' ', '_', uEntityName, re.UNICODE) # replace spaces with underscores
     uEntityNameWA = re.sub(u'[^\wÀ-ÖØ-öø-ÿĀ-ž-]', '', uEntityNameWA, re.UNICODE) # remove everything that is not unicode letter or hyphen
@@ -248,7 +248,7 @@ def absoluteFilePaths(directory, patterns=['*']):
         for f in filenames:
             if _fileMatchesPatterns(f, patterns):
                 yield os.path.abspath(os.path.join(dirpath, f))
-           
+
 def _fileMatchesPatterns(filename, patterns):
     """Helper function which checks if file matches one the patterns."""
     for pattern in patterns:
