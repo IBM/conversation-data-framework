@@ -38,7 +38,7 @@ class TestMain(BaseTestCaseCapture):
                                                'https://us-south.functions.cloud.ibm.com/api/v1/namespaces')
         cls.namespace = os.environ['CLOUD_FUNCTIONS_NAMESPACE']
         cls.urlNamespace = quote(cls.namespace)
-        cls.actionsUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/actions/'
+        cls.actionsUrl = cls.cloudFunctionsUrl + '/' + cls.urlNamespace + '/actions/'
 
     def callfunc(self, *args, **kwargs):
         functions_deploy.main(*args, **kwargs)
