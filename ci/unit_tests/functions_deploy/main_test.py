@@ -155,7 +155,7 @@ class TestMain(BaseTestCaseCapture):
         self.packageCreated = True
 
         # call function and check if sub-function from non-main file was called
-        functionCallUrl = actionsUrl + self.package + '/testFunc?blocking=true&result=true'
+        functionCallUrl = self.actionsUrl + self.package + '/testFunc?blocking=true&result=true'
 
         functionResp = requests.post(functionCallUrl, auth=(self.username, self.password),
                                      headers={'Content-Type': 'application/json', 'accept': 'application/json'},
