@@ -68,7 +68,7 @@ class TestMain(BaseTestCaseCapture):
     def test_invalidJsonFirst(self):
         ''' Tests if the first file contains invalid json '''
         self.t_raiseError(
-            ValueError, # exeption
+            ValueError, # exception
             'No JSON object could be decoded', # error message substring
             [[
                 self.noJsonPath,
@@ -79,7 +79,7 @@ class TestMain(BaseTestCaseCapture):
     def test_invalidJsonSecond(self):
         ''' Tests if the second file contains invalid json '''
         self.t_raiseError(
-            ValueError, # exeption
+            ValueError, # exception
             'No JSON object could be decoded', # error message substring
             [[
                 self.emptyDictJsonPath,
