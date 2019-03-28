@@ -29,3 +29,13 @@ For brief summary how to run scripts please see [scripts.md](/scripts.md).
 Description of T2C  and xml/csv WAW formats can be found in `doc` folder.
 
 Release notes can be found in [release_notes.md](/release_notes.md).
+
+If you want to run unit tests locally, you first need to install development dependencies from [requirements_dev.txt](/requirements_dev.txt). You can run
+```
+pip install -r requirements_dev.txt
+```
+The unit and app tests can be started with this commands (from top directory of this repository)
+```
+PYTHONPATH=./scripts:$PYTHONPATH pytest ci/unit_tests
+PYTHONPATH=./scripts:$PYTHONPATH pytest ci/app_tests
+```

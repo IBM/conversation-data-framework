@@ -14,7 +14,6 @@ limitations under the License.
 """
 
 import re
-from wawCommons import eprintf
 from collections import OrderedDict
 
 class IntentData(object):
@@ -28,4 +27,3 @@ class IntentData(object):
 
     def getExamples(self):
         return self._examples
-
