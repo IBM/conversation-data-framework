@@ -20,9 +20,10 @@ from ...test_utils import BaseTestCaseCapture
 
 class TestMain(BaseTestCaseCapture):
 
-    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data' + os.sep)
+    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     testOutputPath = os.path.join(dataBasePath, 'outputs')
 
+    outputCommonPath = os.path.abspath(os.path.join(testOutputPath, 'common.out'))
     noJsonPath = os.path.abspath(os.path.join(dataBasePath, 'no.json'))
     emptyDictJsonPath = os.path.abspath(os.path.join(dataBasePath, 'empty_dict.json'))
     testSingleInvalidJsonPath = os.path.abspath(os.path.join(dataBasePath, 'test_single_invalid.json'))
@@ -70,8 +71,6 @@ class TestMain(BaseTestCaseCapture):
     def test_args_advanced(self):
         ''' Tests cloud function sets of args '''
         for missingTestArgIndex, missingTestArg in enumerate(self.functionsTestArgs[::2]):
-            print(missingTestArg)
-            print(missingTestArgIndex)
             providedTestArgs = list(self.functionsTestArgs)
             del providedTestArgs[2 * missingTestArgIndex + 1]
             del providedTestArgs[2 * missingTestArgIndex]
@@ -110,18 +109,16 @@ class TestMain(BaseTestCaseCapture):
 
     def test_invalidJsonInput(self):
         ''' Tests if the input file contains invalid json '''
-        testArgs = [self.noJsonPath, self.noJsonPath] + self.functionsTestArgs
+        testArgs = [self.noJsonPath, self.outputCommonPath] + self.functionsTestArgs
         self.t_exitCodeAndLogMessage(
             1, # exit code
-            'CRITICAL Cannot decode json from test input file ' + 
-            '/home/tomas/Projects/watson-assistant-workbench/ci/unit_tests/functions_test/main_data/no.json, ' + 
-            'error: No JSON object could be decoded', # error message substring
+            'CRITICAL Cannot decode json from test input file', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_nonArrayJsonInput(self):
         ''' Tests if the input file contains non array json '''
-        testArgs = [self.emptyDictJsonPath, self.noJsonPath] + self.functionsTestArgs
+        testArgs = [self.emptyDictJsonPath, self.outputCommonPath] + self.functionsTestArgs
         self.t_exitCodeAndLogMessage(
             1, # exit code
             'CRITICAL Input test json is not array!', # error message substring
@@ -130,17 +127,16 @@ class TestMain(BaseTestCaseCapture):
 
     def test_testSingleInvalid(self):
         ''' Tests if the input file contains test that is not dictionary '''
-        testArgs = [self.testSingleInvalidJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Input test array element 0 is not dictionary. Each test has to be dictionary, please see doc!', # error message substring
+        testArgs = [self.testSingleInvalidJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Input test array element 0 is not dictionary. Each test has to be dictionary, please see doc!', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
 
     def test_testSingleAllInFileBadAuthentification(self):
         ''' Tests if bad authentification was provided '''
-        testArgs = [self.testSingleAllInFileJsonPath, self.noJsonPath] + self.functionsTestArgs
+        testArgs = [self.testSingleAllInFileJsonPath, self.outputCommonPath] + self.functionsTestArgs
         testArgs[testArgs.index('--cloudfunctions_password') + 1] = 'invalidPassword' # change password to something different
         self.t_exitCodeAndLogMessage(
             1, # exit code
@@ -150,10 +146,9 @@ class TestMain(BaseTestCaseCapture):
 
     def test_testSingleAllInFileBadUrl(self):
         ''' Tests if bad url was provided '''
-        testArgs = [self.testSingleAllInFileJsonPath, self.noJsonPath] + self.functionsTestArgs
+        testArgs = [self.testSingleAllInFileJsonPath, self.outputCommonPath] + self.functionsTestArgs
         testArgs[testArgs.index('--cloudfunctions_url') + 1] = 'https://us-south.functions.cloud.ibm.com/invalidUrl' # change password to something different
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
+        self.t_noExceptionAndLogMessage(
             '404 Not Found', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
@@ -165,7 +160,20 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert outputJson[0]['result'] == 0
+            assert outputJson == [
+                {
+                    "input": {
+                        "message": "test message"
+                    }, 
+                    "outputReturned": {
+                        "message": "test message"
+                    }, 
+                    "outputExpected": {
+                        "message": "test message"
+                    }, 
+                    "result": 0
+                }
+            ]
 
     def test_testSingleAllInFileFailed(self):
         ''' Tests if the single test where input and expected output is specified in file (all other params are given from command line) and returned output differs '''
@@ -174,15 +182,28 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert outputJson[0]['result'] == 1
-            assert outputJson[0]['diff'] == {
-                "values_changed": {
-                    "root['message']": {
-                        "new_value": "test message", 
-                        "old_value": "bad expected message"
-                    }
+            assert outputJson == [
+                {
+                    "input": {
+                        "message": "test message"
+                    }, 
+                    "outputReturned": {
+                        "message": "test message"
+                    }, 
+                    "outputExpected": {
+                        "message": "bad expected message"
+                    }, 
+                    "diff": {
+                        "values_changed": {
+                            "root['message']": {
+                                "new_value": "test message", 
+                                "old_value": "bad expected message"
+                            }
+                        }
+                    }, 
+                    "result": 1
                 }
-            }
+            ]
 
     def test_testSinglePayloadsOut(self):
         ''' Tests if the single test where input and expected output is specified in another file - by relative path to that file (all other params are given from command line) '''
@@ -191,78 +212,100 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert outputJson[0]['result'] == 0
+            assert outputJson == [
+                {
+                    "input": "@test_single_payload.json", 
+                    "outputReturned": {
+                        "message": "test message"
+                    }, 
+                    "outputExpected": "@test_single_payload.json", 
+                    "result": 0
+                }
+            ]
 
     def test_testSinglePayloadsOutNonExistingInput(self):
         ''' Tests if the single test where input and expected output is specified in another file - by relative path to that file but input path is wrong (all other params are given from command line) '''
-        testArgs = [self.testSinglePayloadsOutNonExistingInputJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Cannot open input payload from file: /some/random/path', # error message substring
+        testArgs = [self.testSinglePayloadsOutNonExistingInputJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Cannot open input payload from file: /some/random/path', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSinglePayloadsOutNoJsonInput(self):
         ''' Tests if the single test where input and expected output is specified in another file - by relative path to that file but input is invalid json (all other params are given from command line) '''
-        testArgs = [self.testSinglePayloadsOutNoJsonInputJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Cannot decode json from input payload from file', # error message substring
+        testArgs = [self.testSinglePayloadsOutNoJsonInputJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Cannot decode json from input payload from file', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSinglePayloadsOutNonExistingOutput(self):
         ''' Tests if the single test where input and expected output is specified in another file - by relative path to that file but expected output path is wrong (all other params are given from command line) '''
-        testArgs = [self.testSinglePayloadsOutNonExistingOutputJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Cannot open expected output payload from file: /some/random/path', # error message substring
+        testArgs = [self.testSinglePayloadsOutNonExistingOutputJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Cannot open expected output payload from file: /some/random/path', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSinglePayloadsOutNoJsonOutput(self):
         ''' Tests if the single test where input and expected output is specified in another file - by relative path to that file but expected output is invalid json (all other params are given from command line) '''
-        testArgs = [self.testSinglePayloadsOutNoJsonOutputJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Cannot decode json from expected output payload from file', # error message substring
+        testArgs = [self.testSinglePayloadsOutNoJsonOutputJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Cannot decode json from expected output payload from file', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSingleAllInFileBadType(self):
         ''' Tests if bad test type was provided '''
-        testArgs = [self.testSingleAllInFileBadTypeJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
-            'CRITICAL Error while evaluation, unknown test type: BAD TYPE', # error message substring
+        testArgs = [self.testSingleAllInFileBadTypeJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
+            'ERROR    Unknown test type: BAD TYPE', # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSingleAllInFileOverridePackage(self):
         ''' Tests if bad package was provided in test it self, the main reason is test that override works '''
-        testArgs = [self.testSingleAllInFileOverridePackageJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
+        testArgs = [self.testSingleAllInFileOverridePackageJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
             'actions/BAD_PACKAGE/echo', # log message substring
             [testArgs] # params (*args, **kwargs)
         )
 
     def test_testSingleAllInFileOverrideFunction(self):
-        ''' Tests if bad package was provided in test it self, the main reason is test that override works '''
-        testArgs = [self.testSingleAllInFileOverrideFunctionJsonPath, self.noJsonPath] + self.functionsTestArgs
-        self.t_exitCodeAndLogMessage(
-            1, # exit code
+        ''' Tests if bad function was provided in test it self, the main reason is test that override works '''
+        testArgs = [self.testSingleAllInFileOverrideFunctionJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        self.t_noExceptionAndLogMessage(
             'actions/utils/BAD_FUNCTION', # log message substring
             [testArgs] # params (*args, **kwargs)
         )
 
-    def test_testSingleMulti(self):
+    def test_testMulti(self):
         ''' Tests if there are multi tests in input file '''
         outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testMultiJsonPath))[0] + '.out.json'))
         testArgs = [self.testMultiJsonPath, outputFilePath] + self.functionsTestArgs
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert outputJson[0]['result'] == 0
-            assert outputJson[1]['result'] == 0
+            assert outputJson == [
+                {
+                    "input": "@test_single_payload.json", 
+                    "outputReturned": {
+                        "message": "test message"
+                    }, 
+                    "outputExpected": "@test_single_payload.json", 
+                    "result": 0
+                }, 
+                {
+                    "input": {
+                        "message": "test message 2"
+                    }, 
+                    "outputReturned": {
+                        "message": "test message 2"
+                    }, 
+                    "outputExpected": {
+                        "message": "test message 2"
+                    }, 
+                    "result": 0
+                }
+            ]
 

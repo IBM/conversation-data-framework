@@ -18,7 +18,6 @@ from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, g
 from cfgCommons import Cfg
 import logging
 from deepdiff import DeepDiff
-from pprint import pformat
 
 logger = getScriptLogger(__file__)
 
@@ -35,8 +34,8 @@ def main(argv):
             "type": "EXACT_MATCH", # OPTIONAL (DEFAULT = EXACT_MATCH, OPTIONS = [EXACT_MATCH])
             "cf_package": "<CLOUD FUNCTIONS PACKAGE NAME>", # OPTIONAL (could be provided directly to script, at least one has to be specified, test level overrides global script one)
             "cf_function": "<CLOUD FUNCTIONS SPECIFIC FUNCTION TO BE TESTED>", # --||--
-            "input": <OBJECT> | <@RELATIVE/PATH/TO/FILE>, # payload to be send to CF (could be specified as a relative path to the file that cotnains json file, e.g. "input": "@inputs/test_example_1.json")
-            "outputExpected": <OBJECT> | <@RELATIVE/PATH/TO/FILE>, # expected payload to be return from CF (--||--)
+            "input": <OBJECT> | <@PATH/TO/FILE>, # payload to be send to CF (could be specified as a relative or absolute path to the file that contains json file, e.g. "input": "@inputs/test_example_1.json")
+            "outputExpected": <OBJECT> | <@PATH/TO/FILE>, # expected payload to be return from CF (--||--)
         },
         {
             "name": "test example 2",
@@ -112,46 +111,53 @@ def main(argv):
     testCounter = 0
     for test in inputJson:
         if not isinstance(test, dict):
-            logger.critical('Input test array element %d is not dictionary. Each test has to be dictionary, please see doc!', testCounter)
-            sys.exit(1)
+            logger.error('Input test array element %d is not dictionary. Each test has to be dictionary, please see doc!', testCounter)
+            continue
         logger.info('Test number: %d, name: %s', testCounter, (test['name'] if 'name' in test else '-'))
-        testUrl = url + ('' if url.endswith('/') else '/') + namespace + '/actions/' + (test['cf_package'] if 'cf_package' in test else package) + '/' + (test['cf_function'] if 'cf_function' in test else function)
-        testUrl += '?blocking=true&result=true'
+        testUrl = \
+            url + ('' if url.endswith('/') else '/') + \
+            namespace + '/actions/' + (test['cf_package'] if 'cf_package' in test else package) + '/' + \
+            (test['cf_function'] if 'cf_function' in test else function) + \
+            '?blocking=true&result=true'
         logger.info('Tested function url: %s', testUrl)
 
         # load test input payload json
         testInputJson = test['input']
-        if isinstance(testInputJson, basestring) and testInputJson.startswith('@'):
-            testInputRelativePath = testInputJson[1:]
-            testInputPath = os.path.join(os.path.dirname(args.inputFileName), testInputRelativePath)
-            logger.debug('Loading input payload from file: %s', testInputPath)
-            try:
-                inputFile = open(testInputPath, 'r')
-            except IOError:
-                logger.critical('Cannot open input payload from file: %s', testInputPath)
-                sys.exit(1)
-            try:
-                testInputJson = json.load(inputFile)
-            except ValueError as e:
-                logger.critical('Cannot decode json from input payload from file %s, error: %s', testInputPath, str(e))
-                sys.exit(1)
+        try:
+            if testInputJson.startswith('@'): 
+                testInputPath = os.path.join(os.path.dirname(args.inputFileName), testInputJson[1:])
+                logger.debug('Loading input payload from file: %s', testInputPath)
+                try:
+                    inputFile = open(testInputPath, 'r')
+                except IOError:
+                    logger.error('Cannot open input payload from file: %s', testInputPath)
+                    continue
+                try:
+                    testInputJson = json.load(inputFile)
+                except ValueError as e:
+                    logger.error('Cannot decode json from input payload from file %s, error: %s', testInputPath, str(e))
+                    continue
+        except:
+            logger.debug('Input payload provided inside the test')
 
         # load test expected output payload json
         testOutputExpectedJson = test['outputExpected']
-        if isinstance(testOutputExpectedJson, basestring) and testOutputExpectedJson.startswith('@'):
-            testOutputExpectedRelativePath = testOutputExpectedJson[1:]
-            testOutputExpectedPath = os.path.join(os.path.dirname(args.inputFileName), testOutputExpectedRelativePath)
-            logger.debug('Loading expected output payload from file: %s', testOutputExpectedPath)
-            try:
-                outputExpectedFile = open(testOutputExpectedPath, 'r')
-            except IOError:
-                logger.critical('Cannot open expected output payload from file: %s', testOutputExpectedPath)
-                sys.exit(1)
-            try:
-                testOutputExpectedJson = json.load(outputExpectedFile)
-            except ValueError as e:
-                logger.critical('Cannot decode json from expected output payload from file %s, error: %s', testOutputExpectedPath, str(e))
-                sys.exit(1)
+        try:
+            if testOutputExpectedJson.startswith('@'):
+                testOutputExpectedPath = os.path.join(os.path.dirname(args.inputFileName), testOutputExpectedJson[1:])
+                logger.debug('Loading expected output payload from file: %s', testOutputExpectedPath)
+                try:
+                    outputExpectedFile = open(testOutputExpectedPath, 'r')
+                except IOError:
+                    logger.error('Cannot open expected output payload from file: %s', testOutputExpectedPath)
+                    continue
+                try:
+                    testOutputExpectedJson = json.load(outputExpectedFile)
+                except ValueError as e:
+                    logger.error('Cannot decode json from expected output payload from file %s, error: %s', testOutputExpectedPath, str(e))
+                    continue
+        except:
+            logger.debug('Expected output payload provided inside the test')
 
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
@@ -159,15 +165,15 @@ def main(argv):
             testUrl, 
             auth=(username, password), 
             headers={'Content-Type': 'application/json'}, 
-            data=json.dumps(testInputJson, indent=4, ensure_ascii=False).encode('utf8'))
+            data=json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
 
         responseContentType = response.headers.get('content-type')
         if responseContentType != 'application/json':
-            logger.critical('Error while testing, response content type is not json, content type: %s, response:\n%s', responseContentType, response.text)
-            sys.exit(1)
+            logger.error('Response content type is not json, content type: %s, response:\n%s', responseContentType, response.text)
+            continue
 
         # check status
-        if response.status_code in [200, 202]:
+        if response.status_code == 200:
             testOutputReturnedJson = response.json()
             logger.debug('Received output json: %s', json.dumps(testOutputReturnedJson, ensure_ascii=False).encode('utf8'))
             test['outputReturned'] = testOutputReturnedJson
@@ -182,10 +188,20 @@ def main(argv):
                     test['result'] = 1
                     test['diff'] = testResultJson
             else:
-                logger.critical('Error while evaluation, unknown test type: %s', test['type'])
-                sys.exit(1)
+                logger.error('Unknown test type: %s', test['type'])
+        elif response.status_code in [202, 403, 404, 408]:
+            # 202 Accepted activation request (should not happen while sending 'blocking=true&result=true')
+            # 403 Forbidden (could be just for specific package or function)
+            # 404 Not Found (action or package could be incorrectly specified for given test)
+            # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
+            # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
+            # => Could be issue just for given test, so we don't want to stop whole testing.
+            logger.error('Unexpected response status: %d, response: %s', response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
         else:
-            logger.critical('Error while testing, response status: %d, response: %s', response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
+            # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
+            # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
+            # => We don't want to continue with testing.
+            logger.critical('Unexpected response status (cannot continue with testing): %d, response: %s', response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
             sys.exit(1)
 
         testCounter += 1
