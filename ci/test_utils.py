@@ -97,11 +97,11 @@ class BaseTestCaseCapture(object):
         ''' (Generic) Runs function with given arguments and tests exit code and message of given type '''
         self.t_fun_generic(function, SystemExit, str(exitCode), messageType, message, args, kwargs)
 
-    def t_raiseError(self, exceptionType, exceptionValue, args=[], kwargs={}):
+    def t_raiseException(self, exceptionType, exceptionValue, args=[], kwargs={}):
         ''' (Generic) Runs predefined function (callfunc) with given arguments and tests exception '''
-        self.t_fun_raiseError(self.callfunc, exceptionType, exceptionValue, args, kwargs)
+        self.t_fun_raiseException(self.callfunc, exceptionType, exceptionValue, args, kwargs)
 
-    def t_fun_raiseError(self, function, exceptionType, exceptionValue, args=[], kwargs={}):
+    def t_fun_raiseException(self, function, exceptionType, exceptionValue, args=[], kwargs={}):
         ''' (Generic) Runs function with given arguments and tests exception '''
         self.t_fun_generic(function, exceptionType, exceptionValue, None, None, args, kwargs)
 

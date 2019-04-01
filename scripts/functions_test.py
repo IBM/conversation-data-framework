@@ -123,6 +123,7 @@ def main(argv):
 
         # load test input payload json
         testInputJson = test['input']
+        testInputPath = None
         try:
             if testInputJson.startswith('@'): 
                 testInputPath = os.path.join(os.path.dirname(args.inputFileName), testInputJson[1:])
@@ -138,10 +139,14 @@ def main(argv):
                     logger.error('Cannot decode json from input payload from file %s, error: %s', testInputPath, str(e))
                     continue
         except:
+            pass
+
+        if not testInputPath:
             logger.debug('Input payload provided inside the test')
 
         # load test expected output payload json
         testOutputExpectedJson = test['outputExpected']
+        testOutputExpectedPath = None
         try:
             if testOutputExpectedJson.startswith('@'):
                 testOutputExpectedPath = os.path.join(os.path.dirname(args.inputFileName), testOutputExpectedJson[1:])
@@ -157,6 +162,9 @@ def main(argv):
                     logger.error('Cannot decode json from expected output payload from file %s, error: %s', testOutputExpectedPath, str(e))
                     continue
         except:
+            pass
+
+        if not testOutputExpectedPath:
             logger.debug('Expected output payload provided inside the test')
 
         # call CF
