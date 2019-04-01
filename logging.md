@@ -13,75 +13,8 @@ Default logging level can be seen in the following table. The numeric value corr
 | DEBUG    | 10    |
 | NOTSET   | 0     |
 
-## Logging a message
-To log a message in a WAW script, first import logging and call:
-
-```python
-import logging
-```
-
-and then get the logger instance:
-
-```python
-logger = getScriptLogger(__file__)
-```
-
-The `__file__` argument is needed to be able to set special logger for this concrete script. Instructions to do so will be shown below.
-
-If the script is the first one to get called (it's not used as a module), you also need to load the configuration for the logger:
-
-```python
-if __name__ == '__main__':
-    setLoggerConfig()
-```
-
-This loads the `logging_config.ini` file and sets the loggers.
-
-Now you can log a message with desired log level:
-```
-logger.debug('This is a debug message.')
-logger.info('This is an informational message.')
-logger.warning('This is a warning.')
-logger.error('This is an errror message.')
-logger.critical('Something really bad happened.')
-```
-
 ## Logger configuration
-You can configure the loggers in the `logging_config.ini` file. A basic configuration may look like this:
-```ini
-[loggers]
-keys=root,common
-
-[handlers]
-keys=defaultFileHandler,defaultConsoleHandler
-
-[formatters]
-keys=form
-
-[logger_root]
-level=INFO
-handlers=defaultFileHandler,defaultConsoleHandler
-
-[logger_common]
-handlers=
-qualname=common
-
-[handler_defaultFileHandler]
-class=FileHandler
-level=DEBUG
-formatter=form
-args=('log.log',)
-
-[handler_defaultConsoleHandler]
-class=StreamHandler
-level=DEBUG
-formatter=form
-args=()
-
-[formatter_form]
-format=%(asctime)s %(filename)-22s %(levelname)-8s %(message)s
-datefmt=
-```
+A basic configuration can be seen in  `logging_config.ini` file.
 
 An important thing to note here is that there is a _root_ logger, which listens to ALL messages regardles of what the calling script is, but also a _common_ logger, which is needed to be able to set up different loggers for concrete scripts in an unified way. Its sole purpose is to connect all the loggers under one parent logger and then upon getting the logger check, whether or not there is a logger called `common.[script name]`. If there is no such logger, only the _root_ logger is used. This is not possible to do with the _root_ logger only.
 
@@ -130,6 +63,40 @@ A logger that logs separately all the errors from `cfgCommons.py` to a file call
  level=ERROR
  args=('customLog.log',)
 ```
+
+## Logging a message
+To log a message in a WAW script, first import logging and call:
+
+```python
+import logging
+```
+
+and then get the logger instance:
+
+```python
+logger = getScriptLogger(__file__)
+```
+
+The `__file__` argument is needed to be able to set special logger for this concrete script. Instructions to do so will be shown below.
+
+If the script is the first one to get called (it's not used as a module), you also need to load the configuration for the logger:
+
+```python
+if __name__ == '__main__':
+    setLoggerConfig()
+```
+
+This loads the `logging_config.ini` file and sets the loggers.
+
+Now you can log a message with desired log level:
+```
+logger.debug('This is a debug message.')
+logger.info('This is an informational message.')
+logger.warning('This is a warning.')
+logger.error('This is an errror message.')
+logger.critical('Something really bad happened.')
+```
+
 
 ## More information
 For more information, refer to the [official documentation](https://docs.python.org/3/library/logging.html).
