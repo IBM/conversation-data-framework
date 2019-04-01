@@ -29,9 +29,9 @@ To create custom logger for a single script:
 1) Create a logger with any name you want, but preferably according to the script name (e.g. 'cfgCommons'), create custom handlers
 2) Set-up the logger:
     ```ini
-    [logger_(SCRIPT_NAME)]
-    qualname=common.(SCRIPT NAME)
-    handlers=(CUSTOM HANDLERS)
+    [logger_<SCRIPT_NAME>]
+    qualname=common.<SCRIPT_NAME>
+    handlers=<CUSTOM_HANDLERS>
     ```
     _qualname_ - must be set according to the script name without '.py' suffix, note the 'common' prefix which is needed to be able to use the root logger even without creating a logger for each script.
 
