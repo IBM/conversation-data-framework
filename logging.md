@@ -14,7 +14,7 @@ Default logging level can be seen in the following table. The numeric value corr
 | NOTSET   | 0     |
 
 ## Logger configuration
-A basic configuration can be seen in  `logging_config.ini` file.
+A basic configuration can be seen in [`logging_config.ini`](/scripts/logging_config.ini) file.
 
 An important thing to note here is that there is a _root_ logger, which listens to ALL messages regardles of what the calling script is, but also a _common_ logger, which is needed to be able to set up different loggers for concrete scripts in an unified way. Its sole purpose is to connect all the loggers under one parent logger and then upon getting the logger check, whether or not there is a logger called `common.[script name]`. If there is no such logger, only the _root_ logger is used. This is not possible to do with the _root_ logger only.
 
