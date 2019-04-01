@@ -19,7 +19,7 @@ A basic configuration can be seen in [`logging_config.ini`](/scripts/logging_con
 An important thing to note here is that there is a _root_ logger, which listens to ALL messages regardles of what the calling script is, but also a _common_ logger, which is needed to be able to set up different loggers for concrete scripts in an unified way. Its sole purpose is to connect all the loggers under one parent logger and then upon getting the logger check, whether or not there is a logger called `common.[script name]`. If there is no such logger, only the _root_ logger is used. This is not possible to do with the _root_ logger only.
 
 ### Setting log level
-The _root_ logger has two handlers - _defaultFileHandler_ and _defaultConsoleHandler_. You can set the log level in the _root_ logger settings, which **limits**  the log level for ALL messages. That means, that if _root_ logger's level is set to WARNING, messages of log level DEBUG and INFO will not get passed to any if the logger's handlers. 
+The _root_ logger has two handlers - _defaultFileHandler_ and _defaultConsoleHandler_. You can set the log level in the _root_ logger settings, which **limits**  the log level for ALL messages. That means, that if _root_ logger's level is set to WARNING, messages of log level DEBUG and INFO will not get passed to any of the logger's handlers. 
 
 You can also set the _root_ level to UNSET and set the handlers individually. For example, you might want to output messages of all levels to a log file and show only errors and criticals in the console. For that you need to set the _root_ logger level to UNSET or DEBUG, _defaultFileHandler_ to DEBUG and _defaultConsoleHandler_ to ERROR.
 
