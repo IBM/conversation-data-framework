@@ -29,7 +29,8 @@ class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
         BaseTestCaseCapture.createFolder(TestConvertWorkspaceBackAndForth.testOutputPath)
 
-    @pytest.mark.parametrize('dialogFilename', ['dialog_1.json', 'dialog_2.json', 'dialog_3.json'])
+   #  @pytest.mark.parametrize('dialogFilename', ['dialog_1.json', 'dialog_2.json', 'dialog_3.json'])
+    @pytest.mark.parametrize('dialogFilename', ['dialog_1.json'])
     def test_basic(self, dialogFilename):
         ''' Tests if json converted to xml and back is same as source. '''
         # prepare paths

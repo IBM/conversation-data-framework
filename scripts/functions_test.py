@@ -69,6 +69,7 @@ def main(argv):
     parser.add_argument('--cloudfunctions_namespace', required=False, help='cloud functions namespace')
     parser.add_argument('--cloudfunctions_package', required=False, help='cloud functions package name')
     parser.add_argument('--cloudfunctions_function', required=False, help='cloud functions specific function to be tested')
+    parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
     parser.add_argument('--cloudfunctions_username', required=False, help='cloud functions user name')
     parser.add_argument('--cloudfunctions_password', required=False, help='cloud functions password')
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
@@ -80,10 +81,23 @@ def main(argv):
 
     url = getRequiredParameter(config, 'cloudfunctions_url')
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
-    username = getRequiredParameter(config, 'cloudfunctions_username')
-    password = getRequiredParameter(config, 'cloudfunctions_password')
+    apikey = getOptionalParameter(config, 'cloudfunctions_apikey')
+    username = getOptionalParameter(config, 'cloudfunctions_username')
+    password = getOptionalParameter(config, 'cloudfunctions_password')
     package = getOptionalParameter(config, 'cloudfunctions_package')
     function = getOptionalParameter(config, 'cloudfunctions_function')
+
+    if apikey:
+        apikeySplit = apikey.split(':')
+        if len(apikeySplit) == 2:
+            username = apikeySplit[0]
+            password = apikeySplit[1]
+        else:
+            logger.critical('Cloud Functions apikey has invalid format (valid format is: \'username:password\')')
+            sys.exit(1)
+    if not (username and password):
+        logger.critical('Missing Cloud Functions credentials, you have to provide \'cloudfunctions_apikey\' or \'cloudfunctions_username\' with \'cloudfunctions_password\'')
+        sys.exit(1)
 
     try:
         inputFile = open(args.inputFileName, 'r')

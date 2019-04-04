@@ -16,7 +16,7 @@ limitations under the License.
 import os, json, sys, argparse, requests, zipfile, base64
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter
+from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter
 import urllib3
 import logging
 
@@ -57,6 +57,7 @@ def main(args):
     parser.add_argument('-c', '--common_configFilePaths', help="configuaration file", action='append')
     parser.add_argument('--common_functions', required=False, help="directory where the cloud functions are located")
     parser.add_argument('--cloudfunctions_namespace', required=False, help="cloud functions namespace")
+    parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
     parser.add_argument('--cloudfunctions_username', required=False, help="cloud functions user name")
     parser.add_argument('--cloudfunctions_password', required=False, help="cloud functions password")
     parser.add_argument('--cloudfunctions_package', required=False, help="cloud functions package name")
@@ -71,11 +72,24 @@ def main(args):
     VERBOSE = parsedArgs.verbose
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
-    username = getRequiredParameter(config, 'cloudfunctions_username')
-    password = getRequiredParameter(config, 'cloudfunctions_password')
+    apikey = getOptionalParameter(config, 'cloudfunctions_apikey')
+    username = getOptionalParameter(config, 'cloudfunctions_username')
+    password = getOptionalParameter(config, 'cloudfunctions_password')
     package = getRequiredParameter(config, 'cloudfunctions_package')
     namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
+
+    if apikey:
+        apikeySplit = apikey.split(':')
+        if len(apikeySplit) == 2:
+            username = apikeySplit[0]
+            password = apikeySplit[1]
+        else:
+            logger.critical('Cloud Functions apikey has invalid format (valid format is: \'username:password\')')
+            sys.exit(1)
+    if not (username and password):
+        logger.critical('Missing Cloud Functions credentials, you have to provide \'cloudfunctions_apikey\' or \'cloudfunctions_username\' with \'cloudfunctions_password\'')
+        sys.exit(1)
 
     runtimeVersions = {}
     for ext, runtime in list(interpretedRuntimes.items()) + list(compiledRuntimes.items()):

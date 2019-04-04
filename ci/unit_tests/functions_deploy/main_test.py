@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, requests, shutil, unittest, uuid, zipfile
+import json, os, pytest, requests, shutil, unittest, uuid, zipfile
 
 import functions_deploy
 from ...test_utils import BaseTestCaseCapture
@@ -30,6 +30,7 @@ class TestMain(BaseTestCaseCapture):
                                                        'CLOUD_FUNCTIONS_NAMESPACE'])
         cls.username = os.environ['CLOUD_FUNCTIONS_USERNAME']
         cls.password = os.environ['CLOUD_FUNCTIONS_PASSWORD']
+        cls.apikey = cls.username + ':' + cls.password
         cls.cloudFunctionsUrl = os.environ.get('CLOUD_FUNCTIONS_URL',
                                                'https://us-south.functions.cloud.ibm.com/api/v1/namespaces')
         cls.namespace = os.environ['CLOUD_FUNCTIONS_NAMESPACE']
@@ -76,14 +77,19 @@ class TestMain(BaseTestCaseCapture):
             packageDelResp = requests.delete(packageDelUrl, auth=(self.username, self.password))
             assert packageDelResp.status_code == 200
 
-
-    def test_functionsUploadFromDirectory(self):
+    @pytest.mark.parametrize('useApikey', [True, False])
+    def test_functionsUploadFromDirectory(self, useApikey):
         """Tests if functions_deploy uploads all supported functions from given directory."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
                   '--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password,
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
         # upload functions
         self.t_noException([params])
