@@ -359,7 +359,7 @@ def getParametersCombination(config, *args):
     dict
         Parameters combination with values
     """
-    parametersCombinationTuple = ()
+    parametersCombinationMap = {}
 
     if not config:
         logger.critical("config is null")
@@ -372,46 +372,42 @@ def getParametersCombination(config, *args):
     for arg in args:
         if isinstance(arg, str):
             if hasattr(config, arg) and getattr(config, arg):
-                if parametersCombinationTuple:
+                if parametersCombinationMap:
                     logger.critical("only one combination of parameters can be set, " +
                         "combination already set: '%s', " + 
-                        "another argument set: '%s'", str(list(parametersCombinationTuple)), arg)
+                        "another argument set: '%s'", str(list(parametersCombinationMap)), arg)
                     exit(1)
-                parametersCombinationTuple = (arg,) # this commna is needed to create tuple
+                parametersCombinationMap[arg] = getattr(config, arg)
         elif isinstance(arg, list):
-            parametersCombinationTupleCurrent = ()
+            parametersCombinationMapCurrent = {}
             parametersCombinationMissing = []
             for parameterName in arg:
                 if hasattr(config, parameterName) and getattr(config, parameterName):
-                    if parametersCombinationTuple:
+                    if parametersCombinationMap:
                         logger.critical("only one combination of parameters can be set, " +
                             "combination already set: '%s', " + 
-                            "another argument set: '%s'", str(list(parametersCombinationTuple)), parameterName)
+                            "another argument set: '%s'", str(list(parametersCombinationMap)), parameterName)
                         exit(1)
-                    parametersCombinationTupleCurrent += (parameterName,) # this commna is needed to be able to concatenate tuples
+                    parametersCombinationMapCurrent[parameterName] = getattr(config, parameterName)
                 else:
                     parametersCombinationMissing.append(parameterName)
-            if parametersCombinationTupleCurrent:
-                if len(parametersCombinationTupleCurrent) != len(arg):
+            if parametersCombinationMapCurrent:
+                if len(parametersCombinationMapCurrent) != len(arg):
                     logger.critical("part of parameters combination is set, but some params are missing, " +
                         "combination: '%s', " + 
                         "missing parameters: '%s'", str(arg), str(parametersCombinationMissing))
                     exit(1)
-                parametersCombinationTuple = parametersCombinationTupleCurrent
+                parametersCombinationMap = parametersCombinationMapCurrent
         else:
             logger.critical("arguments could be only parameter names or array of parameters names, arg type '%s'", str(type(arg).__name__))
             exit(1)
 
-    if not parametersCombinationTuple:
+    if not parametersCombinationMap:
         logger.critical("no parameters combination is set in configuration, " + 
             "you have to provide exactly one of those combinations of parameters:'")
         for index, arg in enumerate(args):
             logger.critical("Combination %d: \'%s\'", index, str(arg))
         exit(1)
-
-    parametersCombinationMap = {}
-    for parameterName in parametersCombinationTuple:
-        parametersCombinationMap[parameterName] = getattr(config, parameterName)
     
     return parametersCombinationMap
 
