@@ -82,7 +82,6 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_deploy uploads all supported functions from given directory."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                  '--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password,
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
@@ -175,6 +174,7 @@ class TestMain(BaseTestCaseCapture):
 
         completeArgsList = ['--cloudfunctions_username', self.username,
                             '--cloudfunctions_password', self.password,
+                            '--cloudfunctions_apikey', self.password + ":" + self.username,
                             '--cloudfunctions_package', self.package,
                             '--cloudfunctions_namespace', self.urlNamespace,
                             '--cloudfunctions_url', self.cloudFunctionsUrl,
@@ -190,4 +190,14 @@ class TestMain(BaseTestCaseCapture):
                 if i != argIndex and i != (argIndex + 1):
                     argsListWithoutOne.append(completeArgsList[i])
 
-            self.t_exitCodeAndLogMessage(1, paramName, [argsListWithoutOne])
+            if paramName in ['cloudfunctions_username', 'cloudfunctions_password']:
+                message = 'combination already set: \'[\'cloudfunctions_apikey\']\''
+            elif paramName in ['cloudfunctions_apikey']:
+                # we have to remove username and password (if not it would be valid combination of parameters)
+                argsListWithoutOne = argsListWithoutOne[4:] # remove username and password (leave just apikey)
+                message = 'Combination 0: \'cloudfunctions_apikey\''
+            else:
+                # we have to remove username and password (if not then it would always return error that both auth types are provided)
+                argsListWithoutOne = argsListWithoutOne[4:] # remove username and password (leave just apikey)
+                message = 'required \'' + paramName + '\' parameter not defined'
+            self.t_exitCodeAndLogMessage(1, message, [argsListWithoutOne])

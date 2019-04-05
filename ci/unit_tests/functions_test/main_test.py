@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, pytest, json, pytest
+import os, json, pytest
 
 import functions_test
 from ...test_utils import BaseTestCaseCapture
@@ -85,7 +85,7 @@ class TestMain(BaseTestCaseCapture):
             elif missingTestArg in ['--cloudfunctions_username', '--cloudfunctions_password']:
                 self.t_exitCodeAndLogMessage(
                     1, # exit code
-                    'CRITICAL Missing Cloud Functions credentials', # critical message substring
+                    'CRITICAL part of parameters combination is set, but some params are missing', # critical message substring
                     [providedTestArgs] # params (*args, **kwargs)
                 )
             else:

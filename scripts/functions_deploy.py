@@ -16,7 +16,7 @@ limitations under the License.
 import os, json, sys, argparse, requests, zipfile, base64
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter
+from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword
 import urllib3
 import logging
 
@@ -72,24 +72,16 @@ def main(args):
     VERBOSE = parsedArgs.verbose
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
-    apikey = getOptionalParameter(config, 'cloudfunctions_apikey')
-    username = getOptionalParameter(config, 'cloudfunctions_username')
-    password = getOptionalParameter(config, 'cloudfunctions_password')
+    auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     package = getRequiredParameter(config, 'cloudfunctions_package')
     namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
 
-    if apikey:
-        apikeySplit = apikey.split(':')
-        if len(apikeySplit) == 2:
-            username = apikeySplit[0]
-            password = apikeySplit[1]
-        else:
-            logger.critical('Cloud Functions apikey has invalid format (valid format is: \'username:password\')')
-            sys.exit(1)
-    if not (username and password):
-        logger.critical('Missing Cloud Functions credentials, you have to provide \'cloudfunctions_apikey\' or \'cloudfunctions_username\' with \'cloudfunctions_password\'')
-        sys.exit(1)
+    if 'cloudfunctions_apikey' in auth:
+         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
+    else:
+        username = auth['cloudfunctions_username']
+        password = auth['cloudfunctions_password']
 
     runtimeVersions = {}
     for ext, runtime in list(interpretedRuntimes.items()) + list(compiledRuntimes.items()):
