@@ -371,7 +371,7 @@ def getParametersCombination(config, *args):
 
     for arg in args:
         if isinstance(arg, str):
-            if hasattr(config, arg) and getattr(config, arg):
+            if getattr(config, arg, None):
                 if parametersCombinationMap:
                     logger.critical("only one combination of parameters can be set, " +
                         "combination already set: '%s', " + 
@@ -382,7 +382,7 @@ def getParametersCombination(config, *args):
             parametersCombinationMapCurrent = {}
             parametersCombinationMissing = []
             for parameterName in arg:
-                if hasattr(config, parameterName) and getattr(config, parameterName):
+                if getattr(config, parameterName, None):
                     if parametersCombinationMap:
                         logger.critical("only one combination of parameters can be set, " +
                             "combination already set: '%s', " + 
@@ -418,11 +418,11 @@ def getScriptLogger(script):
     return logging.getLogger("common."+os.path.splitext(os.path.basename(script))[0])
 
 def convertApikeyToUsernameAndPassword(apikey):
-    apikeySplit = apikey.split(':')
-    if len(apikeySplit) == 2:
-        return (apikeySplit[0], apikeySplit[1])
-    else:
-        logger.critical('Apikey has invalid format (valid format is: \'username:password\')')
-        sys.exit(1)
+    if isinstance(apikey, str):
+        apikeySplit = apikey.split(':')
+        if len(apikeySplit) == 2:
+            return (apikeySplit[0], apikeySplit[1])
+    logger.critical('Apikey has invalid format (valid format is string: \'username:password\')')
+    sys.exit(1)
 
 logger = getScriptLogger(__file__)

@@ -86,7 +86,7 @@ def main(argv):
     function = getOptionalParameter(config, 'cloudfunctions_function')
 
     if 'cloudfunctions_apikey' in auth:
-         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
+        username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
     else:
         username = auth['cloudfunctions_username']
         password = auth['cloudfunctions_password']

@@ -78,7 +78,7 @@ def main(args):
     functionDir = getRequiredParameter(config, 'common_functions')
 
     if 'cloudfunctions_apikey' in auth:
-         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
+        username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
     else:
         username = auth['cloudfunctions_username']
         password = auth['cloudfunctions_password']
