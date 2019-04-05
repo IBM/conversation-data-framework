@@ -418,6 +418,20 @@ def getScriptLogger(script):
     return logging.getLogger("common."+os.path.splitext(os.path.basename(script))[0])
 
 def convertApikeyToUsernameAndPassword(apikey):
+    """
+    Obtains 'apikey' string that is in format \'username:password\' and returns
+    tuple (username, password). 
+
+    Parameters
+    ----------
+    apikey : string
+        Apikey in format \'username:password\'
+
+    Returns
+    -------
+    tuple : (username, password)
+        Username and password parsed from 'apikey'
+    """
     if isinstance(apikey, str):
         apikeySplit = apikey.split(':')
         if len(apikeySplit) == 2:
