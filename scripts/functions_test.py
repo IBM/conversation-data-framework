@@ -14,7 +14,7 @@ limitations under the License.
 '''
 
 import json, sys, os, argparse, requests, configparser
-from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword
+from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, replaceValue
 from cfgCommons import Cfg
 import logging
 from deepdiff import DeepDiff
@@ -73,6 +73,14 @@ def main(argv):
     parser.add_argument('--cloudfunctions_username', required=False, help='cloud functions user name')
     parser.add_argument('--cloudfunctions_password', required=False, help='cloud functions password')
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
+
+    # we need to support arbitrary number of '--replace_<TARGET> <REPLACEMENT>' arguments
+    parsed, unknown = parser.parse_known_args(argv)
+    for arg in unknown:
+        if arg.startswith('--replace_'):
+            target = arg.replace('--replace_', '')
+            parser.add_argument(arg, help='Target \'' + target + '\' to be replaced by its value.')
+
     args = parser.parse_args(argv)
 
     config = Cfg(args)
@@ -172,6 +180,19 @@ def main(argv):
 
         if not testOutputExpectedPath:
             logger.debug('Expected output payload provided inside the test')
+
+        logger.debug('Replacing values in input and expected output jsons by configuration parameters.')
+        for attr in dir(config):
+            if not attr.startswith("__"):
+                target = '::' + attr
+                if attr.startswith('replace_'):
+                    target = target.replace('replace_', '')
+                rc, testInputJson = replaceValue(testInputJson, target, getattr(config, attr), False)
+                if rc > 0:
+                    logger.debug('Replaced configuration parameter \'%s\' in input json, number of occurences: %d.', target, rc)
+                rc, testOutputExpectedJson = replaceValue(testOutputExpectedJson, target, getattr(config, attr), False)
+                if rc > 0:
+                    logger.debug('Replaced configuration parameter \'%s\' in expected output json, number of occurences: %d.', target, rc)
 
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
