@@ -29,7 +29,6 @@ def isActionNotSequence(action):
     return False
 
 def main(argv):
-    logger.info('STARTING: '+ os.path.basename(__file__))
     parser = argparse.ArgumentParser(description="Deploys the cloud functions",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-v', '--verbose', required=False, help='verbosity', action='store_true')
@@ -47,8 +46,9 @@ def main(argv):
 
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
-        
+    
     config = Cfg(args)
+    logger.info('STARTING: '+ os.path.basename(__file__))
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
