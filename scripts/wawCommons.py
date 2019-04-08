@@ -455,7 +455,7 @@ def replaceValue(sourceJson, target, replacementJson, matchKey = True):
 
     Returns
     -------
-    tuple : (replacedValuesNumber, targetJson)
+    tuple : (targetJson, replacedValuesNumber)
         Number of replacements and modified json.
     """
     replacedValuesNumber = 0
@@ -463,21 +463,21 @@ def replaceValue(sourceJson, target, replacementJson, matchKey = True):
     if sourceJson and target:
         if isinstance(sourceJson, list):
             for index, item in enumerate(sourceJson):
-                rcValuesNumber, rcValue = replaceValue(item, target, replacementJson, matchKey)
-                replacedValuesNumber += rcValuesNumber
-                targetJson[index] = rcValue
+                rJson, rValuesNumber = replaceValue(item, target, replacementJson, matchKey)
+                replacedValuesNumber += rValuesNumber
+                targetJson[index] = rJson
         elif isinstance(sourceJson, dict):
             for key in sourceJson:
                 if matchKey and key == target:
                     targetJson[key] = copy.deepcopy(replacementJson)
                     replacedValuesNumber += 1
                 else:
-                    rcValuesNumber, rcValue = replaceValue(sourceJson[key], target, replacementJson, matchKey)
-                    replacedValuesNumber += rcValuesNumber
-                    targetJson[key] = rcValue
+                    rJson, rValuesNumber = replaceValue(sourceJson[key], target, replacementJson, matchKey)
+                    replacedValuesNumber += rValuesNumber
+                    targetJson[key] = rJson
         elif not matchKey and sourceJson == target:
             targetJson = copy.deepcopy(replacementJson)
             replacedValuesNumber += 1
-    return replacedValuesNumber, targetJson
+    return targetJson, replacedValuesNumber
 
 logger = getScriptLogger(__file__)

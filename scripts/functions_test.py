@@ -27,6 +27,11 @@ def main(argv):
     Cloud Functions and produce output that extends input json file by results
     from CFs and evaluation.
 
+    Inputs and expected outputs can contain string values that starts with '::'
+    (e.g. "key": "::valueToBeReplaced1") which will be replaced by matching 
+    configuration parameters or by values specified by parameter 'replace'
+    (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')).
+
     Input json file example:
     [
         {
@@ -72,15 +77,8 @@ def main(argv):
     parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
     parser.add_argument('--cloudfunctions_username', required=False, help='cloud functions user name')
     parser.add_argument('--cloudfunctions_password', required=False, help='cloud functions password')
+    parser.add_argument('--replace', required=False, help='string values to be replaced in input and expected output json (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')')
     parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
-
-    # we need to support arbitrary number of '--replace_<TARGET> <REPLACEMENT>' arguments
-    parsed, unknown = parser.parse_known_args(argv)
-    for arg in unknown:
-        if arg.startswith('--replace_'):
-            target = arg.replace('--replace_', '')
-            parser.add_argument(arg, help='Target \'' + target + '\' to be replaced by its value.')
-
     args = parser.parse_args(argv)
 
     config = Cfg(args)
@@ -120,6 +118,21 @@ def main(argv):
     if not isinstance(inputJson, list):
         logger.critical('Input test json is not array!')
         sys.exit(1)
+
+    replaceDict = {}
+    for attr in dir(config):
+        if not attr.startswith("__"):
+            if attr == 'replace':
+                # format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\'
+                replacementsString = getattr(config, attr)
+                for replacementString in replacementsString.split(','):
+                    replacementStringSplit = replacementString.split(':')
+                    if len(replacementStringSplit) != 2 or not replacementStringSplit[0] or not replacementStringSplit[1]:
+                        logger.critical('Invalid format of \'replace\' parameter, valid format is \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\'')
+                        sys.exit(1)
+                    replaceDict[replacementStringSplit[0]] = replacementStringSplit[1]
+            else:
+                replaceDict[attr] = getattr(config, attr)
 
     # run tests
     testCounter = 0
@@ -182,17 +195,14 @@ def main(argv):
             logger.debug('Expected output payload provided inside the test')
 
         logger.debug('Replacing values in input and expected output jsons by configuration parameters.')
-        for attr in dir(config):
-            if not attr.startswith("__"):
-                target = '::' + attr
-                if attr.startswith('replace_'):
-                    target = target.replace('replace_', '')
-                rc, testInputJson = replaceValue(testInputJson, target, getattr(config, attr), False)
-                if rc > 0:
-                    logger.debug('Replaced configuration parameter \'%s\' in input json, number of occurences: %d.', target, rc)
-                rc, testOutputExpectedJson = replaceValue(testOutputExpectedJson, target, getattr(config, attr), False)
-                if rc > 0:
-                    logger.debug('Replaced configuration parameter \'%s\' in expected output json, number of occurences: %d.', target, rc)
+
+        for target, value in replaceDict.items():
+            testInputJson, replacementNumber = replaceValue(testInputJson, '::' + target, value, False)
+            if replacementNumber > 0:
+                logger.debug('Replaced configuration parameter \'%s\' in input json, number of occurences: %d.', target, replacementNumber)
+            testOutputExpectedJson, replacementNumber = replaceValue(testOutputExpectedJson, '::' + target, value, False)
+            if replacementNumber > 0:
+                logger.debug('Replaced configuration parameter \'%s\' in expected output json, number of occurences: %d.', target, replacementNumber)
 
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))

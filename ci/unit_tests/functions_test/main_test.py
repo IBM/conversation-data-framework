@@ -97,6 +97,16 @@ class TestMain(BaseTestCaseCapture):
                     [providedTestArgs] # params (*args, **kwargs)
                 )
 
+    def test_args_invalidReplaceFormat(self):
+        ''' Tests if treplace format is invalid '''
+        testArgs = [self.testSingleAllInFileJsonPath, self.outputCommonPath] + self.functionsTestArgs
+        for invalidReplaceFormat in ['xxx', 'xxx:', ':xxx', 'xxx:yyy:zzz', 'xxx:yyy,', ',xxx:yyy', 'xxx:yyy,ccc']:
+            self.t_exitCodeAndLogMessage(
+                1, # exit code
+                'CRITICAL Invalid format of \'replace\' parameter', # critical message substring
+                [testArgs +  ['--replace', invalidReplaceFormat]] # params (*args, **kwargs)
+            )
+
     def test_nonExistentFileInput(self):
         ''' Tests if the input file does not exist '''
         testArgs = ['/some/random/path', '/some/random/path'] + self.functionsTestArgs
@@ -186,7 +196,7 @@ class TestMain(BaseTestCaseCapture):
     def test_testSingleAllInFileReplace(self):
         ''' Tests if the single test where input and expected output is specified in file (all other params are given from command line), using replace functionality (using --replace_)'''
         outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '.out.json'))
-        testArgs = [self.testSingleAllInFileReplaceJsonPath, outputFilePath] + self.functionsTestArgs + ['--replace_OUTPUT_EXPECTED_MESSAGE', 'test message']
+        testArgs = [self.testSingleAllInFileReplaceJsonPath, outputFilePath] + self.functionsTestArgs + ['--replace', 'OUTPUT_EXPECTED_MESSAGE:test message']
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)

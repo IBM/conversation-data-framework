@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import pytest, unittest
+import pytest
 
 import wawCommons
 from ...test_utils import BaseTestCaseCapture
@@ -110,48 +110,48 @@ class TestMain(BaseTestCaseCapture):
 
     def test_sourceNull(self):
         ''' Tests if sourceJson is Null '''
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(None, 'targetKey', 'replacementJson')
-        assert rcReplacementNumber == 0
-        assert rcJson == None
+        rJson, rReplacementNumber = wawCommons.replaceValue(None, 'targetKey', 'replacementJson')
+        assert rReplacementNumber == 0
+        assert rJson == None
 
     def test_keyNull(self):
         ''' Tests if targetKey is Null '''
         sourceJsonDict = dict(self.sourceJsonDict)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonDict, None, 'replacementJson')
-        assert rcReplacementNumber == 0
-        assert rcJson == self.sourceJsonDict
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonDict, None, 'replacementJson')
+        assert rReplacementNumber == 0
+        assert rJson == self.sourceJsonDict
         assert sourceJsonDict == self.sourceJsonDict
 
     def test_sourceString(self):
         ''' Tests if sourceJson is String '''
-        rcReplacementNumber, rcJson = wawCommons.replaceValue('sourceJson', 'targetKey', 'replacementJson')
-        assert rcJson == 'sourceJson'
-        assert rcReplacementNumber == 0
+        rJson, rReplacementNumber = wawCommons.replaceValue('sourceJson', 'targetKey', 'replacementJson')
+        assert rJson == 'sourceJson'
+        assert rReplacementNumber == 0
 
     def test_noReplacementDict(self):
         ''' Tests if targetKey is not in sourceJson, dict '''
         sourceJsonDict = dict(self.sourceJsonDict)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonDict, 'randomKey', 'replacementJson')
-        assert rcReplacementNumber == 0
-        assert rcJson == self.sourceJsonDict
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonDict, 'randomKey', 'replacementJson')
+        assert rReplacementNumber == 0
+        assert rJson == self.sourceJsonDict
         assert sourceJsonDict == self.sourceJsonDict
 
     def test_noReplacementList(self):
         ''' Tests if targetKey is not in sourceJson, list'''
         sourceJsonList = list(self.sourceJsonList)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonList, 'randomKey', 'replacementJson')
-        assert rcReplacementNumber == 0
-        assert rcJson == self.sourceJsonList
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonList, 'randomKey', 'replacementJson')
+        assert rReplacementNumber == 0
+        assert rJson == self.sourceJsonList
         assert sourceJsonList == self.sourceJsonList
 
     @pytest.mark.parametrize('replacement', [None, 'replacementJson', {'replacementKey': 'replacementValue'}])
     def test_replacementDict(self, replacement):
         ''' Tests if value of targetKey is replaced by different object, dict '''
         sourceJsonDict = dict(self.sourceJsonDict)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonDict, 'targetKey', replacement)
-        assert rcReplacementNumber == 2
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonDict, 'targetKey', replacement)
+        assert rReplacementNumber == 2
         assert sourceJsonDict == self.sourceJsonDict
-        assert rcJson == {
+        assert rJson == {
             'notTargetKeyA': None,
             'notTargetKeyB': 'notToBeReplacedValue',
             'notTargetKeyC': 'targetKey',
@@ -181,10 +181,10 @@ class TestMain(BaseTestCaseCapture):
     def test_replacementList(self, replacement):
         ''' Tests if value of targetKey is replaced by different object, list '''
         sourceJsonList = list(self.sourceJsonList)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonList, 'targetKey', replacement)
-        assert rcReplacementNumber == 2
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonList, 'targetKey', replacement)
+        assert rReplacementNumber == 2
         assert sourceJsonList == self.sourceJsonList
-        assert rcJson == [
+        assert rJson == [
             None,
             'targetKey',
             'notTargetKeyC',
@@ -232,10 +232,10 @@ class TestMain(BaseTestCaseCapture):
     def test_replacementDictValue(self, replacement):
         ''' Tests if value of targetKey is replaced by different object, dict '''
         sourceJsonDict = dict(self.sourceJsonDict)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonDict, 'targetKey', replacement, False)
-        assert rcReplacementNumber == 7
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonDict, 'targetKey', replacement, False)
+        assert rReplacementNumber == 7
         assert sourceJsonDict == self.sourceJsonDict
-        assert rcJson == {
+        assert rJson == {
             'notTargetKeyA': None,
             'notTargetKeyB': 'notToBeReplacedValue',
             'notTargetKeyC': replacement,
@@ -283,10 +283,10 @@ class TestMain(BaseTestCaseCapture):
     def test_replacementListValue(self, replacement):
         ''' Tests if value of targetKey is replaced by different object, list '''
         sourceJsonList = list(self.sourceJsonList)
-        rcReplacementNumber, rcJson = wawCommons.replaceValue(sourceJsonList, 'targetKey', replacement, False)
-        assert rcReplacementNumber == 7
+        rJson, rReplacementNumber = wawCommons.replaceValue(sourceJsonList, 'targetKey', replacement, False)
+        assert rReplacementNumber == 7
         assert sourceJsonList == self.sourceJsonList
-        assert rcJson == [
+        assert rJson == [
             None,
             replacement,
             'notTargetKeyC',

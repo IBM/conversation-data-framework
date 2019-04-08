@@ -57,7 +57,7 @@ def main(args):
     # find the target key and add the json
     replacedValuesNumber = 0
     if 'dialog_nodes' in workspaceInput:
-        replacedValuesNumber, workspaceInput['dialog_nodes'] = replaceValue(workspaceInput['dialog_nodes'], targetKey, jsonInclude)
+        workspaceInput['dialog_nodes'], replacedValuesNumber = replaceValue(workspaceInput['dialog_nodes'], targetKey, jsonInclude)
     else:
         logger.warning('Workspace does not contain \'dialog_nodes\'')
 
