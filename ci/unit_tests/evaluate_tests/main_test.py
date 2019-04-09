@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json, pytest
+import os
 
 import evaluate_tests
 from ...test_utils import BaseTestCaseCapture
