@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import os, json, sys, argparse, requests, configparser
-from wawCommons import setLoggerConfig, getScriptLogger,  getWorkspaceId, errorsInResponse, getOptionalParameter, getRequiredParameter, openFile
+from wawCommons import setLoggerConfig, getScriptLogger, filterWorkspaces, getWorkspaces, errorsInResponse, getOptionalParameter, getRequiredParameter, openFile
 from cfgCommons import Cfg
 import datetime
 import logging
@@ -73,10 +73,16 @@ def main(argv):
     # version (required)
     version = getRequiredParameter(config, 'conversation_version')
     # workspace id
-    workspaceId = getWorkspaceId(config, workspacesUrl, version, username, password)
-    if workspaceId:
+    workspaces = filterWorkspaces(config, getWorkspaces(workspacesUrl, version, username, password))
+    if len(workspaces) > 1:
+        # if there is more than one workspace with the same name -> error
+        logger.error('There are more than one workspace with this name, do not know which one to update.')
+        exit(1)
+    elif len(workspaces) == 1:
+        workspaceId = workspaces[0]['workspace_id']
         logger.info("Updating existing workspace.")
     else:
+        workspaceId = ""
         logger.info("Creating new workspace.")
 
     requestUrl = workspacesUrl + '/' + workspaceId + '?version=' + version
