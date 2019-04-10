@@ -52,6 +52,7 @@ class TestMain(BaseTestCaseCapture):
         responseJson = response.json()
         return responseJson
 
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteEmptyPackage(self, useApikey):
@@ -74,6 +75,7 @@ class TestMain(BaseTestCaseCapture):
         # delete package
         self.t_noException([params])
     
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonEmptyPackageWithoutSequence(self, useApikey):
@@ -91,13 +93,14 @@ class TestMain(BaseTestCaseCapture):
         functionsDir = os.path.join(self.dataBasePath, 'example_functions')
         functionFiles = [os.path.join(functionsDir, f) for f in os.listdir(functionsDir)]
 
+        # Iterate over the cloud functions and upload them
         for fileName in functionFiles:
             funcName = os.path.basename(fileName)
             functionUrl = self.actionsUrl + self.package + '/' + funcName + '?overwrite=true'
 
             content = open(fileName, 'r').read()
             payload = {'exec': {'kind': 'python', 'binary': False, 'code': content}}
-            print(functionUrl)
+            # Upload the cloud function
             response = requests.put(functionUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
                                     data=json.dumps(payload), verify=False)
             responseJson = response.json()
@@ -113,6 +116,7 @@ class TestMain(BaseTestCaseCapture):
         # delete package
         self.t_noException([params])
     
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonEmptyPackageWithSequence(self, useApikey):
@@ -129,13 +133,14 @@ class TestMain(BaseTestCaseCapture):
         functionsDir = os.path.join(self.dataBasePath, 'example_functions')
         functionFiles = [os.path.join(functionsDir, f) for f in os.listdir(functionsDir)]
 
+        # Iterate over the cloud functions and upload them
         for fileName in functionFiles:
             funcName = os.path.basename(fileName)
             functionUrl = self.actionsUrl + self.package + '/' + funcName + '?overwrite=true'
 
             content = open(fileName, 'r').read()
             payload = {'exec': {'kind': 'python', 'binary': False, 'code': content}}
-            print(functionUrl)
+            # Upload the cloud function
             response = requests.put(functionUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
                                     data=json.dumps(payload), verify=False)
             responseJson = response.json()
@@ -146,6 +151,7 @@ class TestMain(BaseTestCaseCapture):
         # fully qualified names
         functionNames = [f"/{self.namespace}/{self.package}/{os.path.basename(fileName)}" for fileName in functionFiles]
         payload = {'exec': {'kind': 'sequence', 'binary': False, 'components': functionNames}}
+        # Connect the functions into a sequence
         response = requests.put(sequenceUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
                                     data=json.dumps(payload), verify=False)
         responseJson = response.json()
@@ -160,6 +166,7 @@ class TestMain(BaseTestCaseCapture):
         # delete package
         self.t_noException([params])
     
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonexistentPackage(self, useApikey):
