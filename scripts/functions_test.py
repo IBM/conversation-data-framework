@@ -76,8 +76,9 @@ def main(argv):
     parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
     parser.add_argument('--cloudfunctions_username', required=False, help='cloud functions user name')
     parser.add_argument('--cloudfunctions_password', required=False, help='cloud functions password')
+    parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
+    parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
     parser.add_argument('--replace', required=False, help='string values to be replaced in input and expected output json (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')')
-    parser.add_argument('-v','--common_verbose', required=False, help='verbosity', action='store_true')
     args = parser.parse_args(argv)
 
     if __name__ == '__main__':

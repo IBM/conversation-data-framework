@@ -20,8 +20,7 @@ import logging
 
 logger = getScriptLogger(__file__)
 
-def main(args):
-    logger.info('STARTING: ' + os.path.basename(__file__))
+def main(argv):
     parser = argparse.ArgumentParser(description='This script takes a workspace JSON as one parameter and another JSON (i.e., piece of context data structure) and put the second one into desired place in the first one. This happens inplace.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # arguments
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
@@ -39,6 +38,8 @@ def main(args):
         setLoggerConfig(args.log, args.verbose)
 
     config = Cfg(args)
+
+    logger.info('STARTING: ' + os.path.basename(__file__))
 
     # get required parameters
     # workspace
