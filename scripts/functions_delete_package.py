@@ -29,10 +29,11 @@ def isActionNotSequence(action):
     return False
 
 def main(argv):
+    """Deletes the cloudfunctions package specified in the configuration file."""
     parser = argparse.ArgumentParser(description="Deploys the cloud functions",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-v', '--verbose', required=False, help='verbosity', action='store_true')
-    parser.add_argument('-c', '--common_configFilePaths', help="configuaration file", action='append')
+    parser.add_argument('-c', '--common_configFilePaths', help="configuration file", action='append')
     parser.add_argument('--common_functions', required=False, help="directory where the cloud functions are located")
     parser.add_argument('--cloudfunctions_namespace', required=False, help="cloud functions namespace")
     parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
