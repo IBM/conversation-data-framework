@@ -51,5 +51,5 @@ class TestMain(BaseTestCaseCapture):
         self.t_raiseException(
             NameError,
             'FailedTestDetected',
-            [[self.expectedJsonPath, self.receivedJsonPath, '-o', self.outputJunitXmlPath, '-e','--exception_if_fail']])
+            [[self.expectedJsonPath, self.receivedJsonPath, '-o', self.outputJunitXmlPath, '-e']])
 
