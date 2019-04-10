@@ -23,9 +23,9 @@ import logging
 
 logger = getScriptLogger(__file__)
 
-def isActionNotSequence(action):
+def isActionSequence(action):
     for annotation in action['annotations']:
-        if annotation['key'] == 'exec' and annotation['value'] == 'sequence': return True;
+        if 'key' in annotation and annotation['key'] == 'exec' and annotation['value'] == 'sequence': return True;
     return False
 
 def main(argv):
@@ -77,7 +77,7 @@ def main(argv):
     
     actions = responseJson['actions']
     # put the sequences at the beggining
-    actions.sort(key=lambda action: isActionNotSequence(action))
+    actions.sort(key=lambda action: not isActionSequence(action))
     
     for action in actions:
         name = action['name']
