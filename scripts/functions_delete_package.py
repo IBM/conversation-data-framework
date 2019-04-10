@@ -89,7 +89,7 @@ def main(argv):
             logger.critical(responseJson['error'])
             sys.exit(1)
         else:
-            logger.verbose("Done")
+            logger.verbose("Action deleted.")
     
     logger.verbose(f"Deleting package '{package}'")
     response = requests.delete(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
@@ -100,7 +100,9 @@ def main(argv):
         logger.critical(responseJson['error'])
         sys.exit(1)
     else:
-        logger.verbose("Done")
+        logger.verbose("Package deleted.")
+    
+    logger.info("Cloud functions in package successfully deleted.")
 
 if __name__ == '__main__':
     main(sys.argv[1:])
