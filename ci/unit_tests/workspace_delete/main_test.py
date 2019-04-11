@@ -116,7 +116,7 @@ class TestMain(BaseTestCaseCapture):
         assert workspacesFound == 0
 
         # there should be still one workspace left (even with the same name)
-        assert len(worksapces) == 1
+        assert len(workspaces) == 1
 
         # check if workspace_id is not present in the output config
         parser = argparse.ArgumentParser()
