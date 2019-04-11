@@ -37,7 +37,7 @@ def main(argv):
     parser.add_argument('-ow', '--common_outputs_workspace', required=False, help='name of the json file with workspace')
     parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
     parser.add_argument('-oc', '--common_output_config', help='output configuration file')
-    parser.add_argument('-cu','--conversation-url', required=False, help='url of the conversation service API')
+    parser.add_argument('-cu','--conversation_url', required=False, help='url of the conversation service API')
     parser.add_argument('-cv','--conversation_version', required=False, help='version of the conversation service API')
     parser.add_argument('-cn','--conversation_username', required=False, help='username of the conversation service instance')
     parser.add_argument('-cp','--conversation_password', required=False, help='password of the conversation service instance')
@@ -47,7 +47,7 @@ def main(argv):
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
     args = parser.parse_args(argv)
-    
+
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
 

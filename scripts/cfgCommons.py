@@ -85,6 +85,7 @@ class Cfg:
                 if hasattr(self, arg):
                     logger.warning("Overwriting config file parameter '%s' with value '%s' from command line argumets.", arg, getattr(args, arg))
                 setattr(self, arg, getattr(args, arg))
+# we do not want to save configuration automatically - do the following inside the script instead
 #        if hasattr(self, 'common_output_config'):
 #            self.saveConfiguration(getattr(self, 'common_output_config'))
 
