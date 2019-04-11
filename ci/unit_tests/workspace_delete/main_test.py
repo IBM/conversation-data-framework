@@ -36,11 +36,19 @@ class TestMain(BaseTestCaseCapture):
         cls.username = os.environ['WA_USERNAME']
         cls.password = os.environ['WA_PASSWORD']
 
-        cls.deployParamsBase = ['-of', cls.dataBasePath, '-ow', cls.jsonWorkspaceFilename,\
-         '-cn', cls.username, '-cp', cls.password, '-cu', cls.workspacesUrl, '-cv', cls.version, '-v']
+        cls.deployParamsBase = ['--common_outputs_directory', cls.dataBasePath,
+                                '--common_outputs_workspace', cls.jsonWorkspaceFilename,
+                                '--conversation_username', cls.username,
+                                '--conversation_password', cls.password,
+                                '--conversation_url', cls.workspacesUrl,
+                                '--conversation_version', cls.version,
+                                '-v']
 
-        cls.deleteParamsBase = [\
-         '-cn', cls.username, '-cp', cls.password, '-cu', cls.workspacesUrl, '-cv', cls.version, '-v']
+        cls.deleteParamsBase = ['--conversation_username', cls.username,
+                                '--conversation_password', cls.password,
+                                '--conversation_url', cls.workspacesUrl,
+                                '--conversation_version', cls.version,
+                                '-v']
 
     def callfunc(self, *args, **kwargs):
         workspace_delete.main(*args, **kwargs)
@@ -75,42 +83,36 @@ class TestMain(BaseTestCaseCapture):
         deleteOutputConfigFilename = 'deleteWorkspaceOutput.cfg'
         deleteOutputConfigPath = os.path.abspath(os.path.join(self.dataBasePath, deleteOutputConfigFilename))
 
+        workspaceName = 'deleteById_workspace'
+
         # deploy test workspace
         deployParams = list(self.deployParamsBase)
-        deployParams.extend(['-oc', createOutputConfigPath, '-wn', '2 workspaces with the same name'])
+        deployParams.extend(['--common_output_config', createOutputConfigPath,
+                             '--conversation_workspace_name', workspaceName])
         workspace_deploy.main(deployParams)
-
         # deploy one more workspace
         deployParamsMore = list(self.deployParamsBase)
-        deployParamsMore.extend(['-wn', '2 workspaces with the same name'])
+        deployParamsMore.extend(['--conversation_workspace_name', workspaceName])
         workspace_deploy.main(deployParamsMore)
 
         # try to delete workspace by its id (id is obtained from output config of deploy script)
         deleteParams = list(self.deleteParamsBase)
-        deleteParams.extend(['-c', createOutputConfigPath, '-oc', deleteOutputConfigPath])
+        deleteParams.extend(['-c', createOutputConfigPath,
+                             '--common_output_config', deleteOutputConfigPath])
         self.t_noException([deleteParams])
 
+        # parse output config of deploy script (contains workspace id to delete)
         parser = argparse.ArgumentParser()
         parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
-        parser.add_argument('-oc', '--common_output_config', help='output configuration file')
-        parser.add_argument('-cu','--conversation_url', required=False, help='url of the conversation service API')
-        parser.add_argument('-cv','--conversation_version', required=False, help='version of the conversation service API')
-        parser.add_argument('-cn','--conversation_username', required=False, help='username of the conversation service instance')
-        parser.add_argument('-cp','--conversation_password', required=False, help='password of the conversation service instance')
-        parser.add_argument('-cid','--conversation_workspace_id', required=False, help='workspace_id of the application.')
-        parser.add_argument('-wn','--conversation_workspace_name', required=False, help='name of the workspace')
-        parser.add_argument('-wnm','--conversation_workspace_match_by_name', required=False, help='true if the workspace name should be matched by name (or pattern if defined)')
-        parser.add_argument('-wnp','--conversation_workspace_name_pattern', required=False, help='regex pattern specifying a name of workspaces to be deleted')
-        parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
-        args = parser.parse_args(deleteParams)
-        deleteInputConfig = Cfg(args)
+        args = parser.parse_args(['--common_configFilePaths', createOutputConfigPath])
+        createOutputConfig = Cfg(args)
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
 
-        # there should be no workspace with id specified in config file
+        # in workspaces on server there should be no workspace with id from config file
         workspacesFound = 0
         for workspace in workspaces:
-            if workspace['workspace_id'] == getRequiredParameter(deleteInputConfig, 'conversation_workspace_id'):
+            if workspace['workspace_id'] == getRequiredParameter(createOutputConfig, 'conversation_workspace_id'):
                 workspacesFound += 1
 
         assert workspacesFound == 0
@@ -118,28 +120,36 @@ class TestMain(BaseTestCaseCapture):
         # there should be still one workspace left (even with the same name)
         assert len(workspaces) == 1
 
-        # check if workspace_id is not present in the output config
+        # check if workspace_id is not present in the output config of delete script
         parser = argparse.ArgumentParser()
         parser.add_argument('-c', '--common_configFilePaths', help='configuaration file', action='append')
-        args = parser.parse_args(['-c', deleteOutputConfigPath])
+        args = parser.parse_args(['--common_configFilePaths', deleteOutputConfigPath])
         deleteOutputConfig = Cfg(args)
 
         assert hasattr(deleteOutputConfig, 'conversation_workspace_id') == False
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
-    def test_deleteByName(self, envVarNameUsername, envVarNamePassword):
-        """Tests if workspace can be deleted by its id."""
+    def test_deleteMoreByName(self, envVarNameUsername, envVarNamePassword):
+        """Tests if more workspaces with the same name can be deleted by their name."""
 
         workspaceName = 'deleteByName_workspace'
+        workspaceNameNM = 'non-matching_workspace'
 
         # deploy test workspace
         deployParams = list(self.deployParamsBase)
-        deployParams.extend(['-wn', workspaceName])
+        deployParams.extend(['--conversation_workspace_name', workspaceName])
         workspace_deploy.main(deployParams)
+        # deploy second workspace with the same name
+        workspace_deploy.main(deployParams)
+        # deploy non-matching workspace
+        deployParamsNM = list(self.deployParamsBase)
+        deployParamsNM.extend(['--conversation_workspace_name', workspaceNameNM])
+        workspace_deploy.main(deployParamsNM)
 
         # try to delete workspace by its name
         deleteParams = list(self.deleteParamsBase)
-        deleteParams.extend(['-wn', workspaceName, '-wnm', 'true'])
+        deleteParams.extend(['--conversation_workspace_name', workspaceName,
+                             '--conversation_workspace_match_by_name', 'true'])
         self.t_noException([deleteParams])
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
@@ -152,6 +162,9 @@ class TestMain(BaseTestCaseCapture):
 
         assert workspacesFound == 0
 
+        # there should be still workspace with non-matching name
+        assert len(workspaces) == 1
+
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteMoreWithRegexp(self, envVarNameUsername, envVarNamePassword):
         """Tests if more workspaces can be deleted by regular expression."""
@@ -162,18 +175,21 @@ class TestMain(BaseTestCaseCapture):
 
         # deploy test workspaces
         deployParams1 = list(self.deployParamsBase)
-        deployParams1.extend(['-wn', workspaceName1])
+        deployParams1.extend(['--conversation_workspace_name', workspaceName1])
         workspace_deploy.main(deployParams1)
+        # deploy second workspace with matching name
         deployParams2 = list(self.deployParamsBase)
-        deployParams2.extend(['-wn', workspaceName2])
+        deployParams2.extend(['--conversation_workspace_name', workspaceName2])
         workspace_deploy.main(deployParams2)
+        # deploy non-matching workspace
         deployParamsNM = list(self.deployParamsBase)
-        deployParamsNM.extend(['-wn', workspaceNameNM])
+        deployParamsNM.extend(['--conversation_workspace_name', workspaceNameNM])
         workspace_deploy.main(deployParamsNM)
 
         # try to delete workspace by regular expression
         deleteParams = list(self.deleteParamsBase)
-        deleteParams.extend(['-wnm', 'true', '-wnp', 'regexp_*'])
+        deleteParams.extend(['--conversation_workspace_match_by_name', 'true',
+                             '--conversation_workspace_name_pattern', 'regexp_*'])
         self.t_noException([deleteParams])
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
@@ -187,16 +203,11 @@ class TestMain(BaseTestCaseCapture):
         assert workspacesFound == 0
 
         # there should be still workspace with non-matching name
-        NMworkspacesFound = 0
-        for workspace in workspaces:
-            if workspace['name'] == workspaceNameNM:
-                NMworkspacesFound += 1
-
-        assert NMworkspacesFound == 1
+        assert len(workspaces) == 1
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteAllWithRegex(self, envVarNameUsername, envVarNamePassword):
-        """Tests if more workspaces can be deleted by '*'."""
+        """Tests if all workspaces can be deleted by '*'."""
 
         workspaceName1 = "workspace-1?"
         workspaceName2 = "Šťastný s'kill"
@@ -204,18 +215,21 @@ class TestMain(BaseTestCaseCapture):
 
         # deploy test workspaces
         deployParams1 = list(self.deployParamsBase)
-        deployParams1.extend(['-wn', workspaceName1])
+        deployParams1.extend(['--conversation_workspace_name', workspaceName1])
         workspace_deploy.main(deployParams1)
+
         deployParams2 = list(self.deployParamsBase)
-        deployParams2.extend(['-wn', workspaceName2])
+        deployParams2.extend(['--conversation_workspace_name', workspaceName2])
         workspace_deploy.main(deployParams2)
+
         deployParams3 = list(self.deployParamsBase)
-        deployParams3.extend(['-wn', workspaceName3])
+        deployParams3.extend(['--conversation_workspace_name', workspaceName3])
         workspace_deploy.main(deployParams3)
 
         # try to delete all workspaces
         deleteParams = list(self.deleteParamsBase)
-        deleteParams.extend(['-wnm', 'true', '-wnp', '.*'])
+        deleteParams.extend(['--conversation_workspace_match_by_name', 'true',
+                             '--conversation_workspace_name_pattern', '.*'])
         self.t_noException([deleteParams])
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
