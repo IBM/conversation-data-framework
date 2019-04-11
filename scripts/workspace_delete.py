@@ -14,7 +14,7 @@ limitations under the License.
 """
 
 import sys, argparse, requests, configparser, os
-from wawCommons import setLoggerConfig, getScriptLogger, openFile, getOptionalParameter, filterWorkspaces, getWorkspaces, errorsInResponse
+from wawCommons import setLoggerConfig, getScriptLogger, openFile, getOptionalParameter, getRequiredParameter, filterWorkspaces, getWorkspaces, errorsInResponse
 from cfgCommons import Cfg
 import logging
 
@@ -44,10 +44,10 @@ def main(argv):
     VERBOSE = hasattr(config, 'verbose')
 
     # load credentials
-    version = getOptionalParameter(config, 'conversation_version')
-    workspacesUrl = getOptionalParameter(config, 'conversation_url')
-    username = getOptionalParameter(config, 'conversation_username')
-    password = getOptionalParameter(config, 'conversation_password')
+    version = getRequiredParameter(config, 'conversation_version')
+    workspacesUrl = getRequiredParameter(config, 'conversation_url')
+    username = getRequiredParameter(config, 'conversation_username')
+    password = getRequiredParameter(config, 'conversation_password')
     workspaces = filterWorkspaces(config, getWorkspaces(workspacesUrl, version, username, password))
 
     for workspace in workspaces:
