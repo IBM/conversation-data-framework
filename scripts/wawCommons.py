@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import sys, re, codecs, os, io, unidecode, types, fnmatch, requests
+import copy, sys, re, codecs, os, io, unidecode, types, fnmatch, requests
 import lxml.etree as Xml
 import logging
 from logging.config import fileConfig
@@ -330,7 +330,7 @@ def errorsInResponse(responseJson):
         if 'errors' in responseJson:
             for errorJson in responseJson['errors']:
                 logger.error('\t path: \'%s\' - %s', errorJson['path'], errorJson['message'])
-#        if VERBOSE: logger.error("WORKSPACE: %s", json.dumps(workspace, indent=4))
+#       logger.verbose("WORKSPACE: %s", json.dumps(workspace, indent=4))
         return True
     else:
         return False
@@ -386,7 +386,7 @@ def getParametersCombination(config, *args):
                 if parametersCombinationMap:
                     logger.critical("only one combination of parameters can be set, " +
                         "combination already set: '%s', " +
-                        "another argument set: '%s'", str(list(parametersCombinationMap)), arg)
+                        "another argument set: '%s'", str(sorted(list(parametersCombinationMap))), arg)
                     exit(1)
                 parametersCombinationMap[arg] = getattr(config, arg)
         elif isinstance(arg, list):
@@ -397,7 +397,7 @@ def getParametersCombination(config, *args):
                     if parametersCombinationMap:
                         logger.critical("only one combination of parameters can be set, " +
                             "combination already set: '%s', " +
-                            "another argument set: '%s'", str(list(parametersCombinationMap)), parameterName)
+                            "another argument set: '%s'", str(sorted(list(parametersCombinationMap))), parameterName)
                         exit(1)
                     parametersCombinationMapCurrent[parameterName] = getattr(config, parameterName)
                 else:
@@ -422,8 +422,21 @@ def getParametersCombination(config, *args):
 
     return parametersCombinationMap
 
-def setLoggerConfig():
+def setLoggerConfig(level=None, isVerbose=False):
     fileConfig(os.path.split(os.path.abspath(__file__))[0]+'/logging_config.ini')
+    l = logging.getLogger()
+    logging.Logger.isVerbose = isVerbose
+
+    def verbose(self, message, *args, **kws):
+        if (logging.Logger.isVerbose):
+            self.info(message, *args, **kws)
+
+    logging.Logger.verbose = verbose
+    if level:
+        levelName = logging.getLevelName(level)
+        l.setLevel(levelName)
+        for h in l.handlers:
+            h.setLevel(levelName)
 
 def getScriptLogger(script):
     return logging.getLogger("common."+os.path.splitext(os.path.basename(script))[0])
@@ -449,5 +462,46 @@ def convertApikeyToUsernameAndPassword(apikey):
             return (apikeySplit[0], apikeySplit[1])
     logger.critical('Apikey has invalid format (valid format is string: \'username:password\')')
     sys.exit(1)
+
+def replaceValue(sourceJson, target, replacementJson, matchKey = True):
+    """
+    Finds recursively 'target' in 'sourceJson' object and replaces its value by 'replacementJson'.
+    Based on given parameter 'matchKey', function tries to find key or value as a 'target'
+    (if 'matchKey' == True then it tries to find key as a 'target'). It returnes number
+    of replacements and modified json (sourceJson is not changed).
+
+    Parameters
+    ----------
+    sourceJson : object
+    target : string
+    replacementJson : object
+    matchKey: boolean
+
+    Returns
+    -------
+    tuple : (targetJson, replacedValuesNumber)
+        Number of replacements and modified json.
+    """
+    replacedValuesNumber = 0
+    targetJson = copy.deepcopy(sourceJson)
+    if sourceJson and target:
+        if isinstance(sourceJson, list):
+            for index, item in enumerate(sourceJson):
+                rJson, rValuesNumber = replaceValue(item, target, replacementJson, matchKey)
+                replacedValuesNumber += rValuesNumber
+                targetJson[index] = rJson
+        elif isinstance(sourceJson, dict):
+            for key in sourceJson:
+                if matchKey and key == target:
+                    targetJson[key] = copy.deepcopy(replacementJson)
+                    replacedValuesNumber += 1
+                else:
+                    rJson, rValuesNumber = replaceValue(sourceJson[key], target, replacementJson, matchKey)
+                    replacedValuesNumber += rValuesNumber
+                    targetJson[key] = rJson
+        elif not matchKey and sourceJson == target:
+            targetJson = copy.deepcopy(replacementJson)
+            replacedValuesNumber += 1
+    return targetJson, replacedValuesNumber
 
 logger = getScriptLogger(__file__)

@@ -35,13 +35,13 @@ def main(argv):
     parser.add_argument('-wnm','--conversation_workspace_match_by_name', required=False, help='true if the workspace name should be matched by name (or pattern if defined)')
     parser.add_argument('-wnp','--conversation_workspace_name_pattern', required=False, help='regex pattern specifying a name of workspaces to be deleted')
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
+    parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
     args = parser.parse_args(argv)
 
-    global config
-    config = Cfg(args)
+    if __name__ == '__main__':
+        setLoggerConfig(args.log, args.verbose)
 
-    global VERBOSE
-    VERBOSE = hasattr(config, 'verbose')
+    config = Cfg(args)
 
     # load credentials
     version = getRequiredParameter(config, 'conversation_version')
@@ -78,5 +78,4 @@ def main(argv):
         logger.info("Configuration saved to %s", outputConfigFile)
 
 if __name__ == '__main__':
-    setLoggerConfig()
     main(sys.argv[1:])
