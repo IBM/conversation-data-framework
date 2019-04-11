@@ -25,7 +25,7 @@ class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     outputPath = os.path.join(dataBasePath, 'outputs')
-    jsonWorkspaceFilename = 'skill-Customer-Care-Sample-Skill.json'
+    jsonWorkspaceFilename = 'sample-skill.json'
     jsonWorkspacePath = os.path.abspath(os.path.join(dataBasePath, jsonWorkspaceFilename))
     workspacesUrl = 'https://gateway.watsonplatform.net/conversation/api/v1/workspaces'
     version = '2017-02-03'
