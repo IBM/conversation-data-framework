@@ -268,7 +268,7 @@ def getWorkspaces(workspacesUrl, version, username, password):
     # get all workspaces
     requestUrl = workspacesUrl + '?version=' + version
     logger.info("request url: %s", requestUrl)
-    response = requests.get(workspacesUrl + '?version=' + version, auth=(username, password))
+    response = requests.get(requestUrl, auth=(username, password))
     responseJson = response.json()
     logger.debug("response: %s", responseJson)
     if not errorsInResponse(responseJson):
@@ -304,8 +304,7 @@ def filterWorkspaces(config, workspaces):
                     logger.info("workspace name match: " + workspace['name'])
 
         else: # workspace match by name and name nor pattenot defined or empty
-            logger.error("'conversation_workspace_match_by_name' set to true\
-             but neither 'conversation_workspace_name' nor 'conversation_workspace_name_pattern' is defined.")
+            logger.error("'conversation_workspace_match_by_name' set to true but neither 'conversation_workspace_name' nor 'conversation_workspace_name_pattern' is defined.")
             exit(1)
 
     else: # workspace matched by id (default option)
