@@ -23,11 +23,6 @@ import logging
 
 logger = getScriptLogger(__file__)
 
-def isActionSequence(action):
-    for annotation in action['annotations']:
-        if 'key' in annotation and annotation['key'] == 'exec' and annotation['value'] == 'sequence': return True;
-    return False
-
 def main(argv):
     """Deletes the cloudfunctions package specified in the configuration file or as CLI argument."""
     parser = argparse.ArgumentParser(description="Deletes cloud functions package.",
@@ -47,7 +42,31 @@ def main(argv):
 
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
-    
+
+    def handleResponse(response):
+        code = response.status_code
+        if code != requests.codes.ok:
+            #logger.critical(f"code: {code}, err: {response.text}")
+            if code == 401:
+                logger.critical("Authorization error. Wrong credentials.")
+            elif code == 403:
+                logger.critical("Access is forbidden. Wrong url or credentials.")
+            elif code == 404:
+                logger.critical("The resource could not be found.")
+            elif code >= 500:
+                logger.critical("Internal server error.")
+
+            if "error" in response.json():
+                logger.critical(f"(error: {response.json()['error']})")
+            else:
+                logger.critical("(No error information from the server.)")
+            sys.exit(1)
+
+    def isActionSequence(action):
+        for annotation in action['annotations']:
+            if 'key' in annotation and annotation['key'] == 'exec' and annotation['value'] == 'sequence': return True;
+        return False
+
     config = Cfg(args)
     logger.info('STARTING: '+ os.path.basename(__file__))
 
@@ -68,41 +87,24 @@ def main(argv):
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     packageUrl = namespaceUrl + '/' + namespace + '/packages/' + package# + '?overwrite=true'
     response = requests.get(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
-    responseJson = response.json()
+    handleResponse(response)
 
-    if 'error' in responseJson:
-        logger.critical("Cannot get the package information")
-        logger.critical(responseJson['error'])
-        sys.exit(1)
-    
-    actions = responseJson['actions']
+    actions = response.json()['actions']
     # put the sequences at the beggining
-    actions.sort(key=lambda action: not isActionSequence(action))
-    
+    actions.sort(key=lambda action: isActionSequence(action))
+
     for action in actions:
         name = action['name']
         actionUrl = namespaceUrl + '/' + namespace + '/actions/' + package +'/' + name
         logger.verbose(f"Deleting action '{name}' at {actionUrl}")
         response = requests.delete(actionUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
-        responseJson = response.json()
-        if 'error' in responseJson:
-            logger.critical(f"Cannot delete the action '{name}'")
-            logger.critical(responseJson['error'])
-            sys.exit(1)
-        else:
-            logger.verbose("Action deleted.")
-    
+        handleResponse(response)
+        logger.verbose("Action deleted.")
+
     logger.verbose(f"Deleting package '{package}'")
     response = requests.delete(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
-    responseJson = response.json()
-
-    if 'error' in responseJson:
-        logger.critical(f"Cannot delete the package '{name}'")
-        logger.critical(responseJson['error'])
-        sys.exit(1)
-    else:
-        logger.verbose("Package deleted.")
-    
+    handleResponse(response)
+    logger.verbose("Package deleted.")
     logger.info("Cloud functions in package successfully deleted.")
 
 if __name__ == '__main__':

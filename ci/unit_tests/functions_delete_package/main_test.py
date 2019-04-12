@@ -74,7 +74,7 @@ class TestMain(BaseTestCaseCapture):
 
         # delete package
         self.t_noException([params])
-    
+
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
@@ -115,7 +115,7 @@ class TestMain(BaseTestCaseCapture):
 
         # delete package
         self.t_noException([params])
-    
+
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
@@ -146,7 +146,7 @@ class TestMain(BaseTestCaseCapture):
             responseJson = response.json()
             if 'error' in responseJson:
                 pytest.fail(responseJson['error'])
-        
+
         sequenceUrl = self.actionsUrl + self.package + '/testSequence?overwrite=true'
         # fully qualified names
         functionNames = [f"/{self.namespace}/{self.package}/{os.path.basename(fileName)}" for fileName in functionFiles]
@@ -158,14 +158,14 @@ class TestMain(BaseTestCaseCapture):
 
         if 'error' in responseJson:
             pytest.fail(responseJson['error'])
-        
+
         if useApikey:
             params.extend(['--cloudfunctions_apikey', self.apikey])
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
         # delete package
         self.t_noException([params])
-    
+
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
@@ -181,6 +181,5 @@ class TestMain(BaseTestCaseCapture):
             params.extend(['--cloudfunctions_apikey', self.apikey])
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
-        # Fail 
-        self.t_exitCode(1, [params])
-        
+        # Fail
+        self.t_exitCodeAndLogMessage(1, "The resource could not be found.", [params])
