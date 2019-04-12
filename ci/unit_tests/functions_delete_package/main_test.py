@@ -31,12 +31,12 @@ class TestMain(BaseTestCaseCapture):
                                                        'CLOUD_FUNCTIONS_NAMESPACE'])
         cls.username = os.environ['CLOUD_FUNCTIONS_USERNAME']
         cls.password = os.environ['CLOUD_FUNCTIONS_PASSWORD']
-        cls.apikey = cls.username + ':' + cls.password
+        cls.apikey = f"{cls.username}:{cls.password}"
         cls.cloudFunctionsUrl = os.environ.get('CLOUD_FUNCTIONS_URL',
                                                'https://us-south.functions.cloud.ibm.com/api/v1/namespaces')
         cls.namespace = os.environ['CLOUD_FUNCTIONS_NAMESPACE']
         cls.urlNamespace = quote(cls.namespace)
-        cls.actionsUrl = cls.cloudFunctionsUrl + '/' + cls.urlNamespace + '/actions/'
+        cls.actionsUrl = f"{cls.cloudFunctionsUrl}/{cls.urlNamespace}/actions/"
 
     def callfunc(self, *args, **kwargs):
         functions_delete_package.main(*args, **kwargs)
@@ -57,7 +57,7 @@ class TestMain(BaseTestCaseCapture):
 
     def _getPackage(self):
         """Get the package with the name of self.package"""
-        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + self.package
+        packageUrl = f"{self.cloudFunctionsUrl}/{self.urlNamespace}/packages/{self.package}"
         return requests.get(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'})
 
     def _checkPackageExists(self):
@@ -133,7 +133,7 @@ class TestMain(BaseTestCaseCapture):
         functions_deploy.main(params)
         self._checkPackageExists()
 
-        sequenceUrl = self.actionsUrl + self.package + '/testSequence'
+        sequenceUrl = f"{self.actionsUrl}{self.package}/testSequence"
         functionsDir = os.path.join(self.dataBasePath, 'example_functions')
         functionFileNames = [os.path.basename(os.path.join(functionsDir, f)) for f in os.listdir(functionsDir)]
         # Use fully qualified names!

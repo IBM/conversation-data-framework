@@ -84,7 +84,7 @@ def main(argv):
     logger.info(f"Will delete cloud functions in package '{package}'.")
 
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    packageUrl = namespaceUrl + '/' + namespace + '/packages/' + package# + '?overwrite=true'
+    packageUrl = f"{namespaceUrl}/{namespace}/packages/{package}"
     response = requests.get(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
     handleResponse(response)
 
@@ -94,7 +94,7 @@ def main(argv):
 
     for action in actions:
         name = action['name']
-        actionUrl = namespaceUrl + '/' + namespace + '/actions/' + package +'/' + name
+        actionUrl = f"{namespaceUrl}/{namespace}/actions/{package}/{name}"
         logger.verbose(f"Deleting action '{name}' at {actionUrl}")
         response = requests.delete(actionUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
         handleResponse(response)
