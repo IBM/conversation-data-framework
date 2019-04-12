@@ -44,17 +44,19 @@ def main(argv):
         setLoggerConfig(args.log, args.verbose)
 
     def handleResponse(response):
+        """Get response code and show an error if it's not OK"""
         code = response.status_code
         if code != requests.codes.ok:
-            #logger.critical(f"code: {code}, err: {response.text}")
             if code == 401:
-                logger.critical("Authorization error. Wrong credentials.")
+                logger.critical("Authorization error. Check your credentials.")
             elif code == 403:
-                logger.critical("Access is forbidden. Wrong url or credentials.")
+                logger.critical("Access is forbidden. Check your credentials and permissions.")
             elif code == 404:
-                logger.critical("The resource could not be found.")
+                logger.critical("The resource could not be found. Check your cloudfunctions url and namespace.")
             elif code >= 500:
                 logger.critical("Internal server error.")
+            else:
+                logger.critical(f"Unexpected error code: {code}")
 
             if "error" in response.json():
                 logger.critical(f"(error: {response.json()['error']})")

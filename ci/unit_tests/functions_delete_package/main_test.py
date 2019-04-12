@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, requests, shutil, unittest, uuid, zipfile
+import json, os, pytest, requests, unittest, uuid
 
 import functions_delete_package
+import functions_deploy
 from ...test_utils import BaseTestCaseCapture
 from urllib.parse import quote
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -36,7 +37,6 @@ class TestMain(BaseTestCaseCapture):
         cls.namespace = os.environ['CLOUD_FUNCTIONS_NAMESPACE']
         cls.urlNamespace = quote(cls.namespace)
         cls.actionsUrl = cls.cloudFunctionsUrl + '/' + cls.urlNamespace + '/actions/'
-        cls.functionFilePath = os.path.join(cls.dataBasePath, 'examplePython.py')
 
     def callfunc(self, *args, **kwargs):
         functions_delete_package.main(*args, **kwargs)
@@ -44,13 +44,33 @@ class TestMain(BaseTestCaseCapture):
     def setup_method(self):
         self.package = self.packageBase + str(uuid.uuid4())
 
-    def _uploadPackage(self):
-        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + self.package + '?overwrite=true'
-        response = requests.put(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
-                                data='{}')
-        responseJson = response.json()
-        return responseJson
+    def teardown_method(self):
+        """Delete my package, if it exists."""
+        existsResponse = self._getPackage()
+        if existsResponse.status_code == 200:
+            params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl,
+                '--cloudfunctions_package', self.package,
+                '--cloudfunctions_apikey', self.apikey]
+            self.t_noException([params])
+
+    def _getPackage(self):
+        """Get the package with the name of self.package"""
+        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + self.package
+        return requests.get(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'})
+
+    def _checkPackageExists(self):
+        """Check if the package was correctly created"""
+        response = self._getPackage()
+        if response.status_code != 200:
+            pytest.fail(f"The package does not exist!")
+
+    def _checkPackageDeleted(self):
+        """Check if the package was correctly deleted"""
+        response = self._getPackage()
+        if response.status_code != 404:
+            pytest.fail("The package is not deleted!")
 
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -58,7 +78,7 @@ class TestMain(BaseTestCaseCapture):
     def test_deleteEmptyPackage(self, useApikey):
         """Tests if functions_delete_package deletes uploaded package that is empty."""
 
-        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
                 '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
@@ -68,12 +88,11 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
-        responseJson = self._uploadPackage()
-        if 'error' in responseJson:
-            pytest.fail(responseJson['error'])
-
+        functions_deploy.main(params)
+        self._checkPackageExists()
         # delete package
         self.t_noException([params])
+        self._checkPackageDeleted()
 
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -86,35 +105,16 @@ class TestMain(BaseTestCaseCapture):
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
 
-        responseJson = self._uploadPackage()
-        if 'error' in responseJson:
-            pytest.fail(responseJson['error'])
-
-        functionsDir = os.path.join(self.dataBasePath, 'example_functions')
-        functionFiles = [os.path.join(functionsDir, f) for f in os.listdir(functionsDir)]
-
-        # Iterate over the cloud functions and upload them
-        for fileName in functionFiles:
-            funcName = os.path.basename(fileName)
-            functionUrl = self.actionsUrl + self.package + '/' + funcName + '?overwrite=true'
-
-            content = open(fileName, 'r').read()
-            payload = {'exec': {'kind': 'python', 'binary': False, 'code': content}}
-            # Upload the cloud function
-            response = requests.put(functionUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
-                                    data=json.dumps(payload), verify=False)
-            responseJson = response.json()
-
-            if 'error' in responseJson:
-                pytest.fail(responseJson['error'])
-
         if useApikey:
             params.extend(['--cloudfunctions_apikey', self.apikey])
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
+        functions_deploy.main(params)
+        self._checkPackageExists()
         # delete package
         self.t_noException([params])
+        self._checkPackageDeleted()
 
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -125,46 +125,31 @@ class TestMain(BaseTestCaseCapture):
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
                 '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
-
-        responseJson = self._uploadPackage()
-        if 'error' in responseJson:
-            pytest.fail(responseJson['error'])
-
-        functionsDir = os.path.join(self.dataBasePath, 'example_functions')
-        functionFiles = [os.path.join(functionsDir, f) for f in os.listdir(functionsDir)]
-
-        # Iterate over the cloud functions and upload them
-        for fileName in functionFiles:
-            funcName = os.path.basename(fileName)
-            functionUrl = self.actionsUrl + self.package + '/' + funcName + '?overwrite=true'
-
-            content = open(fileName, 'r').read()
-            payload = {'exec': {'kind': 'python', 'binary': False, 'code': content}}
-            # Upload the cloud function
-            response = requests.put(functionUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
-                                    data=json.dumps(payload), verify=False)
-            responseJson = response.json()
-            if 'error' in responseJson:
-                pytest.fail(responseJson['error'])
-
-        sequenceUrl = self.actionsUrl + self.package + '/testSequence?overwrite=true'
-        # fully qualified names
-        functionNames = [f"/{self.namespace}/{self.package}/{os.path.basename(fileName)}" for fileName in functionFiles]
-        payload = {'exec': {'kind': 'sequence', 'binary': False, 'components': functionNames}}
-        # Connect the functions into a sequence
-        response = requests.put(sequenceUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
-                                    data=json.dumps(payload), verify=False)
-        responseJson = response.json()
-
-        if 'error' in responseJson:
-            pytest.fail(responseJson['error'])
-
         if useApikey:
             params.extend(['--cloudfunctions_apikey', self.apikey])
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        functions_deploy.main(params)
+        self._checkPackageExists()
+
+        sequenceUrl = self.actionsUrl + self.package + '/testSequence'
+        functionsDir = os.path.join(self.dataBasePath, 'example_functions')
+        functionFileNames = [os.path.basename(os.path.join(functionsDir, f)) for f in os.listdir(functionsDir)]
+        # Use fully qualified names!
+        functionNames = [f"/{self.namespace}/{self.package}/{os.path.splitext(fileName)[0]}" for fileName in functionFileNames]
+
+        payload = {'exec': {'kind': 'sequence', 'binary': False, 'components': functionNames}}
+        # Connect the functions into a sequence
+        response = requests.put(sequenceUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'},
+                                    data=json.dumps(payload), verify=False)
+
+        # Fail if sequence upload failed
+        response.raise_for_status()
+
         # delete package
         self.t_noException([params])
+        self._checkPackageDeleted()
 
     # TODO: Enable enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -182,4 +167,93 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
         # Fail
-        self.t_exitCodeAndLogMessage(1, "The resource could not be found.", [params])
+        self.t_exitCodeAndLogMessage(1, "The resource could not be found. Check your cloudfunctions url and namespace.", [params])
+
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    #@pytest.mark.parametrize('useApikey', [True, False])
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_wrongCredentials(self, useApikey):
+        """Tests if functions_delete_package errors while deleting with wrong credentials."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        # Correct params for deploy
+        paramsDeploy = list(params)
+        if useApikey:
+            paramsDeploy.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            paramsDeploy.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        # Wrong params for delete
+        paramsDelete = list(params)
+        randomUsername = str(uuid.uuid4())
+        randomPassword = str(uuid.uuid4())
+        if useApikey:
+            paramsDelete.extend(['--cloudfunctions_apikey', f"{randomUsername}:{randomPassword}"])
+        else:
+            paramsDelete.extend(['--cloudfunctions_username', randomUsername, '--cloudfunctions_password', randomPassword])
+
+        # Pass
+        functions_deploy.main(paramsDeploy)
+        self._checkPackageExists()
+
+        # Fail
+        self.t_exitCodeAndLogMessage(1, "Authorization error. Check your credentials.", [paramsDelete])
+
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    #@pytest.mark.parametrize('useApikey', [True, False])
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_wrongCloudfunctionsUrl(self, useApikey):
+        """Tests if functions_delete_package errors while deleting with wrong cloud functions url."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace]
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        # Correct params for deploy
+        paramsDeploy = list(params)
+        paramsDeploy.extend(['--cloudfunctions_url', self.cloudFunctionsUrl])
+        # Wrong params for delete
+        paramsDelete = list(params)
+        paramsDelete.extend(['--cloudfunctions_url', self.cloudFunctionsUrl+str(uuid.uuid4())])
+
+        # Pass
+        functions_deploy.main(paramsDeploy)
+        self._checkPackageExists()
+
+        # Fail
+        self.t_exitCodeAndLogMessage(1,
+        "The resource could not be found. Check your cloudfunctions url and namespace.", [paramsDelete])
+
+    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    #@pytest.mark.parametrize('useApikey', [True, False])
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_wrongNamespace(self, useApikey):
+        """Tests if functions_delete_package errors while deleting with wrong namespace."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_package', self.package, '--cloudfunctions_url', self.cloudFunctionsUrl]
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        # Correct params for deploy
+        paramsDeploy = list(params)
+        paramsDeploy.extend(['--cloudfunctions_namespace', self.urlNamespace])
+        # Wrong params for delete
+        paramsDelete = list(params)
+        paramsDelete.extend(['--cloudfunctions_namespace', self.urlNamespace + self.cloudFunctionsUrl+str(uuid.uuid4())])
+
+        # Pass
+        functions_deploy.main(paramsDeploy)
+        self._checkPackageExists()
+
+        # Fail
+        self.t_exitCodeAndLogMessage(1,
+        "The resource could not be found. Check your cloudfunctions url and namespace.", [paramsDelete])
