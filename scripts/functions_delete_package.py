@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json, sys, argparse, requests, zipfile, base64
+import os, json, sys, argparse, requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword
+from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, errorsInResponse
 import urllib3
 import logging
 
@@ -58,10 +58,7 @@ def main(argv):
             else:
                 logger.critical(f"Unexpected error code: {code}")
 
-            if "error" in response.json():
-                logger.critical(f"(error: {response.json()['error']})")
-            else:
-                logger.critical("(No error information from the server.)")
+            errorsInResponse(response.json())
             sys.exit(1)
 
     def isActionSequence(action):
