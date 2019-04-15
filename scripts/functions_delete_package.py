@@ -107,7 +107,7 @@ def main(argv):
             sys.exit(1)
         logger.verbose("Action deleted.")
 
-    logger.verbose(f"Deleting package '{package}' ar {packageUrl}")
+    logger.verbose(f"Deleting package '{package}' at {packageUrl}")
     response = requests.delete(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
     if not handleResponse(response):
         logger.critical(f"Unable to delete package '{package}' at {packageUrl}")

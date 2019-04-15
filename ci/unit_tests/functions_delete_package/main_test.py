@@ -46,7 +46,7 @@ class TestMain(BaseTestCaseCapture):
 
     def teardown_method(self):
         """Delete my package, if it exists."""
-        existsResponse = self._getPackage()
+        existsResponse = self._getResponseFromPackage()
         if existsResponse.status_code == 200:
             params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
                 '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
@@ -55,20 +55,20 @@ class TestMain(BaseTestCaseCapture):
                 '--cloudfunctions_apikey', self.apikey]
             self.t_noException([params])
 
-    def _getPackage(self):
+    def _getResponseFromPackage(self):
         """Get the package with the name of self.package"""
         packageUrl = f"{self.cloudFunctionsUrl}/{self.urlNamespace}/packages/{self.package}"
         return requests.get(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'})
 
     def _checkPackageExists(self):
         """Check if the package was correctly created"""
-        response = self._getPackage()
+        response = self._getResponseFromPackage()
         if response.status_code != 200:
             pytest.fail(f"The package does not exist!")
 
     def _checkPackageDeleted(self):
         """Check if the package was correctly deleted"""
-        response = self._getPackage()
+        response = self._getResponseFromPackage()
         if response.status_code != 404:
             pytest.fail("The package is not deleted!")
 
