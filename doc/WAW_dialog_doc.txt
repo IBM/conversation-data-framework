@@ -405,3 +405,66 @@
 		'true'
 		'false'
 	Default value: 'true'
+
+	**************************************************
+	** <action>
+	**************************************************
+	Specifies action.
+	Elements
+		<name> REQUIRED (only once)
+		<result_variable> REQUIRED (only once)
+		<type> (only once)
+		<parameters> (only once)
+		<credentials> (only once)
+	Attributes
+		none
+	Example
+		<action>
+			<name>...</name>
+			<type>cloud_function</type>
+			<parameters>
+				<arg1>...</arg1>
+				<arg2>...</arg2>
+			</parameters>
+			<result_variable>...</result_variable>
+			<credentials>...</credentials>
+		</action>
+
+	**************************************************
+	** <name>
+	**************************************************
+	Specifies the name of the action.
+
+	**************************************************
+	** <type>
+	**************************************************
+	The type of action to invoke.
+	Allowed values
+		'client'
+		'server'
+		'cloud_function'
+		'web_action'
+
+	**************************************************
+	** <parameters>
+	**************************************************
+	A map of key/value pairs to be provided to the action.
+	Elements
+		any
+	Attributes
+		none
+	Example
+		<parameters>
+			<arg1>...</arg1>
+			<arg2>...</arg2>
+		</parameters>
+
+	**************************************************
+	** <result_variable>
+	**************************************************
+	The location in the dialog context where the result of the action is stored.
+
+	**************************************************
+	** <credentials>
+	**************************************************
+	The name of the context variable that the client application will use to pass in credentials for the action.
