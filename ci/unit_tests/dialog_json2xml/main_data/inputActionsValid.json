@@ -26,7 +26,6 @@
             },
             {
                 "name":"98c70d77cf0a97fd9f74",
-                "type":"cloud_function",
                 "result_variable": "resVar"
             }
         ],
