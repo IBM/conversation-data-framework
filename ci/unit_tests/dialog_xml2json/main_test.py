@@ -15,7 +15,7 @@ limitations under the License.
 
 import os, json
 
-import dialog_json2xml
+import dialog_xml2json
 from ...test_utils import BaseTestCaseCapture
 
 class TestMain(BaseTestCaseCapture):
@@ -30,27 +30,29 @@ class TestMain(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolder(TestMain.testOutputPath)
 
     def callfunc(self, *args, **kwargs):
-        dialog_json2xml.main(*args, **kwargs)
+        dialog_xml2json.main(*args, **kwargs)
 
     def test_mainValidActions(self):
         """Tests if the script successfully completes with valid input file with actions."""
-        inputJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputActionsValid.json'))
-        expectedXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedActionsValid.xml'))
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputActionsValid.xml'))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedActionsValid.json'))
 
-        outputXmlDirPath = os.path.join(self.testOutputPath, 'outputActionsValidResult')
-        outputXmlPath = os.path.join(outputXmlDirPath, 'dialog.xml')
+        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputActionsValidResult')
+        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
 
-        BaseTestCaseCapture.createFolder(outputXmlDirPath)
+        BaseTestCaseCapture.createFolder(outputJsonDirPath)
 
-        self.t_noException([[inputJsonPath, '-d', outputXmlDirPath]])
+        self.t_noException([['--common_dialog_main', inputXmlPath,
+                            '--common_outputs_dialogs', 'dialog.json',
+                            '--common_outputs_directory', outputJsonDirPath]])
 
-        expectedXml = ""
-        outputXml = ""
+        expectedJson = ""
+        outputJson = ""
 
-        with open(expectedXmlPath, 'r') as expectedXmlFile:
-            expectedXml = expectedXmlFile.read()
-        with open(outputXmlPath, 'r') as outputXmlFile:
-            outputXml = outputXmlFile.read()
+        with open(expectedJsonPath, 'r') as expectedJsonFile:
+            expectedJson = expectedJsonFile.read()
+        with open(outputJsonPath, 'r') as outputJsonFile:
+            outputJson = outputJsonFile.read()
 
-        assert expectedXml == outputXml
+        assert expectedJson == outputJson
 
