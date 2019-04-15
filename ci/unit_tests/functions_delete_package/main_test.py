@@ -72,7 +72,7 @@ class TestMain(BaseTestCaseCapture):
         if response.status_code != 404:
             pytest.fail("The package is not deleted!")
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteEmptyPackage(self, useApikey):
@@ -94,7 +94,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([params])
         self._checkPackageDeleted()
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonEmptyPackageWithoutSequence(self, useApikey):
@@ -116,7 +116,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([params])
         self._checkPackageDeleted()
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonEmptyPackageWithSequence(self, useApikey):
@@ -151,7 +151,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([params])
         self._checkPackageDeleted()
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_deleteNonexistentPackage(self, useApikey):
@@ -169,7 +169,7 @@ class TestMain(BaseTestCaseCapture):
         # Fail
         self.t_exitCodeAndLogMessage(1, "The resource could not be found. Check your cloudfunctions url and namespace.", [params])
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_wrongCredentials(self, useApikey):
@@ -202,7 +202,7 @@ class TestMain(BaseTestCaseCapture):
         # Fail
         self.t_exitCodeAndLogMessage(1, "Authorization error. Check your credentials.", [paramsDelete])
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_wrongCloudfunctionsUrl(self, useApikey):
@@ -230,7 +230,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_exitCodeAndLogMessage(1,
         "The resource could not be found. Check your cloudfunctions url and namespace.", [paramsDelete])
 
-    # TODO: Enable enable apikey/username+password testing in Nightly builds
+    # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
     @pytest.mark.parametrize('useApikey', [True])
     def test_wrongNamespace(self, useApikey):

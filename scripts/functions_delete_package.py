@@ -63,7 +63,9 @@ def main(argv):
 
     def isActionSequence(action):
         for annotation in action['annotations']:
-            if 'key' in annotation and annotation['key'] == 'exec' and annotation['value'] == 'sequence': return True;
+            if 'key' in annotation and annotation['key'] == 'exec':
+                if ['value'] in annotation and annotation['value'] == 'sequence':
+                    return True;
         return False
 
     config = Cfg(args)
