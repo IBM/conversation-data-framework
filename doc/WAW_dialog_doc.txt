@@ -430,13 +430,9 @@
 			<credentials>...</credentials>
 		</action>
 
-	**************************************************
-	** <name>
-	**************************************************
-	Specifies the name of the action.
 
 	**************************************************
-	** <type>
+	** <type> in <action>
 	**************************************************
 	The type of action to invoke.
 	Allowed values
@@ -452,7 +448,7 @@
 	Elements
 		any
 	Attributes
-		none
+		scope
 	Example
 		<parameters>
 			<arg1>...</arg1>
@@ -463,8 +459,12 @@
 	** <result_variable>
 	**************************************************
 	The location in the dialog context where the result of the action is stored.
+	Attributes
+		scope
 
 	**************************************************
 	** <credentials>
 	**************************************************
 	The name of the context variable that the client application will use to pass in credentials for the action.
+	Attributes
+		scope
