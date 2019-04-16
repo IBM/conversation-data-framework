@@ -77,7 +77,7 @@ def main(argv):
             sys.exit(1)
 
     if not nWorkspacesDeleted:
-        logger.info("No workspaces has been deleted")
+        logger.info("No workspace has been deleted")
     elif nWorkspacesDeleted == 1:
         logger.info("One workspace has been successfully deleted")
     else:

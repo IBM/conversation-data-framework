@@ -239,7 +239,7 @@ class TestMain(BaseTestCaseCapture):
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteByNameNoneMatching(self, envVarNameUsername, envVarNamePassword):
-        """Tests if no workspace match name."""
+        """Tests if no workspace matches name."""
 
         # non matching workspace
         workspaceName = "My skill"
