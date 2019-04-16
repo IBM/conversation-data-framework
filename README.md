@@ -41,3 +41,5 @@ The unit and app tests can be started with this commands (from top directory of 
 PYTHONPATH=./scripts:$PYTHONPATH pytest ci/unit_tests
 PYTHONPATH=./scripts:$PYTHONPATH pytest ci/app_tests
 ```
+
+This should not be in official WAW repository.
