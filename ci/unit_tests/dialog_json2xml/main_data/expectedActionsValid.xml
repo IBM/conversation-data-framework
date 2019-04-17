@@ -11,26 +11,26 @@
     <metadata structure="emptyDict"/>
     <actions>
       <action>
-        <result_variable>resVar</result_variable>
-        <credentials>creds</credentials>
         <name>793d74aac848ecdc8159</name>
         <type>cloud_function</type>
         <parameters>
-          <arg2>val2</arg2>
           <arg1>val1</arg1>
+          <arg2>val2</arg2>
         </parameters>
+        <result_variable>resVar</result_variable>
+        <credentials>creds</credentials>
       </action>
       <action>
-        <result_variable>resVar</result_variable>
         <name>89c37e7a3bb755472962</name>
         <type>cloud_function</type>
         <parameters>
           <arg1>10</arg1>
         </parameters>
+        <result_variable>resVar</result_variable>
       </action>
       <action>
-        <result_variable>resVar</result_variable>
         <name>98c70d77cf0a97fd9f74</name>
+        <result_variable>resVar</result_variable>
       </action>
     </actions>
   </node>
