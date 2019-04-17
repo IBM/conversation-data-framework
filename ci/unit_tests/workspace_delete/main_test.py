@@ -251,7 +251,7 @@ class TestMain(BaseTestCaseCapture):
         deleteParams = list(self.deleteParamsBase)
         deleteParams.extend(['--conversation_workspace_match_by_name', 'true',
                              '--conversation_workspace_name_pattern', 'workspace'])
-        self.t_noExceptionAndLogMessage("No workspaces has been deleted",[deleteParams])
+        self.t_noExceptionAndLogMessage("No workspace has been deleted",[deleteParams])
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
 
@@ -266,7 +266,7 @@ class TestMain(BaseTestCaseCapture):
         deleteParams = list(self.deleteParamsBase)
         deleteParams.extend(['--conversation_workspace_match_by_name', 'true',
                              '--conversation_workspace_name_pattern', 'workspace'])
-        self.t_noExceptionAndLogMessage("No workspaces has been deleted",[deleteParams])
+        self.t_noExceptionAndLogMessage("No workspace has been deleted",[deleteParams])
 
     def test_wrongCredentials(self):
         """Tests if script errors while deleting with wrong credentials."""
