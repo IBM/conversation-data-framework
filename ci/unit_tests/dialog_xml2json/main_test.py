@@ -54,5 +54,5 @@ class TestMain(BaseTestCaseCapture):
         with open(outputJsonPath, 'r') as outputJsonFile:
             outputJson = outputJsonFile.read()
 
-        assert expectedJson == outputJson
+        assert json.loads(expectedJson) == json.loads(outputJson)
 
