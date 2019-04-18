@@ -49,13 +49,11 @@ class TestMain(BaseTestCaseCapture):
         with open(expectedXmlPath, 'r') as expectedXmlFile:
             expectedXml = etree.XML(expectedXmlFile.read(), etree.XMLParser(remove_blank_text=True))
             for parent in expectedXml.xpath('//*[./*]'): # Search for parent elements
-                print(parent)
-                parent[:] = sorted(parent,key=lambda x: x.tag)
+                parent[:] = sorted(parent, key=lambda x: x.tag)
         with open(outputXmlPath, 'r') as outputXmlFile:
             outputXml = etree.XML(outputXmlFile.read(), etree.XMLParser(remove_blank_text=True))
             for parent in outputXml.xpath('//*[./*]'): # Search for parent elements
-                print(parent)
-                parent[:] = sorted(parent,key=lambda x: x.tag)
+                parent[:] = sorted(parent, key=lambda x: x.tag)
 
         assert etree.tostring(expectedXml) == etree.tostring(outputXml)
 
