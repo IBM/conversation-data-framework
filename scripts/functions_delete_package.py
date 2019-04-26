@@ -56,7 +56,7 @@ def main(argv):
             elif code >= 500:
                 logger.error("Internal server error. (Error code " + str(code) + ")")
             else:
-                logger.error("Unexpected error code: " + str(code) + ")")
+                logger.error("Unexpected error code: " + str(code))
 
             errorsInResponse(response.json())
             return False
