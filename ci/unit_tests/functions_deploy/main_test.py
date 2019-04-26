@@ -110,7 +110,7 @@ class TestMain(BaseTestCaseCapture):
             assert "Hello unit test!" in functionRespJson['greeting']
 
     def test_pythonVersionFunctions(self):
-        """Tests if it's possible to upload one fuction into two different version of runtime."""
+        """Tests if it's possible to upload one function into two different version of runtime."""
         for pythonVersion in [2, 3]:
             params = ['-c', os.path.join(self.dataBasePath, 'python' + str(pythonVersion) + 'Functions.cfg'),
                       '--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password,
@@ -162,7 +162,7 @@ class TestMain(BaseTestCaseCapture):
 
     @pytest.mark.parametrize('useApikey', [True, False])
     def test_functionsUploadSequence(self, useApikey):
-        """Tests if functions_deploy uploads a sequences."""
+        """Tests if functions_deploy uploads sequences."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleValidSequences.cfg'),
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
@@ -178,7 +178,7 @@ class TestMain(BaseTestCaseCapture):
         self.packageCreated = True
 
         sequenceAnswers = {"seq_a" : "123", "seq_b" : "231", "seq_c" : "312"}
-        # try to call particular functions
+        # try to call particular sequences and test their output
         for sequenceName in sequenceAnswers:
             sequenceCallUrl = self.actionsUrl + self.package + '/' + sequenceName + '?blocking=true&result=true'
 
@@ -192,7 +192,7 @@ class TestMain(BaseTestCaseCapture):
 
     @pytest.mark.parametrize('useApikey', [True, False])
     def test_functionsMissingSequenceComponent(self, useApikey):
-        """Tests if functions_deploy fails when uploading a sequence with a missing function."""
+        """Tests if functions_deploy fails when uploading a sequence with a nonexistent function."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence1.cfg'),
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
@@ -203,7 +203,7 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
-        # upload functions
+        # upload functions (will fail AFTER package creation)
         self.packageCreated = True
         self.t_exitCodeAndLogMessage(1, "Unexpected error code", [params])
 
@@ -220,6 +220,7 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
+        # Fails before anything is uploaded
         self.t_exitCodeAndLogMessage(1, "parameter not defined", [params])
 
     def test_badArgs(self):
