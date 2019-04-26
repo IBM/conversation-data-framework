@@ -16,6 +16,7 @@ limitations under the License.
 import json, os, pytest, requests, shutil, unittest, uuid, zipfile
 
 import functions_deploy
+import functions_delete_package
 from ...test_utils import BaseTestCaseCapture
 from urllib.parse import quote
 
@@ -63,19 +64,13 @@ class TestMain(BaseTestCaseCapture):
 
     def teardown_method(self):
         if self.packageCreated:
-            # get all functions in package and remove them
-            functionNames = self._getFunctionsInPackage(self.package)
-            for functionName in functionNames:
-                functionDelUrl =  self.actionsUrl + self.package + '/' + functionName
-
-                functionDelResp = requests.delete(functionDelUrl, auth=(self.username, self.password))
-                assert functionDelResp.status_code == 200
-
-            # remove cloud function package
-            packageDelUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + self.package
-
-            packageDelResp = requests.delete(packageDelUrl, auth=(self.username, self.password))
-            assert packageDelResp.status_code == 200
+            # Delete the package
+            params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl,
+                '--cloudfunctions_package', self.package,
+                '--cloudfunctions_apikey', self.apikey]
+            self.t_fun_noException(functions_delete_package.main, [params])
 
     @pytest.mark.parametrize('useApikey', [True, False])
     def test_functionsUploadFromDirectory(self, useApikey):
