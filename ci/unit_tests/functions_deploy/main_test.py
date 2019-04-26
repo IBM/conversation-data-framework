@@ -109,36 +109,6 @@ class TestMain(BaseTestCaseCapture):
             functionRespJson = functionResp.json()
             assert "Hello unit test!" in functionRespJson['greeting']
 
-    @pytest.mark.parametrize('useApikey', [True, False])
-    def test_functionsUploadSequence(self, useApikey):
-        """Tests if functions_deploy uploads a sequences."""
-
-        params = ['-c', os.path.join(self.dataBasePath, 'exampleValidSequences.cfg'),
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
-                  '--cloudfunctions_url', self.cloudFunctionsUrl]
-
-        if useApikey:
-            params.extend(['--cloudfunctions_apikey', self.apikey])
-        else:
-            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
-
-        # upload functions
-        self.t_noException([params])
-        self.packageCreated = True
-
-        sequenceAnswers = {"seq_a" : "123", "seq_b" : "231", "seq_c" : "312"}
-        # try to call particular functions
-        for sequenceName in sequenceAnswers:
-            sequenceCallUrl = self.actionsUrl + self.package + '/' + sequenceName + '?blocking=true&result=true'
-
-            sequenceResp = requests.post(sequenceCallUrl, auth=(self.username, self.password),
-                                         headers={'Content-Type': 'application/json', 'accept': 'application/json'})
-
-            assert sequenceResp.status_code == 200
-            sequenceRespJson = sequenceResp.json()
-            shouldAnswer = sequenceAnswers[sequenceName]
-            assert shouldAnswer in sequenceRespJson["entries"]
-
     def test_pythonVersionFunctions(self):
         """Tests if it's possible to upload one fuction into two different version of runtime."""
         for pythonVersion in [2, 3]:
@@ -190,6 +160,67 @@ class TestMain(BaseTestCaseCapture):
         functionRespJson = functionResp.json()
         assert "String from helper function" == functionRespJson['test']
 
+    @pytest.mark.parametrize('useApikey', [True, False])
+    def test_functionsUploadSequence(self, useApikey):
+        """Tests if functions_deploy uploads a sequences."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleValidSequences.cfg'),
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        # upload functions
+        self.t_noException([params])
+        self.packageCreated = True
+
+        sequenceAnswers = {"seq_a" : "123", "seq_b" : "231", "seq_c" : "312"}
+        # try to call particular functions
+        for sequenceName in sequenceAnswers:
+            sequenceCallUrl = self.actionsUrl + self.package + '/' + sequenceName + '?blocking=true&result=true'
+
+            sequenceResp = requests.post(sequenceCallUrl, auth=(self.username, self.password),
+                                         headers={'Content-Type': 'application/json', 'accept': 'application/json'})
+
+            assert sequenceResp.status_code == 200
+            sequenceRespJson = sequenceResp.json()
+            shouldAnswer = sequenceAnswers[sequenceName]
+            assert shouldAnswer in sequenceRespJson["entries"]
+
+    @pytest.mark.parametrize('useApikey', [True, False])
+    def test_functionsMissingSequenceComponent(self, useApikey):
+        """Tests if functions_deploy fails when uploading a sequence with a missing function."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence1.cfg'),
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        # upload functions
+        self.packageCreated = True
+        self.t_exitCodeAndLogMessage(1, "Unexpected error code", [params])
+
+    @pytest.mark.parametrize('useApikey', [True, False])
+    def test_functionsMissingSequenceDefinition(self, useApikey):
+        """Tests if functions_deploy fails when uploading a sequence without a function list."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence2.cfg'),
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        self.t_exitCodeAndLogMessage(1, "parameter not defined", [params])
 
     def test_badArgs(self):
         """Tests some basic common problems with args."""
