@@ -102,6 +102,8 @@ def main(argv):
     namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
     sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences')
+    if type(sequenceNames) is str:
+        sequenceNames = [sequenceNames]
     sequences = {seqName: getRequiredParameter(config, "cloudfunctions_"+seqName) for seqName in sequenceNames}
 
     if 'cloudfunctions_apikey' in auth:
