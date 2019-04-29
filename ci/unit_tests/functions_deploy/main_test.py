@@ -66,7 +66,7 @@ class TestMain(BaseTestCaseCapture):
         if self.packageCreated:
             # Delete the package
             params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package,
                 '--cloudfunctions_apikey', self.apikey]
@@ -77,7 +77,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_deploy uploads all supported functions from given directory."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -114,7 +114,7 @@ class TestMain(BaseTestCaseCapture):
         for pythonVersion in [2, 3]:
             params = ['-c', os.path.join(self.dataBasePath, 'python' + str(pythonVersion) + 'Functions.cfg'),
                       '--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password,
-                      '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                      '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                       '--cloudfunctions_url', self.cloudFunctionsUrl]
 
             self.t_noException([params])
@@ -143,7 +143,7 @@ class TestMain(BaseTestCaseCapture):
 
         #upload zip file
         params = ['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password,
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl, '--common_functions', [dirForZip]]
 
         self.t_noException([params])
@@ -165,7 +165,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_deploy uploads sequences."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleValidSequences.cfg'),
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -195,7 +195,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_deploy fails when uploading a sequence with a nonexistent function."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence1.cfg'),
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -212,7 +212,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_deploy fails when uploading a sequence without a function list."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence2.cfg'),
-                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                  '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -232,7 +232,7 @@ class TestMain(BaseTestCaseCapture):
                             '--cloudfunctions_password', self.password,
                             '--cloudfunctions_apikey', self.password + ":" + self.username,
                             '--cloudfunctions_package', self.package,
-                            '--cloudfunctions_namespace', self.urlNamespace,
+                            '--cloudfunctions_namespace', self.namespace,
                             '--cloudfunctions_url', self.cloudFunctionsUrl,
                             '--common_functions', self.dataBasePath]
 

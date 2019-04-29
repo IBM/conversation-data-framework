@@ -17,6 +17,7 @@ import os, json, sys, argparse, requests, zipfile, base64
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
 from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, errorsInResponse
+from urllib.parse import quote
 import urllib3
 import logging
 
@@ -97,9 +98,10 @@ def main(argv):
     config = Cfg(args)
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
+    urlNamespace = quote(namespace)
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     package = getRequiredParameter(config, 'cloudfunctions_package')
-    namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
+    cloudFunctionsUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
     sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences') or []
     if type(sequenceNames) is str:
@@ -117,7 +119,7 @@ def main(argv):
         runtimeVersions[runtime] = runtime + ':' + getattr(config, 'cloudfunctions_' + runtime + '_version', 'default')
 
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-    packageUrl = namespaceUrl + '/' + namespace + '/packages/' + package + '?overwrite=true'
+    packageUrl = cloudFunctionsUrl + '/' + urlNamespace + '/packages/' + package + '?overwrite=true'
     logger.info("Will create cloudfunctions package %s.", package)
     response = requests.put(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'},
                             data='{}')
@@ -157,7 +159,7 @@ def main(argv):
                 logger.warning("Cannot determine function type of '%s'. Skipping!", functionFilePath)
                 continue
 
-        functionUrl = namespaceUrl + '/' + namespace + '/actions/' + package + '/' + funcName + '?overwrite=true'
+        functionUrl = cloudFunctionsUrl + '/' + urlNamespace + '/actions/' + package + '/' + funcName + '?overwrite=true'
 
         if binary:
             content = base64.b64encode(open(functionFilePath, 'rb').read()).decode('utf-8')
@@ -179,7 +181,7 @@ def main(argv):
         logger.info("Will deploy cloudfunction sequences.")
 
     for seqName in sequences:
-        sequenceUrl = namespaceUrl + '/' + namespace + '/actions/' + package + '/' + seqName + '?overwrite=true'
+        sequenceUrl = cloudFunctionsUrl + '/' + urlNamespace + '/actions/' + package + '/' + seqName + '?overwrite=true'
         functionNames = sequences[seqName]
         fullFunctionNames = [namespace + '/' + package +'/' + functionName for functionName in functionNames]
         payload = {'exec': {'kind': 'sequence', 'binary': False, 'components': fullFunctionNames}}
