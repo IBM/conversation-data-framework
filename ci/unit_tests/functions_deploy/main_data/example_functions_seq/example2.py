@@ -1,4 +1,4 @@
 
 def main(args):
     entries = args.get("entries", "")
-    return {"entries": entries+"2"}
+    return {"entries": entries + "2"}

@@ -133,7 +133,7 @@ def main(argv):
     if type(sequenceNames) is str:
         sequenceNames = [sequenceNames]
     # Create a dict of {<seqName>: [<functions 1>, <function2> ,...]}
-    sequences = {seqName: getRequiredParameter(config, "cloudfunctions_sequence_"+seqName) for seqName in sequenceNames}
+    sequences = {seqName: getRequiredParameter(config, "cloudfunctions_sequence_" + seqName) for seqName in sequenceNames}
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
