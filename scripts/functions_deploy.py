@@ -55,7 +55,10 @@ def main(argv):
     # then create corresponding arguments for the main parser
     sequenceSubparser = argparse.ArgumentParser()
     sequenceSubparser.add_argument('--cloudfunctions_sequences', nargs='+')
-    sequenceNames = sequenceSubparser.parse_known_args(argv)[0].cloudfunctions_sequences or []
+    argvWithoutHelp = list(argv)
+    if "--help" in argv: argvWithoutHelp.remove("--help")
+    if "-h" in argv: argvWithoutHelp.remove("-h")
+    sequenceNames = sequenceSubparser.parse_known_args(argvWithoutHelp)[0].cloudfunctions_sequences or []
 
     parser = argparse.ArgumentParser(description="Deploys the cloud functions",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
