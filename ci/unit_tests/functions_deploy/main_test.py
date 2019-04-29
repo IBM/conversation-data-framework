@@ -194,7 +194,7 @@ class TestMain(BaseTestCaseCapture):
     def test_functionsMissingSequenceComponent(self, useApikey):
         """Tests if functions_deploy fails when uploading a sequence with a nonexistent function."""
 
-        params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence1.cfg'),
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleNonexistentFunctionRef.cfg'),
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
@@ -211,7 +211,7 @@ class TestMain(BaseTestCaseCapture):
     def test_functionsMissingSequenceDefinition(self, useApikey):
         """Tests if functions_deploy fails when uploading a sequence without a function list."""
 
-        params = ['-c', os.path.join(self.dataBasePath, 'exampleInValidSequence2.cfg'),
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleUndefinedSequence.cfg'),
                   '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                   '--cloudfunctions_url', self.cloudFunctionsUrl]
 
