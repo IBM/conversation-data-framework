@@ -148,7 +148,7 @@ def main(argv):
     response = requests.put(packageUrl, auth=(username, password), headers={'Content-Type': 'application/json'},
                             data='{}')
     if not handleResponse(response):
-        logger.critical("Cannot create cloud functions package %s.", response)
+        logger.critical("Cannot create cloud functions package %s.", package)
         sys.exit(1)
     else:
         logger.info('Cloud functions package successfully uploaded')
