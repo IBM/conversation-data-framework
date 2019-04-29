@@ -51,7 +51,12 @@ zipContent = {
 }
 
 def main(argv):
-    logger.info('STARTING: '+ os.path.basename(__file__))
+    # parse sequence names - because we need to get the name first and
+    # then create corresponding arguments for the main parser
+    sequenceSubparser = argparse.ArgumentParser()
+    sequenceSubparser.add_argument('--cloudfunctions_sequences', nargs='+')
+    sequenceNames = sequenceSubparser.parse_known_args(argv)[0].cloudfunctions_sequences or []
+
     parser = argparse.ArgumentParser(description="Deploys the cloud functions",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-v', '--verbose', required=False, help='verbosity', action='store_true')
@@ -64,15 +69,30 @@ def main(argv):
     parser.add_argument('--cloudfunctions_package', required=False, help="cloud functions package name")
     parser.add_argument('--cloudfunctions_url', required=False, help="url of cloud functions API")
     parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
+    parser.add_argument('--cloudfunctions_sequences', nargs='+', required=False, help="cloud functions sequence names")
 
     for runtime in list(interpretedRuntimes.values()) + list(compiledRuntimes.values()):
         parser.add_argument('--cloudfunctions_' + runtime + '_version', required=False,
             help="cloud functions " + runtime + " version")
 
+    # Add arguments for each sequence to be able to define the functions in the sequence
+    for sequenceName in sequenceNames:
+        try:
+            parser.add_argument("--cloudfunctions_sequence_" + sequenceName, required=True, help="functions in sequence '" + sequenceName + "'")
+        except argparse.ArgumentError as e:
+            if "conflicting option" in str(e):
+                # from None is needed in order to show only the custom exception and not the whole traceback
+                # (It would read as 'During handling of the above exception, another exception has occurred', but we DID handle it)
+                raise argparse.ArgumentError(None, "Duplicate sequence name: "+sequenceName) from None
+            else:
+                raise e
+
     args = parser.parse_args(argv)
 
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
+
+    logger.info('STARTING: '+ os.path.basename(__file__))
 
     def handleResponse(response):
         """Get response code and show an error if it's not OK"""
@@ -103,10 +123,14 @@ def main(argv):
     package = getRequiredParameter(config, 'cloudfunctions_package')
     cloudFunctionsUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
-    sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences') or []
+    # If sequence names are already defined (from console), do nothing. Else look for them in the configuration.
+    if not sequenceNames:
+        sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences') or []
+    # SequenceNames has to be a list
     if type(sequenceNames) is str:
         sequenceNames = [sequenceNames]
-    sequences = {seqName: getRequiredParameter(config, "cloudfunctions_"+seqName) for seqName in sequenceNames}
+    # Create a dict of {<seqName>: [<functions 1>, <function2> ,...]}
+    sequences = {seqName: getRequiredParameter(config, "cloudfunctions_sequence_"+seqName) for seqName in sequenceNames}
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])

@@ -177,7 +177,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([params])
         self.packageCreated = True
 
-        sequenceAnswers = {"seq_a" : "123", "seq_b" : "231", "seq_c" : "312"}
+        sequenceAnswers = {"a" : "123", "b" : "231", "c" : "312"}
         # try to call particular sequences and test their output
         for sequenceName in sequenceAnswers:
             sequenceCallUrl = self.actionsUrl + self.package + '/' + sequenceName + '?blocking=true&result=true'
