@@ -219,7 +219,7 @@ def main(argv):
             logger.critical("Cannot deploy cloudfunctions sequence %s", seqName)
             sys.exit(1)
         else:
-            logger.verbose("Sequence deployed.")
+            logger.verbose("Sequence '%s' deployed.", seqName)
     if sequences:
         logger.info("Cloudfunction sequences successfully deployed.")
     logger.info('FINISHING: ' + os.path.basename(__file__))
