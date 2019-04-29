@@ -101,7 +101,7 @@ def main(argv):
     package = getRequiredParameter(config, 'cloudfunctions_package')
     namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
-    sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences')
+    sequenceNames = getOptionalParameter(config, 'cloudfunctions_sequences') or []
     if type(sequenceNames) is str:
         sequenceNames = [sequenceNames]
     sequences = {seqName: getRequiredParameter(config, "cloudfunctions_"+seqName) for seqName in sequenceNames}
