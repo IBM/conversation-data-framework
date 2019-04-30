@@ -1,5 +1,5 @@
 ## Release 1.5.2019 v2.1
-WAW now requires Python 3.5 and it is not compatible with Python 2 since this release. Last WAW version which supports python 2.7 is the 1.2.
+Since this release, WAW requires Python 3.5 and it is no longer compatible with Python 2. Last WAW version which supports python 2.7 is the 1.2 one.
 
 ### New Features
  - You can now delete, upload and test workspace by specifying its name or regular expression
