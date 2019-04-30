@@ -1,12 +1,12 @@
 ## Release 1.5.2019 v2.1
-WAW was moved to Python 3.5 and from this release it is not compatible with Python 2. Last WAW version which supports python 2.7 is the 1.2.
+WAW now requires Python 3.5 and it is not compatible with Python 2 since this release. Last WAW version which supports python 2.7 is the 1.2.
 
 ### New Features
  - You can now delete, upload and test workspace by specifying its name or regular expression
  - It is possible to replace some values using [workspace_addjson](/scripts/workspace_addjson.py) script
- - There is now an option to set the log level in the CLI.
- - `-v` flag now just print more INFO messages (not DEBUG or ERROR).
- - Documentation and tests for actions in the dialog were added.
+ - There is now an option to set the log level in the CLI
+ - `-v` flag now just print more INFO messages (not DEBUG or ERROR)
+ - Documentation and tests for actions in the dialog were added
 
 #### Cloud Functions
  - While using cloud functions, it is now possible to use an apikey
@@ -15,7 +15,7 @@ WAW was moved to Python 3.5 and from this release it is not compatible with Pyth
 
 #### Testing
  - If you set `exception_if_fail` parameter of script [evaluate_tests](/scripts/evaluate_tests.py) to true, it throws exception, when there are any failed tests detected while evaluating.
- - From now we are running tests for Python 3 only
+ - We are running tests for Python 3 only from now on
 
 ## Release 1.4.2019 v1.2
 This is the last WAW version which supports python 2.7.
