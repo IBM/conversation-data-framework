@@ -6,7 +6,7 @@ WAW was moved to Python 3.5 and from this release it is not compatible with Pyth
  - It is possible to replace some values using [workspace_addjson](/scripts/workspace_addjson.py) script
  - There is now an option to set the log level in the CLI.
  - `-v` flag now just print more INFO messages (not DEBUG or ERROR).
- - Documentation and tests for actions in the dialog was added.
+ - Documentation and tests for actions in the dialog were added.
 
 #### Cloud Functions
  - While using cloud functions is is now possible to use an apikey
