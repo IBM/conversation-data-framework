@@ -9,7 +9,7 @@ WAW was moved to Python 3.5 and from this release it is not compatible with Pyth
  - Documentation and tests for actions in the dialog were added.
 
 #### Cloud Functions
- - While using cloud functions is is now possible to use an apikey
+ - While using cloud functions, it is now possible to use an apikey
  - Script [functions_delete_package](/scripts/functions_delete_package.py) for deleting cf package was added
  - Script [functions_deploy](/scripts/functions_deploy.py) is now able to deploy also CF sequences
 
