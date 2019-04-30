@@ -49,7 +49,7 @@ class TestMain(BaseTestCaseCapture):
         existsResponse = self._getResponseFromPackage(self.package)
         if existsResponse.status_code == 200:
             params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
-                '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package,
                 '--cloudfunctions_apikey', self.apikey]
@@ -57,7 +57,7 @@ class TestMain(BaseTestCaseCapture):
 
     def _getResponseFromPackage(self, package):
         """Get the package with the name of self.package"""
-        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + package
+        packageUrl = self.cloudFunctionsUrl + '/' + self.namespace + '/packages/' + package
         return requests.get(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'})
 
     def _checkPackageExists(self, package=None):
@@ -79,7 +79,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded package that is empty."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
-                '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
 
@@ -101,7 +101,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded package that is not empty and doesn't have a sequence."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
 
@@ -123,7 +123,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded package that is not empty and has a sequence."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
         if useApikey:
             params.extend(['--cloudfunctions_apikey', self.apikey])
@@ -159,7 +159,7 @@ class TestMain(BaseTestCaseCapture):
 
         randomName = str(uuid.uuid4())
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', randomName, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_package', randomName, '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -167,7 +167,42 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
         # Fail
-        self.t_exitCodeAndLogMessage(1, "The resource could not be found. Check your cloudfunctions url and namespace.", [params])
+        self.t_exitCodeAndLogMessage(1, "Package not found. Check your cloudfunctions url and namespace.", [params])
+
+    # TODO: Enable apikey/username+password testing in Nightly builds
+    #@pytest.mark.parametrize('useApikey', [True, False])
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_noPackageProvided(self, useApikey):
+        """Tests if functions_delete_package errors when not providing a package or package name pattern."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_namespace', self.namespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+        # Fail
+        self.t_exitCodeAndLogMessage(1, "neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.", [params])
+
+    # TODO: Enable apikey/username+password testing in Nightly builds
+    #@pytest.mark.parametrize('useApikey', [True, False])
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_noMatchingPackage(self, useApikey):
+        """Tests if functions_delete_package finishes successfully with no matching packages."""
+
+        randomNamePattern = str(uuid.uuid4())
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
+                '--cloudfunctions_package_name_pattern', randomNamePattern, '--cloudfunctions_namespace', self.namespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        self.t_noExceptionAndLogMessage("No matching packages to delete.", [params])
 
     # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -176,7 +211,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package errors while deleting with wrong credentials."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         # Correct params for deploy
@@ -209,7 +244,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package errors while deleting with wrong cloud functions url."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace]
+                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.namespace]
         if useApikey:
             params.extend(['--cloudfunctions_apikey', self.apikey])
         else:
@@ -245,10 +280,10 @@ class TestMain(BaseTestCaseCapture):
 
         # Correct params for deploy
         paramsDeploy = list(params)
-        paramsDeploy.extend(['--cloudfunctions_namespace', self.urlNamespace])
+        paramsDeploy.extend(['--cloudfunctions_namespace', self.namespace])
         # Wrong params for delete
         paramsDelete = list(params)
-        paramsDelete.extend(['--cloudfunctions_namespace', self.urlNamespace + self.cloudFunctionsUrl+str(uuid.uuid4())])
+        paramsDelete.extend(['--cloudfunctions_namespace', self.namespace + self.cloudFunctionsUrl+str(uuid.uuid4())])
 
         # Pass
         functions_deploy.main(paramsDeploy)
@@ -263,7 +298,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded packages by regex matching."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
-                '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:

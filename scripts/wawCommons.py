@@ -304,7 +304,7 @@ def filterWorkspaces(config, workspaces):
                     logger.info("workspace name match: " + workspace['name'])
 
         else: # workspace match by name and name nor pattenot defined or empty
-            logger.error("'conversation_workspace_match_by_name' set to true but neither 'conversation_workspace_name' nor 'conversation_workspace_name_pattern' is defined.")
+            logger.critical("'conversation_workspace_match_by_name' set to true but neither 'conversation_workspace_name' nor 'conversation_workspace_name_pattern' is defined.")
             sys.exit(1)
 
     else: # workspace matched by id (default option)
@@ -339,7 +339,7 @@ def filterPackages(config, packages):
                 logger.info("package name match: " + package['name'])
 
     else:
-        logger.error("neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.")
+        logger.critical("neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.")
         sys.exit(1)
 
     return matchingPackages

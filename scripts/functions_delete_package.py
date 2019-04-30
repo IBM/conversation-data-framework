@@ -18,6 +18,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
 from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, errorsInResponse, filterPackages
 import urllib3
+from urllib.parse import quote
 import logging
 
 
@@ -57,7 +58,7 @@ def main(argv):
             elif code >= 500:
                 logger.error("Internal server error. (Error code " + str(code) + ")")
             else:
-                logger.error("Unexpected error code: " + str(code) + ")")
+                logger.error("Unexpected error code: " + str(code))
 
             errorsInResponse(response.json())
             return False
@@ -74,6 +75,7 @@ def main(argv):
     logger.info('STARTING: '+ os.path.basename(__file__))
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
+    urlNamespace = quote(namespace)
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
@@ -92,8 +94,14 @@ def main(argv):
 
     matchedPackages = filterPackages(config, response.json())
     if not matchedPackages:
-        logger.info("No matching packages to delete.")
-        return
+        # name was provided
+        if getOptionalParameter(config, 'cloudfunctions_package'):
+            logger.critical("Package not found. Check your cloudfunctions url and namespace.")
+            sys.exit(1)
+        # pattern was provided
+        else:
+            logger.info("No matching packages to delete.")
+            return
 
     for package in matchedPackages:
         packageName = package['name']
