@@ -323,6 +323,27 @@ def filterWorkspaces(config, workspaces):
 
     return matchingWorkspaces
 
+def filterPackages(config, packages):
+    matchingPackages = []
+    packageNamePattern = getOptionalParameter(config, 'cloudfunctions_package_name_pattern')
+
+    if packageNamePattern is None:
+        packageNamePattern = getOptionalParameter(config, 'cloudfunctions_package')
+    if packageNamePattern:
+        pattern = re.compile(packageNamePattern)
+
+        for package in packages:
+            logger.debug("package name: " + package['name'])
+            if pattern.match(package['name']):
+                matchingPackages.append(package)
+                logger.info("package name match: " + package['name'])
+
+    else:
+        logger.error("neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.")
+        sys.exit(1)
+
+    return matchingPackages
+
 def errorsInResponse(responseJson):
     # check errors
     if 'error' in responseJson:
