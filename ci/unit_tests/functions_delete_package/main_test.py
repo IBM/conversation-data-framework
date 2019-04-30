@@ -46,29 +46,29 @@ class TestMain(BaseTestCaseCapture):
 
     def teardown_method(self):
         """Delete my package, if it exists."""
-        existsResponse = self._getResponseFromPackage()
+        existsResponse = self._getResponseFromPackage(self.package)
         if existsResponse.status_code == 200:
             params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.urlNamespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package,
                 '--cloudfunctions_apikey', self.apikey]
             self.t_noException([params])
 
-    def _getResponseFromPackage(self):
+    def _getResponseFromPackage(self, package):
         """Get the package with the name of self.package"""
-        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + self.package
+        packageUrl = self.cloudFunctionsUrl + '/' + self.urlNamespace + '/packages/' + package
         return requests.get(packageUrl, auth=(self.username, self.password), headers={'Content-Type': 'application/json'})
 
-    def _checkPackageExists(self):
+    def _checkPackageExists(self, package=None):
         """Check if the package was correctly created"""
-        response = self._getResponseFromPackage()
+        response = self._getResponseFromPackage(package or self.package)
         if response.status_code != 200:
             pytest.fail("The package does not exist!")
 
-    def _checkPackageDeleted(self):
+    def _checkPackageDeleted(self, package=None):
         """Check if the package was correctly deleted"""
-        response = self._getResponseFromPackage()
+        response = self._getResponseFromPackage(package or self.package)
         if response.status_code != 404:
             pytest.fail("The package is not deleted!")
 
@@ -79,7 +79,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded package that is empty."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.urlNamespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
 
@@ -101,7 +101,7 @@ class TestMain(BaseTestCaseCapture):
         """Tests if functions_delete_package deletes uploaded package that is not empty and doesn't have a sequence."""
 
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package', self.package, '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_namespace', self.urlNamespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl,
                 '--cloudfunctions_package', self.package]
 
@@ -257,3 +257,34 @@ class TestMain(BaseTestCaseCapture):
         # Fail
         self.t_exitCodeAndLogMessage(1,
         "The resource could not be found. Check your cloudfunctions url and namespace.", [paramsDelete])
+
+    @pytest.mark.parametrize('useApikey', [True])
+    def test_deletePackageByRegex(self, useApikey):
+        """Tests if functions_delete_package deletes uploaded packages by regex matching."""
+
+        params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctionsEmpty.cfg'),
+                '--cloudfunctions_namespace', self.urlNamespace,
+                '--cloudfunctions_url', self.cloudFunctionsUrl]
+
+        if useApikey:
+            params.extend(['--cloudfunctions_apikey', self.apikey])
+        else:
+            params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
+
+        createdPackages = []
+        # Generate random packages with common prefix and delete them afterwards
+        for i in range(3):
+            newParams = list(params)
+            newPackage = self.packageBase + "REGEX-" + str(uuid.uuid4())
+            newParams.extend(['--cloudfunctions_package', newPackage])
+            functions_deploy.main(newParams)
+            self._checkPackageExists(newPackage)
+            createdPackages.append(newPackage)
+
+        # delete the packages
+        namePattern = '^' + self.packageBase + 'REGEX-.*'
+        params.extend(['--cloudfunctions_package_name_pattern', namePattern])
+        self.t_noException([params])
+
+        for package in createdPackages:
+            self._checkPackageDeleted(package)

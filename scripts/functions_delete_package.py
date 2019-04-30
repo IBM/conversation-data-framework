@@ -91,6 +91,10 @@ def main(argv):
         sys.exit(1)
 
     matchedPackages = filterPackages(config, response.json())
+    if not matchedPackages:
+        logger.info("No matching packages to delete.")
+        return
+
     for package in matchedPackages:
         packageName = package['name']
 
@@ -124,7 +128,11 @@ def main(argv):
             sys.exit(1)
         logger.verbose("Package deleted.")
         logger.info("Cloud functions in package %s successfully deleted.", packageName)
-    logger.info("Matched packages successfully deleted.")
+
+    if (len(matchedPackages) == 1):
+        logger.info("One package has been successfully deleted.")
+    else:
+        logger.info("%s packages have been successfully deleted.", len(matchedPackages))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
