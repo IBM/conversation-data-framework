@@ -109,6 +109,7 @@ class TestMain(BaseTestCaseCapture):
             functionRespJson = functionResp.json()
             assert "Hello unit test!" in functionRespJson['greeting']
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     def test_pythonVersionFunctions(self):
         """Tests if it's possible to upload one function into two different version of runtime."""
         for pythonVersion in [2, 3]:
@@ -130,7 +131,7 @@ class TestMain(BaseTestCaseCapture):
             functionRespJson = functionResp.json()
             assert pythonVersion == functionRespJson['majorVersion']
 
-
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     def test_functionsInZip(self):
         """Tests if functions_deploy can handle function in zip file."""
         # prepare zip file
@@ -190,6 +191,7 @@ class TestMain(BaseTestCaseCapture):
             shouldAnswer = sequenceAnswers[sequenceName]
             assert shouldAnswer in sequenceRespJson["entries"]
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('useApikey', [True, False])
     def test_functionsMissingSequenceComponent(self, useApikey):
         """Tests if functions_deploy fails when uploading a sequence with a nonexistent function."""

@@ -71,6 +71,7 @@ class TestMain(BaseTestCaseCapture):
 
         assert len(workspaces) == 0
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteById(self, envVarNameUsername, envVarNamePassword):
         """Tests if workspace can be deleted by its id."""
@@ -128,6 +129,7 @@ class TestMain(BaseTestCaseCapture):
 
         assert hasattr(deleteOutputConfig, 'conversation_workspace_id') == False
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteMoreByName(self, envVarNameUsername, envVarNamePassword):
         """Tests if more workspaces with the same name can be deleted by their name."""
@@ -165,6 +167,7 @@ class TestMain(BaseTestCaseCapture):
         # there should be still workspace with non-matching name
         assert len(workspaces) == 1
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteMoreWithRegexp(self, envVarNameUsername, envVarNamePassword):
         """Tests if more workspaces can be deleted by regular expression."""
@@ -205,6 +208,7 @@ class TestMain(BaseTestCaseCapture):
         # there should be still workspace with non-matching name
         assert len(workspaces) == 1
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteAllWithRegex(self, envVarNameUsername, envVarNamePassword):
         """Tests if all workspaces can be deleted by '*'."""
@@ -237,6 +241,7 @@ class TestMain(BaseTestCaseCapture):
         # there should be no workspace left
         assert len(workspaces) == 0
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteByNameNoneMatching(self, envVarNameUsername, envVarNamePassword):
         """Tests if no workspace matches name."""
@@ -258,6 +263,7 @@ class TestMain(BaseTestCaseCapture):
         # there should be still one workspace left
         assert len(workspaces) == 1
 
+    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteFromEmpty(self, envVarNameUsername, envVarNamePassword):
         """Tests if it wont fail when no workspace is present."""
