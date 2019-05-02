@@ -71,7 +71,6 @@ class TestMain(BaseTestCaseCapture):
 
         assert len(workspaces) == 0
 
-    @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
     def test_deleteById(self, envVarNameUsername, envVarNamePassword):
         """Tests if workspace can be deleted by its id."""
