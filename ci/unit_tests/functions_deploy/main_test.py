@@ -111,7 +111,7 @@ class TestMain(BaseTestCaseCapture):
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('useApikey', [True, False])
-    def test_pythonVersionFunctions(self):
+    def test_pythonVersionFunctions(self, useApikey):
         """Tests if it's possible to upload one function into two different version of runtime."""
         for pythonVersion in [2, 3]:
             params = ['-c', os.path.join(self.dataBasePath, 'python' + str(pythonVersion) + 'Functions.cfg'),
@@ -138,7 +138,7 @@ class TestMain(BaseTestCaseCapture):
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     @pytest.mark.parametrize('useApikey', [True, False])
-    def test_functionsInZip(self):
+    def test_functionsInZip(self, useApikey):
         """Tests if functions_deploy can handle function in zip file."""
         # prepare zip file
         dirForZip = os.path.join(self.dataBasePath, "outputs", "pythonZip")
