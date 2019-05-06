@@ -77,7 +77,7 @@ def main(argv):
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
     urlNamespace = quote(namespace)
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
-    namespaceUrl = getRequiredParameter(config, 'cloudfunctions_url')
+    cloudfunctionsUrl = getRequiredParameter(config, 'cloudfunctions_url')
     functionDir = getRequiredParameter(config, 'common_functions')
 
     if 'cloudfunctions_apikey' in auth:
@@ -86,7 +86,7 @@ def main(argv):
         username = auth['cloudfunctions_username']
         password = auth['cloudfunctions_password']
 
-    packagesUrl = namespaceUrl + '/' + namespace + '/packages'
+    packagesUrl = cloudfunctionsUrl + '/' + namespace + '/packages'
     response = requests.get(packagesUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
     if not handleResponse(response):
         logger.critical("Unable to get available packages.")
@@ -121,7 +121,7 @@ def main(argv):
 
         for action in actions:
             name = action['name']
-            actionUrl = namespaceUrl + '/' + namespace + '/actions/' + packageName + '/' + name
+            actionUrl = cloudfunctionsUrl + '/' + namespace + '/actions/' + packageName + '/' + name
             logger.verbose("Deleting action '" + name + "' at " + actionUrl)
             response = requests.delete(actionUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
             if not handleResponse(response):
