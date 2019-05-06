@@ -55,6 +55,10 @@ def main(argv):
     # process entities
     entitiesJSON = []
 
+    globalFuzzyMatching = False
+    if hasattr(config, 'entities_fuzzy'):
+        globalFuzzyMatching = getattr(config, 'entities_fuzzy') in ['true', 'True', 'on', 'On']
+    logger.info("Fuzzy matching turned "+("ON" if globalFuzzyMatching else "OFF"))
     pathList = getattr(config, 'common_entities')
     if hasattr(config, 'common_generated_entities'):
         pathList = pathList + getattr(config, 'common_generated_entities')
@@ -76,6 +80,9 @@ def main(argv):
                         entityJSON = {}
                         entityJSON['entity'] = line
                         entityJSON['values'] = []
+                        # Set fuzzy matching
+                        if globalFuzzyMatching:
+                            entityJSON['fuzzy_match'] = True
                         if entityJSON not in entitiesJSON: #we do not want system entities duplicated, e.g., when composing more projects together
                             entitiesJSON.append(entityJSON)
                         else:
@@ -118,6 +125,9 @@ def main(argv):
                                 valueJSON['synonyms'] = synonyms
                         valuesJSON.append(valueJSON)
                 entityJSON['values'] = valuesJSON
+                # Set fuzzy matching
+                if globalFuzzyMatching:
+                    entityJSON['fuzzy_match'] = True
                 entitiesJSON.append(entityJSON)
 
     if getattr(config, 'common_outputs_directory') and hasattr(config, 'common_outputs_entities'):
