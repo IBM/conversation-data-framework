@@ -184,7 +184,7 @@ class TestMain(BaseTestCaseCapture):
         else:
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
         # Fail
-        self.t_exitCodeAndLogMessage(1, "neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.", [params])
+        self.t_exitCodeAndLogMessage(1, "neither 'cloudfunctions_package' nor 'cloudfunctions_package_pattern' is defined.", [params])
 
     # TODO: Enable apikey/username+password testing in Nightly builds
     #@pytest.mark.parametrize('useApikey', [True, False])
@@ -194,7 +194,7 @@ class TestMain(BaseTestCaseCapture):
 
         randomNamePattern = str(uuid.uuid4())
         params = ['-c', os.path.join(self.dataBasePath, 'exampleFunctions.cfg'),
-                '--cloudfunctions_package_name_pattern', randomNamePattern, '--cloudfunctions_namespace', self.namespace,
+                '--cloudfunctions_package_pattern', randomNamePattern, '--cloudfunctions_namespace', self.namespace,
                 '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         if useApikey:
@@ -318,7 +318,7 @@ class TestMain(BaseTestCaseCapture):
 
         # delete the packages
         namePattern = '^' + self.packageBase + 'REGEX-.*'
-        params.extend(['--cloudfunctions_package_name_pattern', namePattern])
+        params.extend(['--cloudfunctions_package_pattern', namePattern])
         self.t_noException([params])
 
         for package in createdPackages:

@@ -325,7 +325,7 @@ def filterWorkspaces(config, workspaces):
 
 def filterPackages(config, packages):
     matchingPackages = []
-    packageNamePattern = getOptionalParameter(config, 'cloudfunctions_package_name_pattern')
+    packageNamePattern = getOptionalParameter(config, 'cloudfunctions_package_pattern')
 
     if packageNamePattern is None:
         packageNamePattern = getOptionalParameter(config, 'cloudfunctions_package')
@@ -339,7 +339,7 @@ def filterPackages(config, packages):
                 logger.info("package name match: " + package['name'])
 
     else:
-        logger.critical("neither 'cloudfunctions_package' nor 'cloudfunctions_package_name_pattern' is defined.")
+        logger.critical("neither 'cloudfunctions_package' nor 'cloudfunctions_package_pattern' is defined.")
         sys.exit(1)
 
     return matchingPackages

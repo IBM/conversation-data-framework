@@ -36,7 +36,7 @@ def main(argv):
     parser.add_argument('--cloudfunctions_username', required=False, help="cloud functions user name")
     parser.add_argument('--cloudfunctions_password', required=False, help="cloud functions password")
     parser.add_argument('--cloudfunctions_package', required=False, help="cloud functions package name")
-    parser.add_argument('--cloudfunctions_package_name_pattern', required=False, help='regex pattern specifying a name of workspaces to be deleted')
+    parser.add_argument('--cloudfunctions_package_pattern', required=False, help='regex pattern specifying a name of workspaces to be deleted')
     parser.add_argument('--cloudfunctions_url', required=False, help="url of cloud functions API")
     parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
 
