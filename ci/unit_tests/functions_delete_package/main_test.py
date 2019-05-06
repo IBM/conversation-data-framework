@@ -307,19 +307,36 @@ class TestMain(BaseTestCaseCapture):
             params.extend(['--cloudfunctions_username', self.username, '--cloudfunctions_password', self.password])
 
         createdPackages = []
+        nonmatchingPackageName = None
         # Generate random packages with common prefix and delete them afterwards
-        for i in range(3):
+        for i in range(4):
             newParams = list(params)
-            newPackage = self.packageBase + "REGEX-" + str(uuid.uuid4())
+            # Add one package that doesn't match (will check if it wasn't deleted)
+            if i == 0:
+                newPackage = self.packageBase + "NONMATCHINGREGEX-" + str(uuid.uuid4())
+                nonmatchingPackageName = newPackage
+            else:
+                newPackage = self.packageBase + "REGEX-" + str(uuid.uuid4())
             newParams.extend(['--cloudfunctions_package', newPackage])
             functions_deploy.main(newParams)
             self._checkPackageExists(newPackage)
             createdPackages.append(newPackage)
 
         # delete the packages
-        namePattern = '^' + self.packageBase + 'REGEX-.*'
-        params.extend(['--cloudfunctions_package_pattern', namePattern])
-        self.t_noException([params])
+        newParams = list(params)
+        newParams.extend(['--cloudfunctions_package_pattern', '^' + self.packageBase + 'REGEX-.*'])
+        self.t_noException([newParams])
 
+        # Check that the correct packages were deleted
         for package in createdPackages:
-            self._checkPackageDeleted(package)
+            if package != nonmatchingPackageName:
+                self._checkPackageDeleted(package)
+
+        # Check that the nonmatching package still exists
+        self._checkPackageExists(nonmatchingPackageName)
+
+        # Delete the nonmatching package
+        newParams = list(params)
+        newParams.extend(['--cloudfunctions_package_pattern', '^' + self.packageBase + 'NONMATCHINGREGEX-.*'])
+        self.t_noException([newParams])
+        self._checkPackageDeleted(nonmatchingPackageName)
