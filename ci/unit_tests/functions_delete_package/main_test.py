@@ -340,3 +340,41 @@ class TestMain(BaseTestCaseCapture):
         newParams.extend(['--cloudfunctions_package_pattern', '^' + self.packageBase + 'NONMATCHINGREGEX-.*'])
         self.t_noException([newParams])
         self._checkPackageDeleted(nonmatchingPackageName)
+
+    def test_badArgs(self):
+        """Tests some basic common problems with args."""
+        self.t_unrecognizedArgs([['--nonExistentArg', 'randomNonPositionalArg']])
+        self.t_exitCode(1, [[]])
+
+        completeArgsList = ['--cloudfunctions_username', self.username,
+                            '--cloudfunctions_password', self.password,
+                            '--cloudfunctions_apikey', self.username + ":" + self.password,
+                            '--cloudfunctions_package', self.package,
+                            '--cloudfunctions_namespace', self.namespace,
+                            '--cloudfunctions_url', self.cloudFunctionsUrl,
+                            '--common_functions', self.dataBasePath]
+
+        for argIndex in range(len(completeArgsList)):
+            if not completeArgsList[argIndex].startswith('--'):
+                continue
+            paramName = completeArgsList[argIndex][2:]
+
+            argsListWithoutOne = []
+            for i in range(len(completeArgsList)):
+                if i != argIndex and i != (argIndex + 1):
+                    argsListWithoutOne.append(completeArgsList[i])
+
+            if paramName in ['cloudfunctions_username', 'cloudfunctions_password']:
+                message = 'combination already set: \'[\'cloudfunctions_apikey\']\''
+            elif paramName in ['cloudfunctions_apikey']:
+                # we have to remove username and password (if not it would be valid combination of parameters)
+                argsListWithoutOne = argsListWithoutOne[4:] # remove username and password (leave just apikey)
+                message = 'Combination 0: \'cloudfunctions_apikey\''
+            else:
+                # we have to remove username and password (if not then it would always return error that both auth types are provided)
+                argsListWithoutOne = argsListWithoutOne[4:] # remove username and password (leave just apikey)
+                message = 'required \'' + paramName + '\' parameter not defined'
+            if paramName == "cloudfunctions_package":
+                self.t_exitCodeAndLogMessage(1, "neither 'cloudfunctions_package' nor 'cloudfunctions_package_pattern' is defined.", [argsListWithoutOne])
+            else:
+                self.t_exitCodeAndLogMessage(1, message, [argsListWithoutOne])
