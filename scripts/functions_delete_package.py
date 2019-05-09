@@ -94,8 +94,8 @@ def main(argv):
 
     matchedPackages = filterPackages(config, response.json())
     if not matchedPackages:
-        # name was provided
-        if getOptionalParameter(config, 'cloudfunctions_package'):
+        # only name was provided
+        if getOptionalParameter(config, 'cloudfunctions_package') and not getOptionalParameter(config, 'cloudfunctions_package_pattern'):
             logger.critical("Package not found. Check your cloudfunctions url and namespace.")
             sys.exit(1)
         # pattern was provided
