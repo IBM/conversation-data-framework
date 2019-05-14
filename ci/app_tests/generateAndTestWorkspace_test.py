@@ -19,7 +19,7 @@ import lxml.etree as LET
 import dialog_json2xml
 import dialog_xls2xml
 import dialog_xml2json
-import evaluate_tests
+import workspace_test_evaluate
 import entities_csv2json
 import entities_json2csv
 import intents_csv2json
@@ -140,9 +140,9 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
         self.t_fun_noException(workspace_delete.main, [['-c', configTmpPath]])
 
         # evaluate tests
-        self.t_fun_noException(evaluate_tests.main, [[testDummyRefPath, testDummyHypPath, '-o', testDummyJUnitPath, '-v']])
-#        self.t_fun_noException(evaluate_tests.main, [[testMoreOutputsRefPath, testMoreOutputsHypPath, '-o', testMoreOutputsJUnitPath, '-v']])
-#        self.t_fun_noException(evaluate_tests.main, [[testNillRefPath, testNillHypPath, '-o', testNillJUnitPath, '-v']])
+        self.t_fun_noException(workspace_test_evaluate.main, [[testDummyRefPath, testDummyHypPath, '-o', testDummyJUnitPath, '-v']])
+#        self.t_fun_noException(workspace_test_evaluate.main, [[testMoreOutputsRefPath, testMoreOutputsHypPath, '-o', testMoreOutputsJUnitPath, '-v']])
+#        self.t_fun_noException(workspace_test_evaluate.main, [[testNillRefPath, testNillHypPath, '-o', testNillJUnitPath, '-v']])
         testDummyJUnitXmlTree = LET.parse(testDummyJUnitPath)
 #        testMoreOutputsJUnitXmlTree = LET.parse(testMoreOutputsJUnitPath)
 #        testNillJUnitXmlTree = LET.parse(testNillJUnitPath)
@@ -153,10 +153,10 @@ class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
 #        assert testMoreOutputsJUnitXmlTree.getroot().get('failures') == '0'
 #        assert testNillJUnitXmlTree.getroot().get('failures') == '0'
 
-        # TODO: should be fixed in evaluate_tests.main (and test itself), right now it does not report errors to junit xml file, but just to the standard output
+        # TODO: should be fixed in workspace_test_evaluate.main (and test itself), right now it does not report errors to junit xml file, but just to the standard output
         # step 1: uncomment lines below and fix test to pass
-        # step 2: fix evaluate_tests.main to report errors to junit xml file, use output properly and remove lines below
+        # step 2: fix workspace_test_evaluate.main to report errors to junit xml file, use output properly and remove lines below
         #if 'ERROR' in self.captured.err:
-            #pytest.fail('ERROR found in err log of evaluate_tests.main, log:\n' + self.captured.err)
+            #pytest.fail('ERROR found in err log of workspace_test_evaluate.main, log:\n' + self.captured.err)
         #if 'ERROR' in self.captured.out:
-            #pytest.fail('ERROR found in out log of evaluate_tests.main, log:\n' + self.captured.out)
+            #pytest.fail('ERROR found in out log of workspace_test_evaluate.main, log:\n' + self.captured.out)

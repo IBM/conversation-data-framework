@@ -14,7 +14,7 @@ Since this release, WAW requires Python 3.5 and it is no longer compatible with 
  - Script [functions_deploy](/scripts/functions_deploy.py) is now able to deploy also CF sequences
 
 #### Testing
- - If you set `exception_if_fail` parameter of script [evaluate_tests](/scripts/evaluate_tests.py) to true, it throws exception, when there are any failed tests detected while evaluating.
+ - If you set `exception_if_fail` parameter of script [workspace_test_evaluate](/scripts/workspace_test_evaluate.py) to true, it throws exception, when there are any failed tests detected while evaluating.
  - We are running tests for Python 3 only from now on
 
 ## Release 1.4.2019 v1.2
@@ -26,7 +26,7 @@ This is the last WAW version which supports python 2.7.
  - We employ `logging` module for logging
  - Using [workspace_addjson.py](/scripts/workspace_addjson.py) script you are now able to add custom json structures to specified location in the workspace json
  - It is now possible to deploy workspace by its name (by setting `workspace_name_unique` to true)
- - [Dialog testing script](/scripts/evaluate_tests.py) now outputs `junit.xml` file with test results
+ - [Dialog testing script](/scripts/workspace_test_evaluate.py) now outputs `junit.xml` file with test results
  - [requirements.txt](/requirements.txt) and [requirements_dev.txt](/requirements_dev.txt) were added to simplify installation process
  - Sample configuration file was split into three: [common.cfg](/example/en_app/common.cfg) (common project settings), [private.cfg](/example/en_app/private.cfg.template) (filled-in template contains credentials, not to be pushed) and [builg.cfg](/example/en_app/build.cfg) (settings specific for concrete build environment, usually not to be pushed). These are just proposal split, not mandatory.
 

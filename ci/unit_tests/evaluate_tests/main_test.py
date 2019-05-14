@@ -15,7 +15,7 @@ limitations under the License.
 
 import os
 
-import evaluate_tests
+import workspace_test_evaluate
 from ...test_utils import BaseTestCaseCapture
 
 class TestMain(BaseTestCaseCapture):
@@ -34,7 +34,7 @@ class TestMain(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolder(TestMain.testOutputPath)
 
     def callfunc(self, *args, **kwargs):
-        evaluate_tests.main(*args, **kwargs)
+        workspace_test_evaluate.main(*args, **kwargs)
 
     def test_args_basic(self):
         ''' Tests some basic sets of args '''
