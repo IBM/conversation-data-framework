@@ -52,7 +52,7 @@ Instructions on how to use logging can be found in [logging.md](/logging.md).
 
 ---
 
-## Installation
+## Testing
 
 If you want to run unit tests locally, you first need to install development dependencies from [requirements_dev.txt](/requirements_dev.txt). You can run
 
@@ -69,10 +69,6 @@ Then set following environment variables
 - `CLOUD_FUNCTIONS_PASSWORD` (Cloud Functions password)
 - `CLOUD_FUNCTIONS_URL` (Cloud Functions namespace - it should contain `https://` at the beginning and `/api/v1/namespaces` at the end)
 - `CLOUD_FUNCTIONS_NAMESPACE` (Cloud Functions namespace - don't forget enclosing it in apostrophes if it contains spaces)
-
----
-
-## Testing
 
 The unit tests and app tests can be started with these commands (from the top directory of this repository)
 
