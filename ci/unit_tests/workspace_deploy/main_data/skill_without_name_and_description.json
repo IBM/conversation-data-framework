@@ -105,12 +105,6 @@
     }
   ],
   "language": "en",
-  "metadata": {
-    "api_version": {
-      "major_version": "v1",
-      "minor_version": "2018-09-20"
-    }
-  },
   "dialog_nodes": [
     {
       "type": "standard",
@@ -131,8 +125,5 @@
       "dialog_node": "Opening"
     }
   ],
-  "workspace_id": "9fd95b09-df1b-4375-b32e-ab79b1bff75e",
   "counterexamples": [],
-  "learning_opt_out": false,
-  "status": "Training"
 }

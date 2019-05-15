@@ -17,7 +17,7 @@ import os, pytest, requests, argparse, uuid
 
 import workspace_deploy, workspace_delete
 from cfgCommons import Cfg
-from wawCommons import getWorkspaces, getRequiredParameter
+from wawCommons import getWorkspaces
 from ...test_utils import BaseTestCaseCapture
 
 
@@ -147,19 +147,18 @@ class TestMain(BaseTestCaseCapture):
 
 
     def test_wrongCredentials(self):
-        """Tests if script errors while deleting with wrong credentials."""
+        """Tests if script errors while uploading workspace with wrong credentials."""
 
         jsonWorkspaceFilename = 'skill_with_name_and_description.json'
 
-        # Wrong params for delete
-        wrongParamsDelete = ['--common_outputs_directory', self.dataBasePath,
+        wrongParams = ['--common_outputs_directory', self.dataBasePath,
                              '--common_outputs_workspace', jsonWorkspaceFilename,
                              '--conversation_username', str(uuid.uuid4()),
                              '--conversation_password', str(uuid.uuid4()),
                              '--conversation_url', self.workspacesUrl,
                              '--conversation_version', self.version,
                              '-v']
-        self.t_exitCodeAndLogMessage(1, "Unauthorized", [wrongParamsDelete])
+        self.t_exitCodeAndLogMessage(1, "Unauthorized", [wrongParams])
 
 
     def test_args_basic(self):
