@@ -17,7 +17,6 @@ import json, sys, os, argparse, requests, configparser
 from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, replaceValue
 from cfgCommons import Cfg
 import logging
-from deepdiff import DeepDiff
 
 logger = getScriptLogger(__file__)
 
@@ -25,18 +24,17 @@ def main(argv):
     '''
     Scripts takes input json file that represents test that should be run against
     Cloud Functions and produce output that extends input json file by results
-    from CFs and evaluation.
+    from CFs.
 
     Inputs and expected outputs can contain string values that starts with '::'
     (e.g. "key": "::valueToBeReplaced1") which will be replaced by matching 
     configuration parameters or by values specified by parameter 'replace'
     (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')).
 
-    Input json file example:
+    Input json file example (could contain additional keys that will be used in evaluations - they will be skipped):
     [
         {
             "name": "test example 1", # OPTIONAL
-            "type": "EXACT_MATCH", # OPTIONAL (DEFAULT = EXACT_MATCH, OPTIONS = [EXACT_MATCH])
             "cf_package": "<CLOUD FUNCTIONS PACKAGE NAME>", # OPTIONAL (could be provided directly to script, at least one has to be specified, test level overrides global script one)
             "cf_function": "<CLOUD FUNCTIONS SPECIFIC FUNCTION TO BE TESTED>", # --||--
             "input": <OBJECT> | <@PATH/TO/FILE>, # payload to be send to CF (could be specified as a relative or absolute path to the file that contains json file, e.g. "input": "@inputs/test_example_1.json")
@@ -57,9 +55,14 @@ def main(argv):
             ...
               rest of the input test definition
             ...
-            "outputReturned": <OBJECT>, # returned payload from CF
-            "result": <0 - test passed, 1 - test failed>
-            "diff": <OBJECT> # if test passed then "diff" is Null, else contains object that represents differences
+            "outputReturned": <OBJECT> # returned payload from CF
+        },
+        {
+            "name": "test example 2",
+            ...
+              rest of the input test definition
+            ...
+            "outputReturned": <OBJECT> # returned payload from CF
         }
     ]
     '''
@@ -207,6 +210,11 @@ def main(argv):
             if replacementNumber > 0:
                 logger.debug('Replaced configuration parameter \'%s\' in expected output json, number of occurences: %d.', target, replacementNumber)
 
+        # save the expected output as an object even it was specified as a file, 
+        # because it can contain replaced value and the returned output is also an object
+        # (could be improved by parameter that save both to external files)
+        test['outputExpected'] = testOutputExpectedJson
+
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
         response = requests.post(
@@ -225,18 +233,6 @@ def main(argv):
             testOutputReturnedJson = response.json()
             logger.debug('Received output json: %s', json.dumps(testOutputReturnedJson, ensure_ascii=False).encode('utf8'))
             test['outputReturned'] = testOutputReturnedJson
-
-            # evaluate test
-            if 'type' not in test or test['type'] == 'EXACT_MATCH':
-                testResultString = DeepDiff(testOutputExpectedJson, testOutputReturnedJson, ignore_order=True).json
-                testResultJson = json.loads(testResultString)
-                if testResultJson == {}:
-                    test['result'] = 0
-                else:
-                    test['result'] = 1
-                    test['diff'] = testResultJson
-            else:
-                logger.error('Unknown test type: %s', test['type'])
         elif response.status_code in [202, 403, 404, 408]:
             # 202 Accepted activation request (should not happen while sending 'blocking=true&result=true')
             # 403 Forbidden (could be just for specific package or function)

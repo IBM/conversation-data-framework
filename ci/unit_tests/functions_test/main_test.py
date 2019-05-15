@@ -189,8 +189,7 @@ class TestMain(BaseTestCaseCapture):
                     },
                     "outputExpected": {
                         "message": "test message"
-                    },
-                    "result": 0
+                    }
                 }
             ]
 
@@ -199,7 +198,7 @@ class TestMain(BaseTestCaseCapture):
         ''' Tests if the single test where input and expected output is specified
          in file (all other params are given from command line), using replace
          functionality (using --replace_)'''
-        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '.out.json'))
+        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileReplaceJsonPath))[0] + '.out.json'))
         testArgs = [self.testSingleAllInFileReplaceJsonPath, outputFilePath] + self.functionsTestArgs + ['--replace', 'OUTPUT_EXPECTED_MESSAGE:test message']
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
@@ -213,9 +212,8 @@ class TestMain(BaseTestCaseCapture):
                         "message": "test message"
                     },
                     "outputExpected": {
-                        "message": "::OUTPUT_EXPECTED_MESSAGE"
-                    },
-                    "result": 0
+                        "message": "test message"
+                    }
                 }
             ]
 
@@ -223,7 +221,7 @@ class TestMain(BaseTestCaseCapture):
         ''' Tests if the single test where input and expected output is specified
          in file (all other params are given from command line), using replace
          functionality (using standard config parameter)'''
-        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '.out.json'))
+        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileReplacePackageJsonPath))[0] + '.out.json'))
         testArgs = [self.testSingleAllInFileReplacePackageJsonPath, outputFilePath] + self.functionsTestArgs
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
@@ -237,40 +235,8 @@ class TestMain(BaseTestCaseCapture):
                         "message": "utils"
                     },
                     "outputExpected": {
-                        "message": "::cloudfunctions_package"
-                    },
-                    "result": 0
-                }
-            ]
-
-    def test_testSingleAllInFileFailed(self):
-        ''' Tests if the single test where input and expected output is specified
-         in file (all other params are given from command line) and returned output differs '''
-        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileFailedJsonPath))[0] + '.out.json'))
-        testArgs = [self.testSingleAllInFileFailedJsonPath, outputFilePath] + self.functionsTestArgs
-        self.t_noException([testArgs])
-        with open(outputFilePath, 'r') as outputFile:
-            outputJson = json.load(outputFile)
-            assert outputJson == [
-                {
-                    "input": {
-                        "message": "test message"
-                    },
-                    "outputReturned": {
-                        "message": "test message"
-                    },
-                    "outputExpected": {
-                        "message": "bad expected message"
-                    },
-                    "diff": {
-                        "values_changed": {
-                            "root['message']": {
-                                "new_value": "test message",
-                                "old_value": "bad expected message"
-                            }
-                        }
-                    },
-                    "result": 1
+                        "message": "utils"
+                    }
                 }
             ]
 
@@ -289,8 +255,9 @@ class TestMain(BaseTestCaseCapture):
                     "outputReturned": {
                         "message": "test message"
                     },
-                    "outputExpected": "@test_single_payload.json",
-                    "result": 0
+                    "outputExpected": {
+                        "message": "test message"
+                    }
                 }
             ]
 
@@ -333,14 +300,6 @@ class TestMain(BaseTestCaseCapture):
             [testArgs] # params (*args, **kwargs)
         )
 
-    def test_testSingleAllInFileBadType(self):
-        ''' Tests if bad test type was provided '''
-        testArgs = [self.testSingleAllInFileBadTypeJsonPath, self.outputCommonPath] + self.functionsTestArgs
-        self.t_noExceptionAndLogMessage(
-            'ERROR    Unknown test type: BAD TYPE', # error message substring
-            [testArgs] # params (*args, **kwargs)
-        )
-
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
     def test_testSingleAllInFileOverridePackage(self):
         ''' Tests if bad package was provided in test it self, the main reason is test that override works '''
@@ -379,8 +338,9 @@ class TestMain(BaseTestCaseCapture):
                     "outputReturned": {
                         "message": "test message"
                     },
-                    "outputExpected": "@test_single_payload.json",
-                    "result": 0
+                    "outputExpected": {
+                        "message": "test message"
+                    }
                 },
                 {
                     "input": {
@@ -391,7 +351,6 @@ class TestMain(BaseTestCaseCapture):
                     },
                     "outputExpected": {
                         "message": "test message 2"
-                    },
-                    "result": 0
+                    }
                 }
             ]
