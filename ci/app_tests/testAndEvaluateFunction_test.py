@@ -54,7 +54,7 @@ class TestTestAndEvaluateFunction(BaseTestCaseCapture):
         testSingleAllInFileReplacePackageEvalJsonPath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileReplacePackageJsonPath))[0] + '.eval.json'))
 
         testArgs = [self.testSingleAllInFileReplacePackageJsonPath, testSingleAllInFileReplacePackageOutJsonPath] + self.functionsTestArgs
-        self.t_fun_noException(functions_test.main, [testArgs])
+        self.t_fun_noException(functions_test.main, [testArgs + ['--version', '2.2']])
 
         testArgs = [testSingleAllInFileReplacePackageOutJsonPath, testSingleAllInFileReplacePackageEvalJsonPath]
         self.t_fun_noException(functions_test_evaluate.main, [testArgs])
