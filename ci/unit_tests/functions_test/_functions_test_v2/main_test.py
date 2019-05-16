@@ -16,7 +16,7 @@ limitations under the License.
 import os, json, pytest
 
 import functions_test
-from ...test_utils import BaseTestCaseCapture
+from ....test_utils import BaseTestCaseCapture
 
 class TestMain(BaseTestCaseCapture):
 
@@ -62,7 +62,8 @@ class TestMain(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolder(TestMain.testOutputPath)
 
     def callfunc(self, *args, **kwargs):
-        functions_test.main(*args, **kwargs)
+        args = list(args)[0] + ['--version', '2.2']
+        functions_test.main(args, **kwargs)
 
     def test_args_basic(self):
         ''' Tests some basic sets of args '''
