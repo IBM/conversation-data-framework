@@ -526,4 +526,72 @@ def replaceValue(sourceJson, target, replacementJson, matchKey = True):
             replacedValuesNumber += 1
     return targetJson, replacedValuesNumber
 
+def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functionName, parameters, data):
+    functionCallUrl = CFNamespaceUrl + '/actions/' + package + '/' + functionName + parameters
+    logger.info("Calling function url '%s'", functionCallUrl)
+
+    functionResponse = requests.post(functionCallUrl, auth=(username, password),
+                                 headers={'Content-Type': 'application/json',
+                                          'accept': 'application/json'},
+                                 data=data)
+
+    if functionResponse.status_code == 200:
+
+        responseContentType = functionResponse.headers.get('content-type')
+        if responseContentType != 'application/json':
+            logger.error('Response content type is not json, content type: %s, response:\n%s', responseContentType, functionResponse.text)
+            return None
+
+        return functionResponse.json()
+
+    elif functionResponse.status_code == 202: # try once more
+        # 202 Accepted activation request (should not happen while sending 'blocking=true&result=true')
+        logger.warning("Did not receive response from function '%s' in package '%s', trying once more.", functionName, package)
+        responseJson = functionResponse.json()
+        activationId = responseJson['activationId']
+        functionCallUrl = CFNamespaceUrl + '/activations/' + activationId + '/result'
+        logger.info("Calling function url '%s'", functionCallUrl)
+        functionResponse = requests.get(functionCallUrl, auth=(username, password),
+                                        headers={'Content-Type': 'application/json',
+                                                 'accept': 'application/json'},
+                                        data=data)
+        if functionResponse.status_code == 200:
+
+            responseContentType = response.headers.get('content-type')
+            if responseContentType != 'application/json':
+                logger.error('Response content type is not json, content type: %s, response:\n%s', responseContentType, response.text)
+                return None
+
+            responseJson = functionResponse.json()
+            return responseJson['result']['payload']
+
+        elif response.status_code in [403, 404, 408]:
+            # 403 Forbidden (could be just for specific package or function)
+            # 404 Not Found (action or package could be incorrectly specified for given test)
+            # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
+            # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
+            # => Could be issue just for given test, so we don't want to stop whole testing.
+            logger.error("Unexpected response status from function '%s' in package '%s' with activation id '%s'", functionName, package, activationId, response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
+        else:
+            # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
+            # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
+            # => We don't want to continue with testing.
+            logger.critical("Unexpected response status from function '%s' in package '%s' with activation id '%s'", functionName, package, activationId, response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
+            sys.exit(1)
+
+    elif response.status_code in [403, 404, 408]:
+        # 403 Forbidden (could be just for specific package or function)
+        # 404 Not Found (action or package could be incorrectly specified for given test)
+        # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
+        # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
+        # => Could be issue just for given test, so we don't want to stop whole testing.
+        logger.error("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s", functionName, package, response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
+    else:
+        # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
+        # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
+        # => We don't want to continue with testing.
+        logger.critical("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s", functionName, package, response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
+        sys.exit(1)
+
+
 logger = getScriptLogger(__file__)
