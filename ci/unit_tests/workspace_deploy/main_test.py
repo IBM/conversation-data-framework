@@ -70,7 +70,7 @@ class TestMain(BaseTestCaseCapture):
 
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
-    def test_nameAndDescriptionNotOverridenByEmpty(self, envVarNameUsername, envVarNamePassword):
+    def test_nameAndDescriptionSetup(self, envVarNameUsername, envVarNamePassword):
         """Tests if name and description from json is uploaded, it is not overriden
          by empty settings and can be overriden by configuration parameters."""
 

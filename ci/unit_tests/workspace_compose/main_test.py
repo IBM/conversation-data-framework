@@ -48,7 +48,7 @@ class TestMain(BaseTestCaseCapture):
 
         workspaceFilename = 'skill_with_all_info.json'
         workspaceName = 'Configuration-defined workspace name'
-        workspaceDescription = "A sample simple Customer Service skill"
+        workspaceDescription = "Configuration-defined skill description"
 
         # deploy test workspace with descriptiton and name defined in json
         composeParams = list(self.composeParamsBase)
