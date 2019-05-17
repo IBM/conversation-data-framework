@@ -51,3 +51,23 @@ class TestMain(BaseTestCaseCapture):
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+    def test_mainValidBool(self):
+        """Tests if the script successfully completes with valid input file with bools."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputBoolValid.xml'))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedBoolValid.json'))
+
+        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputBoolValidResult')
+        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
+
+        BaseTestCaseCapture.createFolder(outputJsonDirPath)
+
+        self.t_noException([['--common_dialog_main', inputXmlPath,
+                            '--common_outputs_dialogs', 'dialog.json',
+                            '--common_outputs_directory', outputJsonDirPath]])
+
+        expectedJson = ""
+        outputJson = ""
+
+        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
+            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
