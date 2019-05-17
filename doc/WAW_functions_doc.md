@@ -1,6 +1,6 @@
 ## Functions
 Workbench also supports various operations with Cloud Functions - deploying, deleting and testing (see `scripts/functions_*`).
-Those functions then could be called from Watson Assistant (see [WA CF doc](TODO: Url to doc)).
+Those functions then could be called from Watson Assistant (see [WA documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-actions)).
 
 **CF Example (python):**
 ```python
