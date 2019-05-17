@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json, pytest
+import json, os, pytest, re
 
 import functions_test_evaluate
 from ...test_utils import BaseTestCaseCapture
@@ -36,6 +36,8 @@ class TestMain(BaseTestCaseCapture):
     testSinglePayloadsOutNonExistingOutputReturnedOutJsonPath = os.path.abspath(os.path.join(dataBasePath, 'test_single_payloads_out_non_existing_output_returned.out.json'))
     testSingleAllInFileBadTypeOutJsonPath = os.path.abspath(os.path.join(dataBasePath, 'test_single_all_in_file_bad_type.out.json'))
     testMultiOutJsonPath = os.path.abspath(os.path.join(dataBasePath, 'test_multi.out.json'))
+    testMultiJUnitXmlOutJsonPath = os.path.abspath(os.path.join(dataBasePath, 'test_multi_junitxml.out.json'))
+    testMultiJUnitXmlRefEvalJUnitXmlPath = os.path.abspath(os.path.join(dataBasePath, 'test_multi_junitxml_ref.eval.junit.xml'))
 
     def setup_class(cls):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
@@ -248,3 +250,26 @@ class TestMain(BaseTestCaseCapture):
                     "result": 0
                 }
             ]
+
+    def test_nonExistentJUnitXmlFileOutput(self):
+        ''' Tests if the JUnit XML output file does not exist '''
+        testArgs = [self.noJsonPath, self.noJsonPath, '-j', '/some/random/path']
+        self.t_exitCodeAndLogMessage(
+            1, # exit code
+            'CRITICAL Cannot open evaluation JUnit XML output file /some/random/path', # critical message substring
+            [testArgs] # params (*args, **kwargs)
+        )
+
+    def test_testMultiJUnitXml(self):
+        ''' Tests if junit xml is generated correctly '''
+        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.basename(self.testMultiJUnitXmlOutJsonPath).split('.')[0] + '.eval.json'))
+        outputJUnitXmlFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.basename(self.testMultiJUnitXmlOutJsonPath).split('.')[0] + '.eval.junit.xml'))
+
+        testArgs = [self.testMultiJUnitXmlOutJsonPath, outputFilePath, '-j', outputJUnitXmlFilePath]
+        self.t_noException([testArgs])
+        with open(self.testMultiJUnitXmlRefEvalJUnitXmlPath, 'r') as f1, open(outputJUnitXmlFilePath, 'r') as f2:
+            for l1, l2 in zip(f1, f2):
+                # remove timestamp because it is not static
+                l1 = re.sub(r' timestamp="[^"]*"', '', l1)
+                l2 = re.sub(r' timestamp="[^"]*"', '', l2)
+                assert l1 == l2
