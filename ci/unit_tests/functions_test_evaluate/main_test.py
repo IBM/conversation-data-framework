@@ -272,4 +272,7 @@ class TestMain(BaseTestCaseCapture):
                 # remove timestamp because it is not static
                 l1 = re.sub(r' timestamp="[^"]*"', '', l1)
                 l2 = re.sub(r' timestamp="[^"]*"', '', l2)
+                # remove absolute path because it is not static
+                l1 = re.sub(r' from file [^ ]*no.json', '', l1)
+                l2 = re.sub(r' from file [^ ]*no.json', '', l2)
                 assert l1 == l2
