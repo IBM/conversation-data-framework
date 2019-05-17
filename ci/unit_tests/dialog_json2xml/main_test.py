@@ -34,7 +34,8 @@ class TestMain(BaseTestCaseCapture):
     def callfunc(self, *args, **kwargs):
         dialog_json2xml.main(*args, **kwargs)
 
-    def _xmlEqual(self, xml1path, xml2path):
+    def _assertXmlEqual(self, xml1path, xml2path):
+        """Tests if two xml files are equal."""
         with open(xml1path, 'r') as xml1File:
             xml1 = etree.XML(xml1File.read(), etree.XMLParser(remove_blank_text=True))
             for parent in xml1.xpath('//*[./*]'): # Search for parent elements
@@ -57,7 +58,7 @@ class TestMain(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolder(outputXmlDirPath)
 
         self.t_noException([[inputJsonPath, '-d', outputXmlDirPath]])
-        self._xmlEqual(expectedXmlPath, outputXmlPath)
+        self._assertXmlEqual(expectedXmlPath, outputXmlPath)
 
     def test_mainValidBool(self):
         """Tests if the script successfully completes with valid input file with bool."""
@@ -70,4 +71,4 @@ class TestMain(BaseTestCaseCapture):
         BaseTestCaseCapture.createFolder(outputXmlDirPath)
 
         self.t_noException([[inputJsonPath, '-d', outputXmlDirPath]])
-        self._xmlEqual(expectedXmlPath, outputXmlPath)
+        self._assertXmlEqual(expectedXmlPath, outputXmlPath)
