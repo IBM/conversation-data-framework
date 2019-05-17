@@ -1,0 +1,13 @@
+[
+    {
+        "entity": "basicEntities",
+        "values": [
+            {
+                "value": "entity1"
+            },
+            {
+                "value": "entity2"
+            }
+        ]
+    }
+]

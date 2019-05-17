@@ -1,0 +1,14 @@
+[
+    {
+        "entity": "basicEntities",
+        "values": [
+            {
+                "value": "entity1"
+            },
+            {
+                "value": "entity2"
+            }
+        ],
+        "fuzzy_match": true
+    }
+]
