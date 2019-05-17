@@ -21,51 +21,6 @@ import logging
 logger = getScriptLogger(__file__)
 
 def main(argv):
-    '''
-    Scripts takes input json file that represents test that should be run against
-    Cloud Functions and produce output that extends input json file by results
-    from CFs.
-
-    Inputs and expected outputs can contain string values that starts with '::'
-    (e.g. "key": "::valueToBeReplaced1") which will be replaced by matching 
-    configuration parameters or by values specified by parameter 'replace'
-    (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')).
-
-    Input json file example (could contain additional keys that will be used in evaluations - they will be skipped):
-    [
-        {
-            "name": "test example 1", # OPTIONAL
-            "cf_package": "<CLOUD FUNCTIONS PACKAGE NAME>", # OPTIONAL (could be provided directly to script, at least one has to be specified, test level overrides global script one)
-            "cf_function": "<CLOUD FUNCTIONS SPECIFIC FUNCTION TO BE TESTED>", # --||--
-            "input": <OBJECT> | <@PATH/TO/FILE>, # payload to be send to CF (could be specified as a relative or absolute path to the file that contains json file, e.g. "input": "@inputs/test_example_1.json")
-            "outputExpected": <OBJECT> | <@PATH/TO/FILE>, # expected payload to be return from CF (--||--)
-        },
-        {
-            "name": "test example 2",
-            ...
-              rest of the test definition
-            ...
-        }
-    ]
-
-    Output json file example:
-    [
-        {
-            "name": "test example 1",
-            ...
-              rest of the input test definition
-            ...
-            "outputReturned": <OBJECT> # returned payload from CF
-        },
-        {
-            "name": "test example 2",
-            ...
-              rest of the input test definition
-            ...
-            "outputReturned": <OBJECT> # returned payload from CF
-        }
-    ]
-    '''
     parser = argparse.ArgumentParser(description='Tests all tests specified in given file against Cloud Functions and save test outputs to output file', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('inputFileName', help='File with json array containing tests.')

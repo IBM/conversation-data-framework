@@ -22,40 +22,7 @@ from deepdiff import DeepDiff
 logger = getScriptLogger(__file__)
 
 def main(argv):
-    '''
-    Scripts takes input json file that represents test output against Cloud 
-    Functions and produce output that extends input json file by results
-    from evaluation.
-
-    Input json file example (could contain additional keys that were used in testing - they will be skipped):
-    [
-        {
-            "name": "test example 1", # OPTIONAL
-            "type": "EXACT_MATCH", # OPTIONAL (DEFAULT = EXACT_MATCH, OPTIONS = [EXACT_MATCH])
-            "outputExpected": <OBJECT> | <@PATH/TO/FILE>, # expected payload to be return from CF (--||--)
-            "outputReturned": <OBJECT> # returned payload from CF
-        },
-        {
-            "name": "test example 2",
-            ...
-              rest of the test definition
-            ...
-        }
-    ]
-
-    Output json file example:
-    [
-        {
-            "name": "test example 1",
-            ...
-              rest of the input test definition
-            ...
-            "result": <0 - test passed, 1 - test failed>
-            "diff": <OBJECT> # if test passed then "diff" is Null, else contains object that represents differences
-        }
-    ]
-    '''
-    parser = argparse.ArgumentParser(description='Evaluate all test output against Cloud Functions specified in given file and save evaluation output to output file', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='Evaluates all test output against Cloud Functions specified in given file and save evaluation output to output file', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # positional arguments
     parser.add_argument('inputFileName', help='File with json array containing test output.')
     parser.add_argument('outputFileName', help='File where to store evaluation output.')

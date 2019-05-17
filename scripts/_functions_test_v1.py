@@ -26,7 +26,7 @@ logger = getScriptLogger(__file__)
 @deprecation.deprecated(deprecated_in='2.2', removed_in='2.6', current_version=__version__, details='Use the function_test.py script / main function with version 2.2 instead (--version 2.2).')
 def main(argv):
     '''
-    Scripts takes input json file that represents test that should be run against
+    Script takes input json file that represents test that should be run against
     Cloud Functions and produce output that extends input json file by results
     from CFs and evaluation.
 
