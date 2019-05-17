@@ -23,8 +23,8 @@ Testing of functions is separated to 2 scripts - [functions_test.py](/scripts/fu
 The first script only runs tests against Cloud Functions environment specified in configuration (see [README.md](/README.md))
 and saves returned outputs to output file. The second script then could be used to evaluate returned outputs and save the results.
 
-#### Script functions_test.py
-Script takes input json file that represents test cases that should be run against
+#### Test script
+Script [functions_test.py](/scripts/functions_test.py) takes input json file that represents test cases that should be run against
 Cloud Functions and produce output that extends input json file by returned outputs
 from CFs.
 
@@ -34,7 +34,7 @@ configuration parameters or by values specified by parameter `replace`
 (format `valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2`)).
 
 **Input json file example (could contain additional keys that will be used in evaluation - they will be skipped):**
-```json
+```
 [
     {
         "name": "test example 1", # OPTIONAL
@@ -53,7 +53,7 @@ configuration parameters or by values specified by parameter `replace`
 ```
 
 **Output json file example:**
-```json
+```
 [
     {
         "name": "test example 1",
@@ -72,13 +72,13 @@ configuration parameters or by values specified by parameter `replace`
 ]
 ```
 
-#### Script functions_test_evaluate.py
-Script takes input json file that represents test output against Cloud
-Functions and produce output that extends input json file by results
+#### Evaluation script
+Script [functions_test_evaluate.py](/scripts/functions_test_evaluate.py) takes input json file that represents test output against Cloud
+Functions and produces output that extends input json file by results
 from evaluation.
 
 **Input json file example (could contain additional keys that were used in testing - they will be skipped):**
-```json
+```
 [
     {
         "name": "test example 1", # OPTIONAL
@@ -96,7 +96,7 @@ from evaluation.
 ```
 
 **Output json file example:**
-```json
+```
 [
     {
         "name": "test example 1",
