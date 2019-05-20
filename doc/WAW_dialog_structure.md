@@ -131,8 +131,8 @@ elements depend on type (in fact anything is allowed)
 - [`<responses>`](#responses) (only once)
 - [`<actions>`](#actions) (only once)
 - [`<digress_in>`](#digress_in-digress_out-digress_out_slots) (only once)
-- [`<digress_out>`](#digress_out) (only once)
-- [`<digress_out_slots>`](#digress_out_slots) (only once)
+- [`<digress_out>`](#digress_in-digress_out-digress_out_slots) (only once)
+- [`<digress_out_slots>`](#digress_in-digress_out-digress_out_slots) (only once)
 - [`<metadata>`](#metadata) (only once)
 
 
