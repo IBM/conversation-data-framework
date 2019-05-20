@@ -15,9 +15,9 @@ limitations under the License.
 
 import json, sys, os, argparse, requests, configparser
 from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter,
-                       getOptionalParameter, getParametersCombination,
-                       convertApikeyToUsernameAndPassword, replaceValue,
-                       getFunctionResponseJson
+   getOptionalParameter, getParametersCombination,
+   convertApikeyToUsernameAndPassword, replaceValue,
+   getFunctionResponseJson
 from cfgCommons import Cfg
 import logging
 from deepdiff import DeepDiff

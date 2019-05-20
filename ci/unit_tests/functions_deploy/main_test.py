@@ -97,6 +97,7 @@ class TestMain(BaseTestCaseCapture):
         functionFileNames = [os.path.splitext(fileName)[0] for fileName in os.listdir(functionsDir)]
         assert set(functionNames) == set(functionFileNames)
 
+        data = json.dumps({'name': 'unit test'})
         # try to call particular functions
         for functionName in functionNames:
 
@@ -106,7 +107,7 @@ class TestMain(BaseTestCaseCapture):
                                                    self.package,
                                                    functionName,
                                                    '?blocking=true&result=true',
-                                                   json.dumps({'name': 'unit test'}))
+                                                   data)
 
             assert "Hello unit test!" in responseJson['greeting']
 
@@ -128,7 +129,7 @@ class TestMain(BaseTestCaseCapture):
             self.t_noException([params])
             self.packageCreated = True
 
-            responseJson = getFunctionResponseJson(cls.cloudFunctionsUrl + '/' + cls.urlNamespace,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
                                                    self.username,
                                                    self.password,
                                                    self.package,
@@ -163,7 +164,7 @@ class TestMain(BaseTestCaseCapture):
         self.packageCreated = True
 
         # call function and check if sub-function from non-main file was called
-        responseJson = getFunctionResponseJson(cls.cloudFunctionsUrl + '/' + cls.urlNamespace,
+        responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
                                                self.username,
                                                self.password,
                                                self.package,
