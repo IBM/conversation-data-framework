@@ -35,8 +35,8 @@ to include this tag to output dialog or not.
 ## Elements
 
 - [`<import>`](#import)
-- [`<autogenerate>`](#<autogenerate>)
-- [`<node>`](#<node>)
+- [`<autogenerate>`](#autogenerate)
+- [`<node>`](#node)
 
 ## Attributes
 
@@ -92,7 +92,7 @@ elements depend on type (in fact anything is allowed)
   - `<message>` - String containing a message that is returned when *back* intent is detected
 - if `type` = `"repeat"`
   - `<attempts>` - Number of attempts before user is returned to the main menu
-  - [`<outputs>`](#<outputs>)
+  - [`<outputs>`](#outputs)
 - if `type` = `"generic"`
   - any valid xml structure
 
@@ -121,19 +121,19 @@ elements depend on type (in fact anything is allowed)
 
 ## Elements
 
-- [`<condition>`](#<condition>) (only once)
-- [`<context>`](#<context>) (only once)
-- [`<output>`](#<output>) (only once)
-- [`<goto>`](#<goto>) (only once)
-- [`<nodes>`](#<nodes>) (only once)
-- [`<handlers>`](#<handlers>) (only once)
-- [`<slots>`](#<slots>) (only once)
-- [`<responses>`](#<responses>) (only once)
-- [`<actions>`](#<actions>) (only once)
-- [`<digress_in>`](#<digress_in>,\ <digress_out>,\ <digress_out_slots>) (only once)
-- [`<digress_out>`](#<digress_out>) (only once)
-- [`<digress_out_slots>`](#<digress_out_slots>) (only once)
-- [`<metadata>`](#<metadata>) (only once)
+- [`<condition>`](#condition) (only once)
+- [`<context>`](#context) (only once)
+- [`<output>`](#output) (only once)
+- [`<goto>`](#goto) (only once)
+- [`<nodes>`](#nodes) (only once)
+- [`<handlers>`](#handlers) (only once)
+- [`<slots>`](#slots) (only once)
+- [`<responses>`](#responses) (only once)
+- [`<actions>`](#actions) (only once)
+- [`<digress_in>`](#digress_in-digress_out-digress_out_slots) (only once)
+- [`<digress_out>`](#digress_out) (only once)
+- [`<digress_out_slots>`](#digress_out_slots) (only once)
+- [`<metadata>`](#metadata) (only once)
 
 
 ## Attributes
@@ -166,7 +166,7 @@ Specifies outputs for repeat nodes. First output is used in first turn, last is 
 
 ## Elements
 
-- [`<output>`](#<output>)
+- [`<output>`](#output)
 
 ## Attributes
 
@@ -253,23 +253,23 @@ Specifies the dialog output.
 
 ### **Notes**:
 
-- It is possible to add any custom variables as in [`<context>`](#<context>).
-- If tag [`<text>`](#<text>) is present, it is used as text output in conversation.
-- For multiple responses feature use [`<textValues>`](#<textValues>) tag.
+- It is possible to add any custom variables as in [`<context>`](#context).
+- If tag [`<text>`](#text) is present, it is used as text output in conversation.
+- For multiple responses feature use [`<textValues>`](#textValues) tag.
 
 ## Elements (in this order)
 
-- [`<text>`](#<text>) (only once)
+- [`<text>`](#text) (only once)
 - any valid xml structure
 
 or
 
-- [`<textValues>`](#<textValues>) (only once)
+- [`<textValues>`](#textValues) (only once)
 - any valid xml structure
 
 or
 
-- [`<response>`](#<response>) (only once)
+- [`<response>`](#response) (only once)
 - any valid xml structure
 
 ## Attributes
@@ -316,9 +316,9 @@ Represents a jump to another node or to another type of next step.
 
 ## Elements (in this order)
 
-- [`<behavior>`](#<behavior>) (only once)
-- [`<target>`](#<target>) **REQUIRED** (only once)
-- [`<selector>`](#<selector>) (only once)
+- [`<behavior>`](#behavior) (only once)
+- [`<target>`](#target) **REQUIRED** (only once)
+- [`<selector>`](#selector) (only once)
 
 ## Attributes
 
@@ -340,7 +340,7 @@ Represents a jump to another node or to another type of next step.
 
 ## Elements
 
-- [`<handler>`](#<handler>)
+- [`<handler>`](#handler)
 
 ## Attributes
 
@@ -362,7 +362,7 @@ Represents a jump to another node or to another type of next step.
 
 ## Elements
 
-- [`<slot>`](#<slot>)
+- [`<slot>`](#slot)
 
 ## Attributes
 
@@ -384,7 +384,7 @@ none
 
 ## Elements
 
-- [`<response>`](#<response>)
+- [`<response>`](#response)
 
 ## Attributes
 
@@ -406,7 +406,7 @@ none
 
 ## Elements
 
-- [`<action>`](#<action>)
+- [`<action>`](#action)
 
 ## Attributes
 
@@ -449,9 +449,9 @@ Enables multiple responses.
 
 ## Elements (in this order)
 
-- [`<values>`](#<values>)
-- [`<append>`](#<append>)
-- [`<selection_policy>`](#<selection_policy>)
+- [`<values>`](#values)
+- [`<append>`](#append)
+- [`<selection_policy>`](#selection_policy)
 
 ## Attributes
 
@@ -517,8 +517,8 @@ Specifies where jump action continues processing.
 
 ## Elements
 
-- [`<condition>`](#<condition>) (only once)
-- [`<context>`](#<context>) (only once)
+- [`<condition>`](#condition) (only once)
+- [`<context>`](#context) (only once)
 - [`<output>`](#output) (only once)
 
 ## Attributes
@@ -541,7 +541,7 @@ Specifies where jump action continues processing.
 
 ## Elements
 
-- [`<handlers>`](#<handlers>) (only once)
+- [`<handlers>`](#handlers) (only once)
 
 ## Attributes
 
@@ -561,10 +561,10 @@ Specifies where jump action continues processing.
 
 ## Elements
 
-- [`<condition>`](#<condition>) (only once)
-- [`<context>`](#<context>) (only once)
-- [`<output>`](#<output>) (only once)
-- [`<goto>`](#<goto>) (only once)
+- [`<condition>`](#condition) (only once)
+- [`<context>`](#context) (only once)
+- [`<output>`](#output) (only once)
+- [`<goto>`](#goto) (only once)
 
 ## Attributes
 
@@ -609,11 +609,11 @@ Specifies whether to append a value to an array or overwrite the values in the a
 
 ## Elements
 
-- [`<name>`](#<name>) **REQUIRED** (only once)
-- [`<result_variable>`](#<result_variable>) **REQUIRED** (only once)
-- [`<type>`](#<type>\ in\ <action>) (only once)
-- [`<parameters>`](#<parameters>) (only once)
-- [`<credentials>`](#<credentials>) (only once)
+- [`<name>`](#name) **REQUIRED** (only once)
+- [`<result_variable>`](#result_variable) **REQUIRED** (only once)
+- [`<type>`](#type-in-action) (only once)
+- [`<parameters>`](#<parameters) (only once)
+- [`<credentials>`](#credentials) (only once)
 
 ## Attributes
 
