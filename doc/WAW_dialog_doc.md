@@ -1,6 +1,8 @@
-## Dialog
+# Dialog
+## Structure
+The structure of the dialog is supposed to be similar in xml and json, with the main difference being in the way how nesting is done. In json, the elements are connected via IDs/names, while in xml the elements are nested explicitly, with child elements being nested inside the parent element. The structure of the xml file is documented in [WAW_dialog_structure.md](WAW_dialog_structure.md).
 
-### Localization
+## Localization
 
 If you want to make your xml dialog language-independent or customize it for various purposes you can use following scripts which allow you to use the same dialog structure for different languages or customers. Use them directly before `dialog_xml2json.py` or `update_all.py` in the pipeline.
 
