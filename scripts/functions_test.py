@@ -14,9 +14,9 @@ limitations under the License.
 '''
 
 import json, sys, os, argparse, requests, configparser
-from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter,
-   getOptionalParameter, getParametersCombination,
-   convertApikeyToUsernameAndPassword, replaceValue,
+from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter,\
+   getOptionalParameter, getParametersCombination,\
+   convertApikeyToUsernameAndPassword, replaceValue,\
    getFunctionResponseJson
 from cfgCommons import Cfg
 import logging
@@ -207,13 +207,13 @@ def main(argv):
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
 
-        testOutputReturnedJson = getFunctionResponseJson(cls.cloudFunctionsUrl + '/' + cls.urlNamespace,
+        testOutputReturnedJson = getFunctionResponseJson(url + '/' + namespace,
                                                username,
                                                password,
                                                (test['cf_package'] if 'cf_package' in test else package),
                                                (test['cf_function'] if 'cf_function' in test else function),
                                                '?blocking=true&result=true',
-                                               json.dumps(testInputJson, ensure_ascii=False).encode('utf8')))
+                                               json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
 
 
         # check status

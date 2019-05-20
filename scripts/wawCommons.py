@@ -578,7 +578,7 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
             # => Could be issue just for given test, so we don't want to stop whole testing.
             logger.error("Unexpected response status from function '%s' in package '%s' with activation id '%s', status code '%d', response: %s",
                          functionName, package, activationId, functionResponse.status_code,
-                         json.dumps(functionResponse.json(), ensure_ascii=False).encode('utf8'))
+                         functionResponse.text)
 
         else:
             # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
@@ -596,7 +596,7 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
         # => Could be issue just for given test, so we don't want to stop whole testing.
         logger.error("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s",
                      functionName, package, functionResponse.status_code,
-                     json.dumps(functionResponse.json(), ensure_ascii=False).encode('utf8'))
+                     functionResponse.text)
     else:
         # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
         # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
