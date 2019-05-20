@@ -8,13 +8,13 @@
 			<error message="Cannot open expected output payload from file: /some/random/path" type="IOError"/>
 		</testcase>
 		<testcase name="Cannot decode json from expected output">
-			<error message="Cannot decode json from expected output payload from file /home/tomas/Projects/watson-assistant-workbench/ci/unit_tests/functions_test_evaluate/main_data/no.json, error: Expecting value: line 1 column 1 (char 0)" type="ValueError"/>
+			<error message="Cannot decode json from expected output payload from file main_data/no.json, error: Expecting value: line 1 column 1 (char 0)" type="ValueError"/>
 		</testcase>
 		<testcase name="Cannot open returned output">
 			<error message="Cannot open returned output payload from file: /some/random/path" type="IOError"/>
 		</testcase>
 		<testcase name="Cannot decode json from returned output">
-			<error message="Cannot decode json from returned output payload from file /home//Projects/watson-assistant-workbench/ci/unit_tests/functions_test_evaluate/main_data/no.json, error: Expecting value: line 1 column 1 (char 0)" type="ValueError"/>
+			<error message="Cannot decode json from returned output payload from file main_data/no.json, error: Expecting value: line 1 column 1 (char 0)" type="ValueError"/>
 		</testcase>
 		<testcase name="Unknown test type">
 			<error message="Unknown test type: BAD TYPE" type="ValueError"/>
