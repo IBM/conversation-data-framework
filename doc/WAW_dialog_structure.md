@@ -34,7 +34,7 @@ to include this tag to output dialog or not.
 
 ## Elements
 
-- [`<import>`](#<import>)
+- [`<import>`](#import)
 - [`<autogenerate>`](#<autogenerate>)
 - [`<node>`](#<node>)
 
@@ -340,9 +340,7 @@ Represents a jump to another node or to another type of next step.
 
 ## Elements
 
-```xml
-<handler>
-```
+- [`<handler>`](#<handler>)
 
 ## Attributes
 
