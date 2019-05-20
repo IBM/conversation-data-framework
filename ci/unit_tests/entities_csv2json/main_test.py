@@ -31,7 +31,8 @@ class TestMain(BaseTestCaseCapture):
         outputsPath = os.path.join(self.dataBasePath, 'outputs')
 
         for files in [("fuzzyOn.cfg", "fuzzyOn.json", "fuzzyOnExpected.json"),
-                    ("fuzzyOff.cfg", "fuzzyOff.json", "fuzzyOffExpected.json")]:
+                    ("fuzzyOff.cfg", "fuzzyOff.json", "fuzzyOffExpected.json"),
+                    ("fuzzyOffEmpty.cfg", "fuzzyOff.json", "fuzzyOffExpected.json")]:
             cfgPath = os.path.join(self.dataBasePath, files[0])
             outputJsonFileName = files[1]
             expectedJsonPath = os.path.join(dataPath, files[2])
