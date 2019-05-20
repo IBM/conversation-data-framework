@@ -29,8 +29,10 @@ class TestMain(BaseTestCaseCapture):
         # create output folder
         BaseTestCaseCapture.createFolder(TestMain.testOutputPath)
 
+
     def callfunc(self, *args, **kwargs):
         dialog_xml2json.main(*args, **kwargs)
+
 
     def test_mainValidActions(self):
         """Tests if the script successfully completes with valid input file with actions."""
@@ -51,3 +53,19 @@ class TestMain(BaseTestCaseCapture):
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+
+    def test_mainMissingImport(self):
+        """Tests if the script fails with file with missing imported dialog file."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputMissingImport.xml'))
+        inputXmlDir = os.path.dirname(os.path.abspath(inputXmlPath))
+        importedXmlPath = os.path.join(inputXmlDir, "nonexistentImport.xml")
+        self.t_exitCodeAndLogMessage(1, "Imported dialog file " + importedXmlPath + " not found.",
+                                    [['--common_dialog_main', inputXmlPath]])
+
+
+    def test_missingRoot(self):
+        """Tests if the script fails with file with missing root dialog file."""
+
+        self.t_exitCodeAndLogMessage(1, "Root dialog file nonexistentInputFile.xml not found.",
+                                    [['--common_dialog_main', 'nonexistentInputFile.xml']])
