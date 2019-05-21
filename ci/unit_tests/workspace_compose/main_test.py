@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, pytest, argparse, json
+import json
+import os
 
 import workspace_compose
-from cfgCommons import Cfg
 from wawCommons import openFile
 from ...test_utils import BaseTestCaseCapture
 
