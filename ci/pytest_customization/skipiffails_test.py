@@ -29,7 +29,7 @@ class TestSkipiffails(BaseTestCaseCapture):
         Test should be skipped and assertion should be printed to warnings.'''
         assert 0
 
-    @pytest.mark.skipiffails(label='202 Cloud Function')
+    @pytest.mark.skipiffails(label='A label')
     def test_withLabel(self):
         ''' Tests if the 'skipiffails' mark does not brake anything (implementation in ci/confest.py).
         Test should be skipped and assertion along with label should be printed to warnings.'''
