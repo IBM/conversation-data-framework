@@ -65,7 +65,7 @@ class TestMain(BaseTestCaseCapture):
 
         for workspace in workspaces:
             requestUrl = self.workspacesUrl + '/' + workspace['workspace_id'] + '?version=' + self.version
-            response = requests.delete(requestUrl, auth=(self.username, self.password), headers={'Accept': 'text/html'})
+            requests.delete(requestUrl, auth=(self.username, self.password), headers={'Accept': 'text/html'})
 
         workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
 

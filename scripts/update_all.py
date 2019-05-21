@@ -15,7 +15,7 @@ limitations under the License.
 from __future__ import print_function
 
 import os, sys
-import subprocess, argparse
+import argparse
 import logging
 from wawCommons import setLoggerConfig, getScriptLogger
 
@@ -27,7 +27,7 @@ import workspace_compose, workspace_addjson, workspace_deploy
 logger = getScriptLogger(__file__)
 
 def main(argv):
-    scriptsPath=os.path.dirname(__file__)
+    os.path.dirname(__file__)
     defaultParamList=['shared.cfg', 'private.cfg']
 
     parser = argparse.ArgumentParser(description='This script executes all the steps needed for building and deployment of the WeatherFrog application.',

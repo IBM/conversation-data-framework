@@ -13,8 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import re
-from collections import OrderedDict
 
 class EntityData(object):
     """ Represents a single entity.    """

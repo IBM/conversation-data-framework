@@ -278,7 +278,7 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
 #                upperNodeXML.attrib['structure'] = "listItem"
 #                logger.verbose("setting listItem")
             for i in range(len(nodeJSON[keyJSON])):
-                listItemJSON = nodeJSON[keyJSON][i]
+                nodeJSON[keyJSON][i]
                 convertAll(upperNodeXML, nodeJSON[keyJSON], i, keyJSON)
     # dict
     elif isinstance(nodeJSON[keyJSON], dict):

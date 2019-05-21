@@ -12,8 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import os, json, sys, argparse, codecs
-import io
+import argparse
+import json
+import os
+import sys
 from cfgCommons import Cfg
 from wawCommons import setLoggerConfig, getScriptLogger, openFile, getRequiredParameter
 import logging

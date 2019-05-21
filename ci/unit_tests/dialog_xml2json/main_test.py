@@ -46,8 +46,6 @@ class TestMain(BaseTestCaseCapture):
                             '--common_outputs_dialogs', 'dialog.json',
                             '--common_outputs_directory', outputJsonDirPath]])
 
-        expectedJson = ""
-        outputJson = ""
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)

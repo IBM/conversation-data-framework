@@ -14,7 +14,9 @@ limitations under the License.
 """
 
 # coding: utf-8
-import sys, argparse, os, codecs
+import argparse
+import os
+import sys
 from cfgCommons import Cfg
 from XLSXHandler import XLSXHandler
 from XMLHandler import XMLHandler
@@ -89,7 +91,7 @@ def main(argv):
     logger.info('STARTING: ' + os.path.basename(__file__))
 
     if hasattr(config, 'verbose') and getattr(config, 'verbose'):
-        name_policy = 'soft_verbose'
+        pass
     if not hasattr(config, 'common_xls'):
         logger.error('xls is not defined')
         exit(1)
@@ -101,7 +103,6 @@ def main(argv):
         logger.verbose('generated_entities parameter is not defined')
 
     xlsxHandler = XLSXHandler(config)
-    allDataBlocks = {}  # map of datablocks, key: Excel sheet name, value: list of all block in the sheet
 
     logger.info(getattr(config, 'common_xls'))
     for fileOrFolder in getattr(config, 'common_xls'):

@@ -1,5 +1,8 @@
 
-import os, unittest, sys, codecs, json
+import codecs
+import json
+import os
+import unittest
 
 import workspace_addjson
 

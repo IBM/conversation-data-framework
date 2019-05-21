@@ -13,7 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, requests, shutil, unittest, uuid, zipfile
+import os
+import pytest
+import requests
+import uuid
+import zipfile
 
 import functions_deploy
 import functions_delete_package

@@ -13,7 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, sys, unittest, traceback, shutil
+import os
+import pytest
+import shutil
+import traceback
 
 #class BaseTestCaseCapture(unittest.TestCase):
 class BaseTestCaseCapture(object):

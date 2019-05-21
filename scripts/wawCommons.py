@@ -15,9 +15,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import copy, sys, re, codecs, os, io, unidecode, types, fnmatch, requests, json
-from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
-import lxml.etree as Xml
+import copy
+import fnmatch
+import io
+import json
+import os
+import re
+import requests
+import sys
+import unidecode
+from urllib.parse import urlencode, urlparse, urlunparse
 import logging
 from logging.config import fileConfig
 
@@ -123,7 +130,7 @@ def toIntentName(NAME_POLICY, userReplacements, *intentSubnames):
                 exit(1)
 
         #uIntentSubnameNoHash = uIntentSubname[1:] if uIntentSubname.startswith(u'#') else uIntentSubname
-        uIntentSubnameNoHash = uIntentSubnameUser[1:] if uIntentSubnameUser.startswith(u'#') else uIntentSubname
+        #uIntentSubnameNoHash = uIntentSubnameUser[1:] if uIntentSubnameUser.startswith(u'#') else uIntentSubname
 
         # if uIntentSubnameUser != uIntentSubnameNoHash:
         #     if NAME_POLICY == 'soft_verbose':
@@ -176,7 +183,7 @@ def toEntityName(NAME_POLICY, userReplacements, entityName):
                     uNewEntityNameUser = uEntityNameUser.upper()
                     triggeredUserRegexToAppend = "entity name should be uppercase"
                 elif replacementPair[1] == r'\A':
-                    uNewIntentSubnameUser = unidecode.unidecode(uEntityNameUser)
+                    unidecode.unidecode(uEntityNameUser)
                     triggeredUserRegexToAppend = "entity name cannot contain accented letters"
                 else:
                     logger.error("unsupported special regex opperation '" + replacementPair[1].decode('utf-8'))

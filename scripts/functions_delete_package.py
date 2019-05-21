@@ -13,11 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json, sys, argparse, requests
+import argparse
+import os
+import requests
+import sys
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, errorsInResponse, filterPackages
-import urllib3
+from wawCommons import convertApikeyToUsernameAndPassword, errorsInResponse, filterPackages, getOptionalParameter, getParametersCombination, getRequiredParameter, getScriptLogger, setLoggerConfig
 from urllib.parse import quote
 import logging
 
@@ -75,10 +77,10 @@ def main(argv):
     logger.info('STARTING: '+ os.path.basename(__file__))
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
-    urlNamespace = quote(namespace)
+    quote(namespace)
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     cloudfunctionsUrl = getRequiredParameter(config, 'cloudfunctions_url')
-    functionDir = getRequiredParameter(config, 'common_functions')
+    getRequiredParameter(config, 'common_functions')
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])

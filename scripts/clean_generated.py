@@ -14,7 +14,6 @@ limitations under the License.
 """
 
 import sys, argparse, os
-import wawCommons
 from wawCommons import setLoggerConfig, getScriptLogger
 from cfgCommons import Cfg
 import shutil

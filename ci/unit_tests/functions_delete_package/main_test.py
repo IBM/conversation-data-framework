@@ -13,13 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, requests, unittest, uuid
+import json
+import os
+import pytest
+import requests
+import uuid
 
 import functions_delete_package
 import functions_deploy
 from ...test_utils import BaseTestCaseCapture
 from urllib.parse import quote
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 class TestMain(BaseTestCaseCapture):
 

@@ -13,7 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, argparse, os
+import argparse
+import json
+import sys
 from wawCommons import setLoggerConfig, getScriptLogger, openFile
 import logging
 
@@ -36,7 +38,7 @@ def main(argv):
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
 
-    workspace_file=json.loads(openFile(args.workspace).read())
+    json.loads(openFile(args.workspace).read())
 
     with openFile(args.workspace, 'r') as workspaceFile:
         workspaceJSON = json.load(workspaceFile)

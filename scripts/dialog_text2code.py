@@ -13,7 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json,sys,argparse, os
+import json
+import argparse
+import sys
 import lxml.etree as LET
 from wawCommons import setLoggerConfig, getScriptLogger,  toCode, openFile
 import logging

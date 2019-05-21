@@ -14,7 +14,12 @@ limitations under the License.
 """
 from __future__ import print_function
 
-import json, sys, argparse, os, glob, codecs, re
+import argparse
+import codecs
+import json
+import os
+import re
+import sys
 from wawCommons import setLoggerConfig, getScriptLogger,  getFilesAtPath, toIntentName, openFile
 from cfgCommons import Cfg
 import logging

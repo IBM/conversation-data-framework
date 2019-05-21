@@ -13,7 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os, time, argparse, requests, configparser
+import argparse
+import json
+import os
+import requests
+import sys
+import time
 from wawCommons import setLoggerConfig, getScriptLogger, filterWorkspaces, getWorkspaces, getRequiredParameter, errorsInResponse, openFile
 from cfgCommons import Cfg
 import logging

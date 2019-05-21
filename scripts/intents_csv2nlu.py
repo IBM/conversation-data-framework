@@ -36,7 +36,6 @@ def getEntities(entityDir, entitiesNameCheck, NAME_POLICY):
 
 def tagEntities(line, entities):
     """Tags entities in the text using names from the entities (entity value to entity name) dictionary"""
-    newline = ""
     words = re.findall('[\w-]+', line, re.UNICODE)
     for word in words:
         if word.lower() in entities:

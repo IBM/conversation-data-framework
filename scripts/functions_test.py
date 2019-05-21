@@ -13,7 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-import json, sys, os, argparse, requests, configparser
+import argparse
+import json
+import os
+import sys
 from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter,\
    getOptionalParameter, getParametersCombination,\
    convertApikeyToUsernameAndPassword, replaceValue,\

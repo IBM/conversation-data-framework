@@ -16,9 +16,8 @@ limitations under the License.
 import os, json, sys, argparse, requests, zipfile, base64
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getFilesAtPath, openFile, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, errorsInResponse
+from wawCommons import convertApikeyToUsernameAndPassword, errorsInResponse, getFilesAtPath, getOptionalParameter, getParametersCombination, getRequiredParameter, getScriptLogger, setLoggerConfig
 from urllib.parse import quote
-import urllib3
 import logging
 
 
