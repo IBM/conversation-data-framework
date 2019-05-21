@@ -16,6 +16,12 @@ limitations under the License.
 import pytest
 import warnings
 
+# register 'skipiffails' mark to get rid of warning
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "skipiffails(label=None): mark test to run and if it fails then it is skipped and assertion along with label is printed to warnings section"
+    )
+
 # custom format of warnings to print just the message
 def custom_formatwarning(message, category, filename, lineno, line=''):
     return str(message) + '\n'
