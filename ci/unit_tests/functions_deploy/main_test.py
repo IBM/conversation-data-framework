@@ -97,17 +97,17 @@ class TestMain(BaseTestCaseCapture):
         functionFileNames = [os.path.splitext(fileName)[0] for fileName in os.listdir(functionsDir)]
         assert set(functionNames) == set(functionFileNames)
 
-        data = json.dumps({'name': 'unit test'})
         # try to call particular functions
         for functionName in functionNames:
 
-            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
+                                                   self.urlNamespace,
                                                    self.username,
                                                    self.password,
                                                    self.package,
                                                    functionName,
-                                                   '?blocking=true&result=true',
-                                                   data)
+                                                   {},
+                                                   {'name': 'unit test'})
 
             assert "Hello unit test!" in responseJson['greeting']
 
@@ -129,13 +129,14 @@ class TestMain(BaseTestCaseCapture):
             self.t_noException([params])
             self.packageCreated = True
 
-            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
+                                                   self.urlNamespace,
                                                    self.username,
                                                    self.password,
                                                    self.package,
                                                    'getPythonMajorVersion',
-                                                   '?blocking=true&result=true',
-                                                   '{}')
+                                                   {},
+                                                   {})
 
             assert pythonVersion == responseJson['majorVersion']
 
@@ -164,13 +165,14 @@ class TestMain(BaseTestCaseCapture):
         self.packageCreated = True
 
         # call function and check if sub-function from non-main file was called
-        responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
+        responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
+                                               self.urlNamespace,
                                                self.username,
                                                self.password,
                                                self.package,
                                                'testFunc',
-                                               '?blocking=true&result=true',
-                                               '{}')
+                                               {},
+                                               {})
 
         assert "String from helper function" == responseJson['test']
 
@@ -195,13 +197,14 @@ class TestMain(BaseTestCaseCapture):
         # try to call particular sequences and test their output
         for sequenceName in sequenceAnswers:
 
-            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl + '/' + self.urlNamespace,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
+                                                   self.urlNamespace,
                                                    self.username,
                                                    self.password,
                                                    self.package,
                                                    sequenceName,
-                                                   '?blocking=true&result=true',
-                                                   '{}')
+                                                   {},
+                                                   {})
 
             shouldAnswer = sequenceAnswers[sequenceName]
             assert shouldAnswer in responseJson["entries"]

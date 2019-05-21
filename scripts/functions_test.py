@@ -207,13 +207,14 @@ def main(argv):
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
 
-        testOutputReturnedJson = getFunctionResponseJson(url + '/' + namespace,
+        testOutputReturnedJson = getFunctionResponseJson(url,
+                                               namespace,
                                                username,
                                                password,
                                                (test['cf_package'] if 'cf_package' in test else package),
                                                (test['cf_function'] if 'cf_function' in test else function),
-                                               '?blocking=true&result=true',
-                                               json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
+                                               {},
+                                               testInputJson)
 
 
         # check status

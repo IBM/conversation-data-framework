@@ -16,6 +16,7 @@ limitations under the License.
 """
 
 import copy, sys, re, codecs, os, io, unidecode, types, fnmatch, requests, json
+from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 import lxml.etree as Xml
 import logging
 from logging.config import fileConfig
@@ -526,14 +527,21 @@ def replaceValue(sourceJson, target, replacementJson, matchKey = True):
             replacedValuesNumber += 1
     return targetJson, replacedValuesNumber
 
-def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functionName, parameters, data):
-    functionCallUrl = CFNamespaceUrl + '/actions/' + package + '/' + functionName + parameters
+def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password, package, functionName, parameters, data):
+
+    functionUrl = cloudFunctionsUrl + '/' + urlNamespace + '/actions/' + package + '/' + functionName
+    url_parts = list(urlparse(functionUrl))
+    params = {'blocking':True, 'result': True} # wait for result and return only result
+    params.update(parameters) # add custom parameters
+    url_parts[4] = urlencode(params)
+    functionCallUrl = urlunparse(url_parts)
+
     logger.info("Calling function url '%s'", functionCallUrl)
 
     functionResponse = requests.post(functionCallUrl, auth=(username, password),
                                  headers={'Content-Type': 'application/json',
                                           'accept': 'application/json'},
-                                 data=data)
+                                 data=json.dumps(data, ensure_ascii=False).encode('utf8'))
 
     if functionResponse.status_code == 200:
 
@@ -550,7 +558,7 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
         logger.info(json.dumps(functionResponse.json()))
         responseJson = functionResponse.json()
         activationId = responseJson['activationId']
-        functionCallUrl = CFNamespaceUrl + '/activations/' + activationId + '/result'
+        functionCallUrl = cloudFunctionsUrl + '/' + urlNamespace + '/activations/' + activationId + '/result'
         logger.info("Trying to get function result from url '%s'", functionCallUrl)
         functionResponse = requests.get(functionCallUrl, auth=(username, password),
                                         headers={})
@@ -562,9 +570,10 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
                 return None
 
             responseJson = functionResponse.json()
-            if not 'result' in responseJson or not responseJson['result'] or not 'payload' in responseJson['result']:
+            if not 'result' in responseJson or not isinstance(responseJson, dict) or not responseJson['result']\
+             or not 'payload' in responseJson['result'] or not isinstance(responseJson['result'], dict):
                 logger.error("Bad response format received from function '%s' in package '%s', status code '%d',\
-                 response: %s, expected was {\"result\":{\"payload\":\"Hello, Fred!\"},\"success\":true,\"status\":\"success\"}",
+                 response: %s, expected was {\"result\":{\"payload\":\"<function_payload>\"}}",\
                  functionName, package, functionResponse.status_code, json.dumps(functionResponse.json(), ensure_ascii=False).encode('utf8'))
                 return None
             else:
@@ -574,8 +583,6 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
             # 403 Forbidden (could be just for specific package or function)
             # 404 Not Found (action or package could be incorrectly specified for given test)
             # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
-            # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
-            # => Could be issue just for given test, so we don't want to stop whole testing.
             logger.error("Unexpected response status from function '%s' in package '%s' with activation id '%s', status code '%d', response: %s",
                          functionName, package, activationId, functionResponse.status_code,
                          functionResponse.text)
@@ -583,7 +590,7 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
         else:
             # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
             # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
-            # => We don't want to continue with testing.
+            # 502 Bad Gateway (when the CF raises exception, e.g. bad params were provided)
             logger.critical("Unexpected response status from function '%s' in package '%s' with activation id '%s', status code '%d', response: %s",
                             functionName, package, activationId, functionResponse.status_code, functionResponse.text)
             sys.exit(1)
@@ -592,15 +599,13 @@ def getFunctionResponseJson(CFNamespaceUrl, username, password, package, functio
         # 403 Forbidden (could be just for specific package or function)
         # 404 Not Found (action or package could be incorrectly specified for given test)
         # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
-        # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
-        # => Could be issue just for given test, so we don't want to stop whole testing.
         logger.error("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s",
                      functionName, package, functionResponse.status_code,
                      functionResponse.text)
     else:
         # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
         # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
-        # => We don't want to continue with testing.
+        # 502 Bad Gateway (when the CF raises exception, e.g. bad params were provided)
         logger.critical("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s",
                         functionName, package, functionResponse.status_code,
                         json.dumps(functionResponse.json(), ensure_ascii=False).encode('utf8'))
