@@ -45,28 +45,18 @@ class TestMain(BaseTestCaseCapture):
                                 '--conversation_password', cls.password,
                                 '--conversation_url', cls.workspacesUrl,
                                 '--conversation_version', cls.version,
+                                '--conversation_workspace_match_by_name', 'true',
+                                '--conversation_workspace_name_pattern', '.*',
                                 '-v']
 
     def callfunc(self, *args, **kwargs):
         workspace_deploy.main(*args, **kwargs)
 
     def setup_method(self):
-        self._deleteAllWorkspaces()
+        self.t_funNoException(workspace_delete.main,[self.deleteParamsBase])
 
     def teardown_method(self):
-        self._deleteAllWorkspaces()
-
-    def _deleteAllWorkspaces(self):
-
-        workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
-
-        for workspace in workspaces:
-            requestUrl = self.workspacesUrl + '/' + workspace['workspace_id'] + '?version=' + self.version
-            response = requests.delete(requestUrl, auth=(self.username, self.password), headers={'Accept': 'text/html'})
-
-        workspaces = getWorkspaces(self.workspacesUrl, self.version, self.username, self.password)
-
-        assert len(workspaces) == 0
+        self.t_funNoException(workspace_delete.main,[self.deleteParamsBase])
 
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
@@ -109,10 +99,10 @@ class TestMain(BaseTestCaseCapture):
         assert workspaces[0]['name'] == "Customer Care Sample Skill"
         assert workspaces[0]['description'] == "A sample simple Customer Service skill"
 
-        # update test workspace with descriptiton and name + configured ones
+        # update test workspace with the one with name while having name as parameter
         deployParams = list(self.deployParamsBase)
         deployParams.extend(['--conversation_workspace_name', workspaceName,
-                             '--common_outputs_workspace', jsonWorkspaceUpdateFilename,
+                             '--common_outputs_workspace', jsonWorkspaceFilename,
                              '--conversation_workspace_id', workspaceId])
 
         self.t_noExceptionAndLogMessage("Workspace successfully uploaded.", [deployParams])
@@ -121,9 +111,8 @@ class TestMain(BaseTestCaseCapture):
 
         assert len(workspaces) == 1
 
-        # description and name should be changed according to configuration
+        # name should be changed accordingly to configuration
         assert workspaces[0]['name'] == workspaceName
-        assert workspaces[0]['description'] == "A sample simple Customer Service skill"
 
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
