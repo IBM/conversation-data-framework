@@ -35,12 +35,6 @@ class TestMain(BaseTestCaseCapture):
     def callfunc(self, *args, **kwargs):
         workspace_compose.main(*args, **kwargs)
 
-    def setup_method(self):
-        pass
-
-    def teardown_method(self):
-        pass
-
     def test_allFromFileAndAllFromConfiguration(self):
         """Tests if all intents, entities and dialog from files and name,
          description and language from configuration are contained in
