@@ -570,41 +570,43 @@ def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password,
                 return None
 
             responseJson = functionResponse.json()
-            if not 'result' in responseJson or not isinstance(responseJson, dict) or not responseJson['result']\
-             or not 'payload' in responseJson['result'] or not isinstance(responseJson['result'], dict):
+            if isinstance(responseJson, dict) and 'result' in responseJson\
+             and isinstance(responseJson['result'], dict) and 'payload' in responseJson['result']:
+                return responseJson['result']['payload']
+            else:
                 logger.error("Bad response format received from function '%s' in package '%s', status code '%d',\
                  response: %s, expected was {\"result\":{\"payload\":\"<function_payload>\"}}",\
                  functionName, package, functionResponse.status_code, json.dumps(functionResponse.json(), ensure_ascii=False).encode('utf8'))
                 return None
-            else:
-                return responseJson['result']['payload']
 
-        elif functionResponse.status_code in [403, 404, 408]:
+        elif functionResponse.status_code in [403, 404, 408]: # not so serious errors, the next request may be fine
             # 403 Forbidden (could be just for specific package or function)
-            # 404 Not Found (action or package could be incorrectly specified for given test)
-            # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
+            # 404 Not Found (action or package could be incorrectly specified for given request)
+            # 408 Request Timeout (could happen e.g. for CF that requests some REST APIs, e.g. Discovery service)
             logger.error("Unexpected response status from function '%s' in package '%s' with activation id '%s', status code '%d', response: %s",
                          functionName, package, activationId, functionResponse.status_code,
                          functionResponse.text)
-
-        else:
+            return None
+        else: # serious errors, stop the process
             # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
-            # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
+            # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests,
+             # then it would be probably same for all requests)
             # 502 Bad Gateway (when the CF raises exception, e.g. bad params were provided)
             logger.critical("Unexpected response status from function '%s' in package '%s' with activation id '%s', status code '%d', response: %s",
                             functionName, package, activationId, functionResponse.status_code, functionResponse.text)
             sys.exit(1)
 
-    elif functionResponse.status_code in [403, 404, 408]:
+    elif functionResponse.status_code in [403, 404, 408]: # not so serious errors, the next request may be fine
         # 403 Forbidden (could be just for specific package or function)
-        # 404 Not Found (action or package could be incorrectly specified for given test)
-        # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
+        # 404 Not Found (action or package could be incorrectly specified for given request)
+        # 408 Request Timeout (could happen e.g. for CF that requests some REST APIs, e.g. Discovery service)
         logger.error("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s",
                      functionName, package, functionResponse.status_code,
                      functionResponse.text)
-    else:
+    else: # serious errors, stop the process
         # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
-        # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
+        # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests,
+         # then it would be probably same for all requests)
         # 502 Bad Gateway (when the CF raises exception, e.g. bad params were provided)
         logger.critical("Unexpected response status from function '%s' in package '%s', status code '%d', response: %s",
                         functionName, package, functionResponse.status_code,
