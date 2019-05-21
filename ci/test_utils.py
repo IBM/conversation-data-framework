@@ -14,9 +14,11 @@ limitations under the License.
 """
 
 import os
-import pytest
 import shutil
 import traceback
+
+import pytest
+
 
 #class BaseTestCaseCapture(unittest.TestCase):
 class BaseTestCaseCapture(object):
@@ -225,4 +227,3 @@ class BaseTestCaseCapture(object):
             else:
                 missingEnvironmentVariables.sort()
                 pytest.fail('Missing ENVIRONMENT VARIABLES: ' + str(missingEnvironmentVariables))
-

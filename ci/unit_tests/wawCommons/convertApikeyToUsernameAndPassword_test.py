@@ -15,7 +15,9 @@ limitations under the License.
 
 
 import wawCommons
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestConvertApikeyToUsernameAndPassword(BaseTestCaseCapture):
 
@@ -51,4 +53,3 @@ class TestConvertApikeyToUsernameAndPassword(BaseTestCaseCapture):
         username, password = wawCommons.convertApikeyToUsernameAndPassword('aaa:bbb')
         assert username == 'aaa'
         assert password == 'bbb'
-

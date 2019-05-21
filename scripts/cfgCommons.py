@@ -15,6 +15,7 @@ limitations under the License.
 
 import configparser
 import sys
+
 from wawCommons import getScriptLogger, openFile
 
 logger = getScriptLogger(__file__)

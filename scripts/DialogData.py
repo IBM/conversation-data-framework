@@ -13,11 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from IntentData import IntentData
 from EntityData import EntityData
+from IntentData import IntentData
 from NodeData import NodeData
 from wawCommons import getScriptLogger, toEntityName, toIntentName
-
 
 logger = getScriptLogger(__file__)
 

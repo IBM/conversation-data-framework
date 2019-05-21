@@ -14,15 +14,19 @@ limitations under the License.
 """
 
 import argparse
-import os
-import requests
-import sys
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from cfgCommons import Cfg
-from wawCommons import convertApikeyToUsernameAndPassword, errorsInResponse, filterPackages, getOptionalParameter, getParametersCombination, getRequiredParameter, getScriptLogger, setLoggerConfig
-from urllib.parse import quote
 import logging
+import os
+import sys
+from urllib.parse import quote
 
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+from cfgCommons import Cfg
+from wawCommons import (convertApikeyToUsernameAndPassword, errorsInResponse,
+                        filterPackages, getOptionalParameter,
+                        getParametersCombination, getRequiredParameter,
+                        getScriptLogger, setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 

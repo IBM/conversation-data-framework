@@ -15,10 +15,10 @@ limitations under the License.
 
 import argparse
 import json
-import sys
-from wawCommons import setLoggerConfig, getScriptLogger, openFile
 import logging
+import sys
 
+from wawCommons import getScriptLogger, openFile, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 
@@ -68,4 +68,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

@@ -18,6 +18,7 @@ import os
 
 import workspace_compose
 from wawCommons import openFile
+
 from ...test_utils import BaseTestCaseCapture
 
 

@@ -6,6 +6,7 @@ import unittest
 
 import workspace_addjson
 
+
 class TestMain(unittest.TestCase):
 
     directory = './ci/unit_tests/workspace_addjson/main_data/'

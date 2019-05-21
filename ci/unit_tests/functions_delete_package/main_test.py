@@ -15,14 +15,17 @@ limitations under the License.
 
 import json
 import os
+import uuid
+from urllib.parse import quote
+
 import pytest
 import requests
-import uuid
 
 import functions_delete_package
 import functions_deploy
+
 from ...test_utils import BaseTestCaseCapture
-from urllib.parse import quote
+
 
 class TestMain(BaseTestCaseCapture):
 

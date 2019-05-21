@@ -14,13 +14,16 @@ limitations under the License.
 """
 
 import argparse
-import os
-import requests
-import sys
-from wawCommons import errorsInResponse, filterWorkspaces, getOptionalParameter, getRequiredParameter, getScriptLogger, getWorkspaces, setLoggerConfig
-from cfgCommons import Cfg
 import logging
+import os
+import sys
 
+import requests
+
+from cfgCommons import Cfg
+from wawCommons import (errorsInResponse, filterWorkspaces,
+                        getOptionalParameter, getRequiredParameter,
+                        getScriptLogger, getWorkspaces, setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 

@@ -12,20 +12,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import json
 import argparse
 import copy
+import datetime
 import io
+import json
+import logging
 import os
 import re
 import sys
-import lxml.etree as LET
 from xml.sax.saxutils import unescape
+
+import lxml.etree as LET
+
 from cfgCommons import Cfg
 from wawCommons import getOptionalParameter, getScriptLogger, setLoggerConfig
-import datetime
-import logging
-
 
 logger = getScriptLogger(__file__)
 

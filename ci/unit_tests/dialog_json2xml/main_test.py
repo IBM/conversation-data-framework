@@ -15,10 +15,12 @@ limitations under the License.
 
 import os
 
+from lxml import etree
+
 import dialog_json2xml
+
 from ...test_utils import BaseTestCaseCapture
 
-from lxml import etree
 
 class TestMain(BaseTestCaseCapture):
 

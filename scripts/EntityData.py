@@ -25,4 +25,3 @@ class EntityData(object):
 
     def getValues(self):
         return self._values
-

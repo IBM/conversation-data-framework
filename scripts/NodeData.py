@@ -15,8 +15,8 @@ limitations under the License.
 
 import re
 from collections import OrderedDict
-from wawCommons import getScriptLogger
 
+from wawCommons import getScriptLogger
 
 logger = getScriptLogger(__file__)
 

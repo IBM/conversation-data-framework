@@ -15,14 +15,14 @@ limitations under the License.
 
 # coding: utf-8
 import argparse
+import logging
 import os
 import sys
+
 from cfgCommons import Cfg
+from wawCommons import getScriptLogger, openFile, setLoggerConfig
 from XLSXHandler import XLSXHandler
 from XMLHandler import XMLHandler
-from wawCommons import setLoggerConfig, getScriptLogger, openFile
-import logging
-
 
 logger = getScriptLogger(__file__)
 

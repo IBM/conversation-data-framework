@@ -14,16 +14,18 @@ limitations under the License.
 """
 
 import os
-import pytest
-import requests
 import uuid
 import zipfile
-
-import functions_deploy
-import functions_delete_package
-from wawCommons import getFunctionResponseJson
-from ...test_utils import BaseTestCaseCapture
 from urllib.parse import quote
+
+import pytest
+import requests
+
+import functions_delete_package
+import functions_deploy
+from wawCommons import getFunctionResponseJson
+
+from ...test_utils import BaseTestCaseCapture
 
 
 class TestMain(BaseTestCaseCapture):

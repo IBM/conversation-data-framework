@@ -13,10 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json
+import json
+import os
 
 import dialog_xml2json
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 

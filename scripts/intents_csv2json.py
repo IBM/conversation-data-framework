@@ -17,12 +17,14 @@ from __future__ import print_function
 import argparse
 import codecs
 import json
+import logging
 import os
 import re
 import sys
-from wawCommons import setLoggerConfig, getScriptLogger,  getFilesAtPath, toIntentName, openFile
+
 from cfgCommons import Cfg
-import logging
+from wawCommons import (getFilesAtPath, getScriptLogger, openFile,
+                        setLoggerConfig, toIntentName)
 
 logger = getScriptLogger(__file__)
 

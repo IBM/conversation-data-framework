@@ -16,14 +16,15 @@ limitations under the License.
 import argparse
 import datetime
 import json
+import logging
 import os
 import re
 import sys
 import time
-import lxml.etree as LET
-from wawCommons import setLoggerConfig, getScriptLogger, openFile
-import logging
 
+import lxml.etree as LET
+
+from wawCommons import getScriptLogger, openFile, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 

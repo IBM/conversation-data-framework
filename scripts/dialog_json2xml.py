@@ -13,11 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, argparse, os
-import lxml.etree as LET
-from wawCommons import setLoggerConfig, getScriptLogger, openFile
+import argparse
+import json
 import logging
+import os
+import sys
 
+import lxml.etree as LET
+
+from wawCommons import getScriptLogger, openFile, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 

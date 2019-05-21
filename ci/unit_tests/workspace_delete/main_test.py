@@ -13,11 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, pytest, requests, argparse, uuid
+import argparse
+import os
+import uuid
 
-import workspace_delete, workspace_deploy
+import pytest
+import requests
+
+import workspace_delete
+import workspace_deploy
 from cfgCommons import Cfg
-from wawCommons import getWorkspaces, getRequiredParameter
+from wawCommons import getRequiredParameter, getWorkspaces
+
 from ...test_utils import BaseTestCaseCapture
 
 

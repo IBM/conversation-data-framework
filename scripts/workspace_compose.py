@@ -14,12 +14,13 @@ limitations under the License.
 """
 import argparse
 import json
+import logging
 import os
 import sys
-from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, openFile, getRequiredParameter
-import logging
 
+from cfgCommons import Cfg
+from wawCommons import (getRequiredParameter, getScriptLogger, openFile,
+                        setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 

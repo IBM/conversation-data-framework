@@ -14,15 +14,21 @@ limitations under the License.
 """
 from __future__ import print_function
 
-import os, sys
 import argparse
 import logging
-from wawCommons import setLoggerConfig, getScriptLogger
+import os
+import sys
 
-import dialog_xls2xml, dialog_xml2json
-import clean_generated,  entities_csv2json, intents_csv2json, functions_deploy
-import workspace_compose, workspace_addjson, workspace_deploy
-
+import clean_generated
+import dialog_xls2xml
+import dialog_xml2json
+import entities_csv2json
+import functions_deploy
+import intents_csv2json
+import workspace_addjson
+import workspace_compose
+import workspace_deploy
+from wawCommons import getScriptLogger, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 

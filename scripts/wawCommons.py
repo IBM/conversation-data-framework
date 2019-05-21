@@ -19,14 +19,15 @@ import copy
 import fnmatch
 import io
 import json
+import logging
 import os
 import re
-import requests
 import sys
-import unidecode
-from urllib.parse import urlencode, urlparse, urlunparse
-import logging
 from logging.config import fileConfig
+from urllib.parse import urlencode, urlparse, urlunparse
+
+import requests
+import unidecode
 
 
 def openFile(name, *args, **kwargs):

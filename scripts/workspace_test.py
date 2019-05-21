@@ -15,14 +15,17 @@ limitations under the License.
 
 import argparse
 import json
+import logging
 import os
-import requests
 import sys
 import time
-from wawCommons import setLoggerConfig, getScriptLogger, filterWorkspaces, getWorkspaces, getRequiredParameter, errorsInResponse, openFile
-from cfgCommons import Cfg
-import logging
 
+import requests
+
+from cfgCommons import Cfg
+from wawCommons import (errorsInResponse, filterWorkspaces,
+                        getRequiredParameter, getScriptLogger, getWorkspaces,
+                        openFile, setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 
