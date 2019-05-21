@@ -13,11 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, re
+import pytest
 
 from ..test_utils import BaseTestCaseCapture
 
 class TestSkipiffails(BaseTestCaseCapture):
+
+    def test_withoutMarkLabel(self):
+        ''' Tests if not providing 'skipiffails' mark does not brake anything (implementation in ci/confest.py).'''
+        assert 1
 
     @pytest.mark.skipiffails()
     def test_withoutLabel(self):
