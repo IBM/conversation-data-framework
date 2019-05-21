@@ -36,7 +36,6 @@ def main(argv):
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-v', '--verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('-c', '--common_configFilePaths', help="configuration file", action='append')
-    parser.add_argument('--common_functions', required=False, help="directory where the cloud functions are located")
     parser.add_argument('--cloudfunctions_namespace', required=False, help="cloud functions namespace")
     parser.add_argument('--cloudfunctions_apikey', required=False, help="cloud functions apikey")
     parser.add_argument('--cloudfunctions_username', required=False, help="cloud functions user name")
@@ -81,10 +80,9 @@ def main(argv):
     logger.info('STARTING: '+ os.path.basename(__file__))
 
     namespace = getRequiredParameter(config, 'cloudfunctions_namespace')
-    quote(namespace)
+    urlNamespace = quote(namespace)
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     cloudfunctionsUrl = getRequiredParameter(config, 'cloudfunctions_url')
-    getRequiredParameter(config, 'common_functions')
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
@@ -92,7 +90,7 @@ def main(argv):
         username = auth['cloudfunctions_username']
         password = auth['cloudfunctions_password']
 
-    packagesUrl = cloudfunctionsUrl + '/' + namespace + '/packages'
+    packagesUrl = cloudfunctionsUrl + '/' + urlNamespace + '/packages'
     response = requests.get(packagesUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
     if not handleResponse(response):
         logger.critical("Unable to get available packages.")
@@ -127,7 +125,7 @@ def main(argv):
 
         for action in actions:
             name = action['name']
-            actionUrl = cloudfunctionsUrl + '/' + namespace + '/actions/' + packageName + '/' + name
+            actionUrl = cloudfunctionsUrl + '/' + urlNamespace + '/actions/' + packageName + '/' + name
             logger.verbose("Deleting action '" + name + "' at " + actionUrl)
             response = requests.delete(actionUrl, auth=(username, password), headers={'Content-Type': 'application/json'})
             if not handleResponse(response):

@@ -33,7 +33,6 @@ from wawCommons import getScriptLogger, setLoggerConfig
 logger = getScriptLogger(__file__)
 
 def main(argv):
-    os.path.dirname(__file__)
     defaultParamList=['shared.cfg', 'private.cfg']
 
     parser = argparse.ArgumentParser(description='This script executes all the steps needed for building and deployment of the WeatherFrog application.',

@@ -90,8 +90,6 @@ def main(argv):
 
     logger.info('STARTING: ' + os.path.basename(__file__))
 
-    if hasattr(config, 'verbose') and getattr(config, 'verbose'):
-        pass
     if not hasattr(config, 'common_xls'):
         logger.error('xls is not defined')
         exit(1)

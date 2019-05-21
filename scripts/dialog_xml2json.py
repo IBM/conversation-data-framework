@@ -149,12 +149,10 @@ def replace_config_variables (importTree):
          # repl.text  - name of the variable to be replaced
          # getattr(config, repl.text) - value of replacement
          # whole segment <replace>...</replace>
-         "" if repl.getparent().text is None else repl.getparent().text
          if repl.text=='internal_build_date_time':
              middle= unicode(datetime.datetime.now().strftime("%y-%m-%d-%H-%M"))
          else:
             middle=getattr(config, repl.text) if hasattr(config, repl.text) else ""
-         "" if repl.tail is None else repl.tail
          repl.getparent().text = ("" if repl.getparent().text is None else repl.getparent().text) + middle + ("" if repl.tail is None else repl.tail)
          repl.getparent().remove(repl)
 
@@ -207,8 +205,8 @@ def importNodes(root, config):
         childIndex = 1
         for importChild in importRoot.findall('node'):
             #logger.info('  Importing node: %s', importChild)
-            getNodeWithTheSameCondition(root, importChild)
             """
+            nodeWithTheSameCondition = getNodeWithTheSameCondition(root, importChild)
             if nodeWithTheSameCondition is not None:
                 # SKIP NODES WITH SAME CONDITIONS
                 #logger.info('    Skipping node (same condition): %s', nodeWithTheSameCondition)
@@ -903,7 +901,8 @@ def main(argv):
     global names
     names = findAllNodeNames(dialogTree)
 
-    dict((c, p) for p in dialogTree.getiterator() for c in p)
+    global parent_map
+    parent_map = dict((c, p) for p in dialogTree.getiterator() for c in p)
     generateNodes(root, None, DEFAULT_ABORT, DEFAULT_AGAIN, DEFAULT_BACK, DEFAULT_REPEAT, DEFAULT_GENERIC)
 
     # create dialog structure for JSON

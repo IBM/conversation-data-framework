@@ -184,7 +184,7 @@ def toEntityName(NAME_POLICY, userReplacements, entityName):
                     uNewEntityNameUser = uEntityNameUser.upper()
                     triggeredUserRegexToAppend = "entity name should be uppercase"
                 elif replacementPair[1] == r'\A':
-                    unidecode.unidecode(uEntityNameUser)
+                    #uNewIntentSubnameUser = unidecode.unidecode(uEntityNameUser)
                     triggeredUserRegexToAppend = "entity name cannot contain accented letters"
                 else:
                     logger.error("unsupported special regex opperation '" + replacementPair[1].decode('utf-8'))

@@ -38,8 +38,6 @@ def main(argv):
     if __name__ == '__main__':
         setLoggerConfig(args.log, args.verbose)
 
-    json.loads(openFile(args.workspace).read())
-
     with openFile(args.workspace, 'r') as workspaceFile:
         workspaceJSON = json.load(workspaceFile)
 
