@@ -12,7 +12,6 @@
             <type>slot</type>
           </node>
           <node name="notype_3060600670257152" title="cad3c356ca5d5fb69e869bf090750fad">
-            <type>standard</type>
             <condition>anything_else</condition>
           </node>
           <node name="resp_cond_2_5702754720808960" title="e45da14b88e452d78a3767a5adca4764">
