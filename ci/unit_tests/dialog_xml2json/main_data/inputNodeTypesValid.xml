@@ -11,8 +11,7 @@
           <node name="slot_1_6280101954060288" title="157869116c40536f941e9538a38dc298">
             <type>slot</type>
           </node>
-          <node name="slot_2_3060600670257152" title="cad3c356ca5d5fb69e869bf090750fad">
-            <type>slot</type>
+          <node name="notype_3060600670257152" title="cad3c356ca5d5fb69e869bf090750fad">
           </node>
           <node name="resp_cond_2_5702754720808960" title="e45da14b88e452d78a3767a5adca4764">
             <type>response_condition</type>
