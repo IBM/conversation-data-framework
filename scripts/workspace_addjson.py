@@ -13,10 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, sys, os, os.path, argparse, codecs
-from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, replaceValue
+import argparse
+import codecs
+import json
 import logging
+import os
+import os.path
+import sys
+
+from cfgCommons import Cfg
+from wawCommons import (getRequiredParameter, getScriptLogger, replaceValue,
+                        setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 
@@ -46,14 +53,14 @@ def main(argv):
     with codecs.open(os.path.join(getRequiredParameter(config, 'common_outputs_directory'), getRequiredParameter(config, 'common_outputs_workspace')), 'r', encoding='utf8') as inputpath:
         try:
             workspaceInput = json.load(inputpath)
-        except:
+        except AttributeError:
             logger.error('Workspace JSON is not valid JSON: %s', os.path.join(getRequiredParameter(config, 'common_outputs_directory'), getRequiredParameter(config, 'common_outputs_workspace')))
             exit(1)
     # json to add
     with codecs.open(os.path.join(getRequiredParameter(config, 'includejsondata_jsonfile')), 'r', encoding='utf8') as jsonincludepath:
         try:
             jsonInclude = json.load(jsonincludepath)
-        except:
+        except AttributeError:
             logger.error('JSON to include is not valid JSON: %s', os.path.join(getRequiredParameter(config, 'includejsondata_jsonfile')))
             exit(1)
     # target element
