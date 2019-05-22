@@ -69,3 +69,22 @@ class TestMain(BaseTestCaseCapture):
 
         self.t_exitCodeAndLogMessage(1, "Root dialog file nonexistentInputFile.xml not found.",
                                     [['--common_dialog_main', 'nonexistentInputFile.xml']])
+
+
+    def test_validation(self):
+        """Tests if the script runs successfully with valid dialogs and fails with invalid dialog files."""
+
+        schemaPath = os.path.join(self.dataBasePath, "dialog_schema.xml")
+        validInputsFolder = os.path.join(self.dataBasePath, "validInputsAccordingToSchema")
+        invalidInputsFolder = os.path.join(self.dataBasePath, "invalidInputsAccordingToSchema")
+
+        for f in os.listdir(validInputsFolder):
+            validXmlPath = os.path.abspath(os.path.join(validInputsFolder, f))
+            invalidXmlPath = os.path.abspath(os.path.join(invalidInputsFolder, f))
+
+            self.t_noException([['--common_dialog_main', validXmlPath,
+                                    '--common_schema', schemaPath]])
+
+            self.t_exitCodeAndLogMessage(1, "Invalid root XML",
+                                    [['--common_dialog_main', invalidXmlPath,
+                                    '--common_schema', schemaPath]])
