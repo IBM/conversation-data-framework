@@ -28,18 +28,12 @@ from wawCommons import getScriptLogger, openFile, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 
-try:
-    basestring            # Python 2
-except NameError:
-    basestring = (str, )  # Python 3
-
-
 def areSame(expectedOutputJson, receivedOutputJson, failureData, parentPath):
 
     logger.info("ARE SAME: %s and %s", expectedOutputJson, receivedOutputJson)
 
-    if isinstance(expectedOutputJson, basestring):
-        if not isinstance(receivedOutputJson, basestring):
+    if isinstance(expectedOutputJson, str):
+        if not isinstance(receivedOutputJson, str):
             failureData['message'] = 'Received output differs in type from expected output.' + " (" + parentPath + ")"
             failureData['expectedElement'] = "Element of the type string (" + expectedOutputJson + ")"
             failureData['receivedElement'] = "Element of the type " + receivedOutputJson.__class__.__name__
@@ -52,7 +46,7 @@ def areSame(expectedOutputJson, receivedOutputJson, failureData, parentPath):
             logger.info("NOT SAME: %s and %s", expectedOutputJson, receivedOutputJson)
             return False
         else:
-            logger.info('SAME: basestring %s and %s are same', expectedOutputJson, receivedOutputJson)
+            logger.info('SAME: string %s and %s are same', expectedOutputJson, receivedOutputJson)
             return True
 
     elif isinstance(expectedOutputJson, int):

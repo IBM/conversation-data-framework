@@ -62,7 +62,7 @@ class TestMain(BaseTestCaseCapture):
         testArgs = ['/some/random/path', '/some/random/path']
         self.t_exitCodeAndLogMessage(
             1, # exit code
-            'CRITICAL Cannot open test output file /some/random/path', # critical message substring
+            "CRITICAL Cannot open test output file '/some/random/path'", # critical message substring
             [testArgs] # params (*args, **kwargs)
         )
 
@@ -71,7 +71,7 @@ class TestMain(BaseTestCaseCapture):
         testArgs = [self.noJsonPath, '/some/random/path']
         self.t_exitCodeAndLogMessage(
             1, # exit code
-            'CRITICAL Cannot open evaluation output file /some/random/path', # critical message substring
+            "CRITICAL Cannot open evaluation output file '/some/random/path'", # critical message substring
             [testArgs] # params (*args, **kwargs)
         )
 
@@ -181,7 +181,7 @@ class TestMain(BaseTestCaseCapture):
          in another file - by relative path to that file but input path is wrong (all other params are given from command line) '''
         testArgs = [self.testSinglePayloadsOutNonExistingOutputExpectedOutJsonPath, self.outputCommonPath]
         self.t_noExceptionAndLogMessage(
-            'ERROR    Cannot open expected output payload from file: /some/random/path', # error message substring
+            "ERROR    Cannot open expected output payload from file '/some/random/path'", # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
@@ -201,7 +201,7 @@ class TestMain(BaseTestCaseCapture):
          is wrong (all other params are given from command line) '''
         testArgs = [self.testSinglePayloadsOutNonExistingOutputReturnedOutJsonPath, self.outputCommonPath]
         self.t_noExceptionAndLogMessage(
-            'ERROR    Cannot open returned output payload from file: /some/random/path', # error message substring
+            "ERROR    Cannot open returned output payload from file '/some/random/path'", # error message substring
             [testArgs] # params (*args, **kwargs)
         )
 
@@ -260,7 +260,7 @@ class TestMain(BaseTestCaseCapture):
         testArgs = [self.noJsonPath, self.noJsonPath, '-j', '/some/random/path']
         self.t_exitCodeAndLogMessage(
             1, # exit code
-            'CRITICAL Cannot open evaluation JUnit XML output file /some/random/path', # critical message substring
+            "CRITICAL Cannot open evaluation JUnit XML output file '/some/random/path'", # critical message substring
             [testArgs] # params (*args, **kwargs)
         )
 

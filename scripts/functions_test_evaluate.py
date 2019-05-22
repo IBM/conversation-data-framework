@@ -50,13 +50,13 @@ def main(argv):
     try:
         inputFile = open(args.inputFileName, 'r')
     except IOError:
-        logger.critical('Cannot open test output file %s', args.inputFileName)
+        logger.critical("Cannot open test output file '%s'", args.inputFileName)
         sys.exit(1)
 
     try:
         outputFile = open(args.outputFileName, 'w')
     except IOError:
-        logger.critical('Cannot open evaluation output file %s', args.outputFileName)
+        logger.critical("Cannot open evaluation output file '%s'", args.outputFileName)
         sys.exit(1)
 
     junitFileName = getOptionalParameter(config, 'junitFileName')
@@ -65,17 +65,17 @@ def main(argv):
             # we just want to check that file is writeable before passing to junitxml writer
             open(junitFileName, 'w')
         except IOError:
-            logger.critical('Cannot open evaluation JUnit XML output file %s', junitFileName)
+            logger.critical("Cannot open evaluation JUnit XML output file '%s'", junitFileName)
             sys.exit(1)
 
     try:
         inputJson = json.load(inputFile)
     except ValueError as e:
-        logger.critical('Cannot decode json from test output file %s, error: %s', args.inputFileName, str(e))
+        logger.critical("Cannot decode json from test output file '%s', error '%s'", args.inputFileName, str(e))
         sys.exit(1)
 
     if not isinstance(inputJson, list):
-        logger.critical('Test output json is not array!')
+        logger.critical("Test output json is not array!")
         sys.exit(1)
 
     # run evaluation
@@ -90,12 +90,12 @@ def main(argv):
         suite.add_testcase(case)
 
         if not isinstance(test, dict):
-            errorMessage = 'Input test array element {:d} is not dictionary. Each test has to be dictionary, please see doc!'.format(testCounter)
+            errorMessage = "Input test array element {:d} is not dictionary. Each test has to be dictionary, please see doc!".format(testCounter)
             logger.error(errorMessage)
             case.result = Error(errorMessage, 'ValueError')
             continue
 
-        logger.info('Test number: %d, name: %s', testCounter, test.get('name', '-'))
+        logger.info("Test number %d, name '%s'", testCounter, test.get('name', '-'))
         case.name = test.get('name', None)
 
         if 'time' in test:
@@ -103,7 +103,7 @@ def main(argv):
             if isinstance(time, int):
                 case.time = test.get('time')
             else:
-                logger.warning('Time is not type of integer, type: ' + str(type(time).__name__))
+                logger.warning("Time is not type of integer, type '%s'", str(type(time).__name__))
 
         # load test expected output payload json
         testOutputExpectedJson = test['outputExpected']
@@ -111,26 +111,26 @@ def main(argv):
         try:
             if testOutputExpectedJson.startswith('@'):
                 testOutputExpectedPath = os.path.join(os.path.dirname(args.inputFileName), testOutputExpectedJson[1:])
-                logger.debug('Loading expected output payload from file: %s', testOutputExpectedPath)
+                logger.debug("Loading expected output payload from file '%s'", testOutputExpectedPath)
                 try:
                     outputExpectedFile = open(testOutputExpectedPath, 'r')
                 except IOError:
-                    errorMessage = 'Cannot open expected output payload from file: {}'.format(testOutputExpectedPath)
+                    errorMessage = "Cannot open expected output payload from file '{}'".format(testOutputExpectedPath)
                     logger.error(errorMessage)
                     case.result = Error(errorMessage, 'IOError')
                     continue
                 try:
                     testOutputExpectedJson = json.load(outputExpectedFile)
                 except ValueError as e:
-                    errorMessage = 'Cannot decode json from expected output payload from file {}, error: {}'.format(testOutputExpectedPath, str(e))
+                    errorMessage = "Cannot decode json from expected output payload from file '{}', error '{}'".format(testOutputExpectedPath, str(e))
                     logger.error(errorMessage)
                     case.result = Error(errorMessage, 'ValueError')
                     continue
-        except:
+        except AttributeError:
             pass
 
         if not testOutputExpectedPath:
-            logger.debug('Expected output payload provided inside the test')
+            logger.debug("Expected output payload provided inside the test")
 
         # load test returned output payload json
         testOutputReturnedJson = test['outputReturned']
@@ -138,26 +138,26 @@ def main(argv):
         try:
             if testOutputReturnedJson.startswith('@'):
                 testOutputReturnedPath = os.path.join(os.path.dirname(args.inputFileName), testOutputReturnedJson[1:])
-                logger.debug('Loading returned output payload from file: %s', testOutputReturnedPath)
+                logger.debug("Loading returned output payload from file '%s'", testOutputReturnedPath)
                 try:
                     outputReturnedFile = open(testOutputReturnedPath, 'r')
                 except IOError:
-                    errorMessage = 'Cannot open returned output payload from file: {}'.format(testOutputReturnedPath)
+                    errorMessage = "Cannot open returned output payload from file '{}'".format(testOutputReturnedPath)
                     logger.error(errorMessage)
                     case.result = Error(errorMessage, 'IOError')
                     continue
                 try:
                     testOutputReturnedJson = json.load(outputReturnedFile)
                 except ValueError as e:
-                    errorMessage = 'Cannot decode json from returned output payload from file {}, error: {}'.format(testOutputReturnedPath, str(e))
+                    errorMessage = "Cannot decode json from returned output payload from file '{}', error '{}'".format(testOutputReturnedPath, str(e))
                     logger.error(errorMessage)
                     case.result = Error(errorMessage, 'ValueError')
                     continue
-        except:
+        except AttributeError:
             pass
 
         if not testOutputReturnedPath:
-            logger.debug('Returned output payload provided inside the test')
+            logger.debug("Returned output payload provided inside the test")
 
         # evaluate test
         if 'type' not in test or test['type'] == 'EXACT_MATCH':
@@ -170,7 +170,7 @@ def main(argv):
                 test['diff'] = testResultJson
                 case.result = Failure(json.dumps(testResultJson, sort_keys=True))
         else:
-            errorMessage = 'Unknown test type: {}'.format(test['type'])
+            errorMessage = "Unknown test type: {}".format(test['type'])
             logger.error(errorMessage)
             case.result = Error(errorMessage, 'ValueError')
 

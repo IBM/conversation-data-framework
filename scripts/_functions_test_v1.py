@@ -173,7 +173,7 @@ def main(argv):
                 except ValueError as e:
                     logger.error('Cannot decode json from input payload from file %s, error: %s', testInputPath, str(e))
                     continue
-        except:
+        except AttributeError:
             pass
 
         if not testInputPath:
@@ -196,7 +196,7 @@ def main(argv):
                 except ValueError as e:
                     logger.error('Cannot decode json from expected output payload from file %s, error: %s', testOutputExpectedPath, str(e))
                     continue
-        except:
+        except AttributeError:
             pass
 
         if not testOutputExpectedPath:
