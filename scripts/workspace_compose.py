@@ -12,12 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import os, json, sys, argparse, codecs
-import io
-from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger, openFile
+import argparse
+import json
 import logging
+import os
+import sys
 
+from cfgCommons import Cfg
+from wawCommons import (getRequiredParameter, getScriptLogger, openFile,
+                        setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 
@@ -47,25 +50,19 @@ def main(argv):
     workspace = {}
     if hasattr(config, 'conversation_workspace_name'):
         workspace['name'] = getattr(config, 'conversation_workspace_name')
-    else:
-        workspace['name'] = 'default_workspace_name'
     if hasattr(config, 'conversation_language'):
         workspace['language'] = getattr(config, 'conversation_language')
     else:
         workspace['language'] = 'en'
     if hasattr(config, 'conversation_description'):
         workspace['description'] = getattr(config, 'conversation_description')
-    else:
-        workspace['description'] = ''
 
-    if not hasattr(config, 'common_outputs_directory'):
-        logger.info('outputs_directory is not defined!')
-        exit(1)
+    outputsDirectory = getRequiredParameter(config, 'common_outputs_directory')
 
     # process intents
     intentsJSON = {}
     if hasattr(config, 'common_outputs_intents'):
-        with openFile(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_intents')), 'r', encoding='utf8') as intentsFile:
+        with openFile(os.path.join(outputsDirectory, getattr(config, 'common_outputs_intents')), 'r', encoding='utf8') as intentsFile:
             intentsJSON = json.load(intentsFile)
         workspace['intents'] = intentsJSON
     else:
@@ -74,7 +71,7 @@ def main(argv):
     # process entities
     entitiesJSON = {}
     if hasattr(config, 'common_outputs_entities'):
-        with openFile(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_entities')), 'r', encoding='utf8') as entitiesFile:
+        with openFile(os.path.join(outputsDirectory, getattr(config, 'common_outputs_entities')), 'r', encoding='utf8') as entitiesFile:
             entitiesJSON = json.load(entitiesFile)
         workspace['entities'] = entitiesJSON
     else:
@@ -83,7 +80,7 @@ def main(argv):
     # process dialog
     dialogJSON = {}
     if hasattr(config, 'common_outputs_dialogs'):
-        with openFile(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_dialogs')), 'r', encoding='utf8') as dialogFile:
+        with openFile(os.path.join(outputsDirectory, getattr(config, 'common_outputs_dialogs')), 'r', encoding='utf8') as dialogFile:
             dialogJSON = json.load(dialogFile)
             workspace['dialog_nodes'] = dialogJSON
     else:
@@ -93,7 +90,7 @@ def main(argv):
     intentExamplesJSON = {} # counterexamples in "intent format"
     counterexamplesJSON = [] # simple list of counterexamples ("text": "example sentence")
     if hasattr(config, 'common_outputs_counterexamples'):
-        with openFile(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_counterexamples')), 'r', encoding='utf8') as counterexamplesFile:
+        with openFile(os.path.join(outputsDirectory, getattr(config, 'common_outputs_counterexamples')), 'r', encoding='utf8') as counterexamplesFile:
             intentExamplesJSON = json.load(counterexamplesFile)
             for intentExampleJSON in intentExamplesJSON:
                 counterexamplesJSON.extend(intentExampleJSON['examples'])
@@ -102,7 +99,7 @@ def main(argv):
         logger.info('outputs_counterexamples not specified, omitting counterexamples.')
 
     if hasattr(config, 'common_outputs_workspace'):
-        with openFile(os.path.join(getattr(config, 'common_outputs_directory'), getattr(config, 'common_outputs_workspace')), 'w', encoding='utf8') as outputFile:
+        with openFile(os.path.join(outputsDirectory, getattr(config, 'common_outputs_workspace')), 'w', encoding='utf8') as outputFile:
             outputFile.write(json.dumps(workspace, indent=4, ensure_ascii=False))
     else:
         logger.info('output_workspace not specified, generating to console.')
@@ -111,4 +108,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

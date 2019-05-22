@@ -13,12 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json
-
-import dialog_json2xml
-from ...test_utils import BaseTestCaseCapture
+import os
 
 from lxml import etree
+
+import dialog_json2xml
+
+from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 
@@ -66,6 +68,20 @@ class TestMain(BaseTestCaseCapture):
         expectedXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedNodeTypesValid.xml'))
 
         outputXmlDirPath = os.path.join(self.testOutputPath, 'outputNodeTypesValidResult')
+        outputXmlPath = os.path.join(outputXmlDirPath, 'dialog.xml')
+
+        BaseTestCaseCapture.createFolder(outputXmlDirPath)
+
+        self.t_noException([[inputJsonPath, '-d', outputXmlDirPath]])
+        self._assertXmlEqual(expectedXmlPath, outputXmlPath)
+
+
+    def test_mainValidBool(self):
+        """Tests if the script successfully completes with valid input file with bool."""
+        inputJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputBoolValid.json'))
+        expectedXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedBoolValid.xml'))
+
+        outputXmlDirPath = os.path.join(self.testOutputPath, 'outputBoolValidResult')
         outputXmlPath = os.path.join(outputXmlDirPath, 'dialog.xml')
 
         BaseTestCaseCapture.createFolder(outputXmlDirPath)

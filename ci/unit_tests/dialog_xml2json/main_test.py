@@ -13,10 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json, lxml
-
+import json
+import os
+import lxml
 import dialog_xml2json
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 
@@ -48,8 +51,23 @@ class TestMain(BaseTestCaseCapture):
                             '--common_outputs_directory', outputJsonDirPath,
                             '--common_schema', self.xmlSchemaPath]])
 
-        expectedJson = ""
-        outputJson = ""
+
+        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
+            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+    def test_mainValidBool(self):
+        """Tests if the script successfully completes with valid input file with bools."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputBoolValid.xml'))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedBoolValid.json'))
+
+        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputBoolValidResult')
+        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
+
+        BaseTestCaseCapture.createFolder(outputJsonDirPath)
+
+        self.t_noException([['--common_dialog_main', inputXmlPath,
+                            '--common_outputs_dialogs', 'dialog.json',
+                            '--common_outputs_directory', outputJsonDirPath]])
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
@@ -68,9 +86,6 @@ class TestMain(BaseTestCaseCapture):
                             '--common_outputs_dialogs', 'dialog.json',
                             '--common_outputs_directory', outputJsonDirPath,
                             '--common_schema', self.xmlSchemaPath]])
-
-        expectedJson = ""
-        outputJson = ""
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
