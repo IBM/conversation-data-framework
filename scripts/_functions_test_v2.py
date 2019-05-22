@@ -13,10 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-import json, sys, os, argparse, requests, configparser
-from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, replaceValue
-from cfgCommons import Cfg
+import argparse
+import json
 import logging
+import os
+import sys
+
+from cfgCommons import Cfg
+from wawCommons import (convertApikeyToUsernameAndPassword,
+                        getFunctionResponseJson, getOptionalParameter,
+                        getParametersCombination, getRequiredParameter,
+                        getScriptLogger, replaceValue, setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 
@@ -102,18 +109,12 @@ def main(argv):
             logger.error('Input test array element %d is not dictionary. Each test has to be dictionary, please see doc!', testCounter)
             continue
         logger.info('Test number: %d, name: %s', testCounter, (test['name'] if 'name' in test else '-'))
-        testUrl = \
-            url + ('' if url.endswith('/') else '/') + \
-            namespace + '/actions/' + (test['cf_package'] if 'cf_package' in test else package) + '/' + \
-            (test['cf_function'] if 'cf_function' in test else function) + \
-            '?blocking=true&result=true'
-        logger.info('Tested function url: %s', testUrl)
 
         # load test input payload json
         testInputJson = test['input']
         testInputPath = None
         try:
-            if testInputJson.startswith('@'): 
+            if testInputJson.startswith('@'):
                 testInputPath = os.path.join(os.path.dirname(args.inputFileName), testInputJson[1:])
                 logger.debug('Loading input payload from file: %s', testInputPath)
                 try:
@@ -165,43 +166,25 @@ def main(argv):
             if replacementNumber > 0:
                 logger.debug('Replaced configuration parameter \'%s\' in expected output json, number of occurences: %d.', target, replacementNumber)
 
-        # save the expected output as an object even it was specified as a file, 
+        # save the expected output as an object even it was specified as a file,
         # because it can contain replaced value and the returned output is also an object
         # (could be improved by parameter that save both to external files)
         test['outputExpected'] = testOutputExpectedJson
 
         # call CF
         logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
-        response = requests.post(
-            testUrl, 
-            auth=(username, password), 
-            headers={'Content-Type': 'application/json'}, 
-            data=json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
+        testOutputReturnedJson = getFunctionResponseJson(
+            url,
+            namespace,
+            username,
+            password,
+            (test['cf_package'] if 'cf_package' in test else package),
+            (test['cf_function'] if 'cf_function' in test else function),
+            {},
+            testInputJson)
 
-        responseContentType = response.headers.get('content-type')
-        if responseContentType != 'application/json':
-            logger.error('Response content type is not json, content type: %s, response:\n%s', responseContentType, response.text)
-            continue
-
-        # check status
-        if response.status_code == 200:
-            testOutputReturnedJson = response.json()
-            logger.debug('Received output json: %s', json.dumps(testOutputReturnedJson, ensure_ascii=False).encode('utf8'))
-            test['outputReturned'] = testOutputReturnedJson
-        elif response.status_code in [202, 403, 404, 408]:
-            # 202 Accepted activation request (should not happen while sending 'blocking=true&result=true')
-            # 403 Forbidden (could be just for specific package or function)
-            # 404 Not Found (action or package could be incorrectly specified for given test)
-            # 408 Request Timeout (could happen e.g. for CF that calls some REST APIs, e.g. Discovery service)
-            # 502 Bad Gateway (when the CF raises exception, e.g. bad params where provided)
-            # => Could be issue just for given test, so we don't want to stop whole testing.
-            logger.error('Unexpected response status: %d, response: %s', response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
-        else:
-            # 401 Unauthorized (while we use same credentials for all tests then we want to end after the first test returns bad authentification)
-            # 500 Internal Server Error (could happen that IBM Cloud has several issue and is not able to handle incoming requests, then it would be probably same for all tests)
-            # => We don't want to continue with testing.
-            logger.critical('Unexpected response status (cannot continue with testing): %d, response: %s', response.status_code, json.dumps(response.json(), ensure_ascii=False).encode('utf8'))
-            sys.exit(1)
+        logger.debug('Received output json: %s', json.dumps(testOutputReturnedJson, ensure_ascii=False).encode('utf8'))
+        test['outputReturned'] = testOutputReturnedJson
 
         testCounter += 1
 
@@ -210,4 +193,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

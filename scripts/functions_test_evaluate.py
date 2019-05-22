@@ -13,12 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-import datetime, json, sys, os, argparse, requests, configparser
-from wawCommons import setLoggerConfig, getScriptLogger, getRequiredParameter, getOptionalParameter, getParametersCombination, convertApikeyToUsernameAndPassword, replaceValue
-from cfgCommons import Cfg
+import argparse
+import datetime
+import json
 import logging
+import os
+import sys
+
 from deepdiff import DeepDiff
-from junitparser import JUnitXml, TestSuite, TestCase, Error, Failure
+from junitparser import Error, Failure, JUnitXml, TestCase, TestSuite
+
+from cfgCommons import Cfg
+from wawCommons import getScriptLogger, setLoggerConfig, getOptionalParameter
 
 logger = getScriptLogger(__file__)
 
@@ -53,12 +59,13 @@ def main(argv):
         logger.critical('Cannot open evaluation output file %s', args.outputFileName)
         sys.exit(1)
 
-    if args.junitFileName:
+    junitFileName = getOptionalParameter(config, 'cloudfunctions_package')
+    if junitFileName:
         try:
             # we just want to check that file is writeable before passing to junitxml writer
-            open(args.junitFileName, 'w')
+            open(junitFileName, 'w')
         except IOError:
-            logger.critical('Cannot open evaluation JUnit XML output file %s', args.junitFileName)
+            logger.critical('Cannot open evaluation JUnit XML output file %s', junitFileName)
             sys.exit(1)
 
     try:
@@ -170,12 +177,11 @@ def main(argv):
         testCounter += 1
 
     # write outputs
-    if args.junitFileName:
-        xml.write(args.junitFileName, True)
+    if junitFileName:
+        xml.write(junitFileName, True)
     outputFile.write(json.dumps(inputJson, indent=4, ensure_ascii=False) + '\n')
 
     logger.info('FINISHING: '+ os.path.basename(__file__))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-

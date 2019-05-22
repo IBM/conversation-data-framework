@@ -13,10 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json, os, pytest, re
+import json
+import os
+import re
 
 import functions_test_evaluate
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 

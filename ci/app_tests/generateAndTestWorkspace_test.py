@@ -13,13 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, pytest, re
+import os
+import re
+
 import lxml.etree as LET
+import pytest
 
 import dialog_json2xml
 import dialog_xls2xml
 import dialog_xml2json
-import workspace_test_evaluate
 import entities_csv2json
 import entities_json2csv
 import intents_csv2json
@@ -29,7 +31,10 @@ import workspace_decompose
 import workspace_delete
 import workspace_deploy
 import workspace_test
+import workspace_test_evaluate
+
 from ..test_utils import BaseTestCaseCapture
+
 
 class TestGenerateAndTestWorkspace(BaseTestCaseCapture):
 

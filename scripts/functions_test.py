@@ -13,10 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import argparse, logging, sys
-from wawCommons import setLoggerConfig, getScriptLogger
+import argparse
+import logging
+import sys
+
 import _functions_test_v1
 import _functions_test_v2
+from wawCommons import getScriptLogger, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 

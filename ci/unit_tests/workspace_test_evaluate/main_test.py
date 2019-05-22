@@ -16,7 +16,9 @@ limitations under the License.
 import os
 
 import workspace_test_evaluate
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 
@@ -52,4 +54,3 @@ class TestMain(BaseTestCaseCapture):
             NameError,
             'FailedTestDetected',
             [[self.expectedJsonPath, self.receivedJsonPath, '-o', self.outputJunitXmlPath, '-e']])
-
