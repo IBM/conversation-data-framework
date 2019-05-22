@@ -53,10 +53,10 @@ class TestMain(BaseTestCaseCapture):
         workspace_deploy.main(*args, **kwargs)
 
     def setup_method(self):
-        self.t_funNoException(workspace_delete.main,[self.deleteParamsBase])
+        workspace_delete.main(self.deleteParamsBase)
 
     def teardown_method(self):
-        self.t_funNoException(workspace_delete.main,[self.deleteParamsBase])
+        workspace_delete.main(self.deleteParamsBase)
 
 
     @pytest.mark.parametrize('envVarNameUsername, envVarNamePassword', [('WA_USERNAME', 'WA_PASSWORD')])
