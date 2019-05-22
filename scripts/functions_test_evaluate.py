@@ -59,7 +59,7 @@ def main(argv):
         logger.critical('Cannot open evaluation output file %s', args.outputFileName)
         sys.exit(1)
 
-    junitFileName = getOptionalParameter(config, 'cloudfunctions_package')
+    junitFileName = getOptionalParameter(config, 'junitFileName')
     if junitFileName:
         try:
             # we just want to check that file is writeable before passing to junitxml writer
