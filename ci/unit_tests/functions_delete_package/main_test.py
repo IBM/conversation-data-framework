@@ -349,8 +349,7 @@ class TestMain(BaseTestCaseCapture):
                             '--cloudfunctions_apikey', self.username + ":" + self.password,
                             '--cloudfunctions_package', self.package,
                             '--cloudfunctions_namespace', self.namespace,
-                            '--cloudfunctions_url', self.cloudFunctionsUrl,
-                            '--common_functions', self.dataBasePath]
+                            '--cloudfunctions_url', self.cloudFunctionsUrl]
 
         for argIndex in range(len(completeArgsList)):
             if not completeArgsList[argIndex].startswith('--'):
