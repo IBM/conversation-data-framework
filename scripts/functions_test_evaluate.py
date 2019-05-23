@@ -90,12 +90,12 @@ def main(argv):
         suite.add_testcase(case)
 
         if not isinstance(test, dict):
-            errorMessage = "Input test array element {:d} is not dictionary. Each test has to be dictionary, please see doc!".format(testCounter)
+            errorMessage = "Test output array element {:d} is not dictionary. Each test output has to be dictionary, please see doc!".format(testCounter)
             logger.error(errorMessage)
             case.result = Error(errorMessage, 'ValueError')
             continue
 
-        logger.info("Test number %d, name '%s'", testCounter, test.get('name', '-'))
+        logger.info("Test output number %d, name '%s'", testCounter, test.get('name', '-'))
         case.name = test.get('name', None)
 
         if 'time' in test:

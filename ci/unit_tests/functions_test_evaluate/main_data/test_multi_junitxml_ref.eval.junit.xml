@@ -2,7 +2,7 @@
 <testsuites>
 	<testsuite errors="6" failures="1" name="test_multi_junitxml.out" skipped="0" tests="11" time="50.0" timestamp="2019-05-17 17:16:54.437212">
 		<testcase>
-			<error message="Input test array element 0 is not dictionary. Each test has to be dictionary, please see doc!" type="ValueError"/>
+			<error message="Test output array element 0 is not dictionary. Each test output has to be dictionary, please see doc!" type="ValueError"/>
 		</testcase>
 		<testcase name="Cannot open expected output">
 			<error message="Cannot open expected output payload from file '/some/random/path'" type="IOError"/>
