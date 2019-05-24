@@ -23,6 +23,7 @@ import logging
 import os
 import re
 import sys
+import time
 from logging.config import fileConfig
 from urllib.parse import urlencode, urlparse, urlunparse
 
@@ -625,6 +626,9 @@ def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password,
                      functionName, package, functionResponse.status_code, functionResponse.json())
         logger.critical(errorMessage)
         sys.exit(1)
+
+def getTimestampInMillis():
+    return int(round(time.time() * 1000))    
 
 
 logger = getScriptLogger(__file__)

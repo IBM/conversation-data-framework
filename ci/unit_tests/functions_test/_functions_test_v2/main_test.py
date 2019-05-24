@@ -197,10 +197,16 @@ class TestMain(BaseTestCaseCapture):
         ''' Tests if the single test where input and expected output is specified
          in file (all other params are given from command line) '''
         outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '.out.json'))
-        testArgs = [self.testSingleAllInFileJsonPath, outputFilePath] + self.functionsTestArgs
+        testArgs = [self.testSingleAllInFileJsonPath, outputFilePath, '-t'] + self.functionsTestArgs
         self.t_noException([testArgs])
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
+            assert isinstance(outputJson[0]['start'], int)
+            assert isinstance(outputJson[0]['end'], int)
+            assert isinstance(outputJson[0]['time'], int)
+            del outputJson[0]['start']
+            del outputJson[0]['end']            
+            del outputJson[0]['time']
             assert outputJson == [
                 {
                     "input": {

@@ -23,7 +23,8 @@ from cfgCommons import Cfg
 from wawCommons import (convertApikeyToUsernameAndPassword,
                         getFunctionResponseJson, getOptionalParameter,
                         getParametersCombination, getRequiredParameter,
-                        getScriptLogger, replaceValue, setLoggerConfig)
+                        getScriptLogger, getTimestampInMillis,
+                        replaceValue, setLoggerConfig)
 
 logger = getScriptLogger(__file__)
 
@@ -44,6 +45,7 @@ def main(argv):
     parser.add_argument('-v','--verbose', required=False, help='verbosity', action='store_true')
     parser.add_argument('--log', type=str.upper, default=None, choices=list(logging._levelToName.values()))
     parser.add_argument('--replace', required=False, help='string values to be replaced in input and expected output json (format \'valueToBeReplaced1:replacement1,valueToBeReplaced2:replacement2\')')
+    parser.add_argument('-t','--time', required=False, help='measure time of each test', action='store_true')
     args = parser.parse_args(argv)
 
     if __name__ == '__main__':
@@ -58,6 +60,8 @@ def main(argv):
     auth = getParametersCombination(config, 'cloudfunctions_apikey', ['cloudfunctions_password', 'cloudfunctions_username'])
     package = getOptionalParameter(config, 'cloudfunctions_package')
     function = getOptionalParameter(config, 'cloudfunctions_function')
+
+    time = getOptionalParameter(config, 'time')
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
@@ -106,15 +110,25 @@ def main(argv):
     def errorJsonTemplate(message, type):
         return { 'message': message, 'type': type }
 
+    # helper to set 'end' and 'time' in test jsons
+    def setDuration(test):
+        if time:
+            test['end'] = getTimestampInMillis()
+            test['time'] = test['end'] - test['start']
+        return test
+
     # run tests
     testCounter = -1
     for test in inputJson:
+        if time:
+            test['start'] = getTimestampInMillis()
         testCounter += 1
         if not isinstance(test, dict):
             errorMessage = "Input test array element {:d} is not dictionary. Each test has to be dictionary, please see doc!".format(testCounter)
             logger.error(errorMessage)
             inputJson[testCounter] = {}
             inputJson[testCounter]['error'] = errorJsonTemplate(errorMessage, 'ValueError')
+            test = setDuration(test)
             continue
         logger.info("Test number %d, name '%s'", testCounter, (test['name'] if 'name' in test else '-'))
 
@@ -131,6 +145,7 @@ def main(argv):
                     errorMessage = "Cannot open input payload from file '{}'".format(testInputPath)
                     logger.error(errorMessage)
                     test['error'] = errorJsonTemplate(errorMessage, 'IOError')
+                    test = setDuration(test)
                     continue
                 try:
                     testInputJson = json.load(inputFile)
@@ -138,6 +153,7 @@ def main(argv):
                     errorMessage = "Cannot decode json from input payload from file '{}', error '{}'".format(testInputPath, str(e))
                     logger.error(errorMessage)
                     test['error'] = errorJsonTemplate(errorMessage, 'IOError')
+                    test = setDuration(test)
                     continue
         except AttributeError:
             pass
@@ -158,6 +174,7 @@ def main(argv):
                     errorMessage = "Cannot open expected output payload from file '{}'".format(testOutputExpectedPath)
                     logger.error(errorMessage)
                     test['error'] = errorJsonTemplate(errorMessage, 'IOError')
+                    test = setDuration(test)
                     continue
                 try:
                     testOutputExpectedJson = json.load(outputExpectedFile)
@@ -165,6 +182,7 @@ def main(argv):
                     errorMessage = "Cannot decode json from expected output payload from file '{}', error '{}'".format(testOutputExpectedPath, str(e))
                     logger.error(errorMessage)
                     test['error'] = errorJsonTemplate(errorMessage, 'IOError')
+                    test = setDuration(test)
                     continue
         except AttributeError:
             pass
@@ -204,6 +222,8 @@ def main(argv):
             test['outputReturned'] = testOutputReturnedJson
         if testOutputError:
             test['error'] = errorJsonTemplate(testOutputError, 'CFCallError')
+
+        test = setDuration(test)
 
     outputFile.write(json.dumps(inputJson, indent=4, ensure_ascii=False) + '\n')
     logger.info('FINISHING: '+ os.path.basename(__file__))
