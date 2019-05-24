@@ -13,12 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json,sys,argparse,os
+import argparse
 import io
-from cfgCommons import Cfg
-from wawCommons import setLoggerConfig, getScriptLogger,  toEntityName, getFilesAtPath, openFile
+import json
 import logging
+import os
+import sys
 
+from cfgCommons import Cfg
+from wawCommons import (getFilesAtPath, getScriptLogger, openFile,
+                        setLoggerConfig, toEntityName)
 
 logger = getScriptLogger(__file__)
 
@@ -55,6 +59,10 @@ def main(argv):
     # process entities
     entitiesJSON = []
 
+    globalFuzzyMatching = False
+    if hasattr(config, 'entities_fuzzy'):
+        globalFuzzyMatching = getattr(config, 'entities_fuzzy') in ['true', 'True', 'on', 'On']
+    logger.info("Fuzzy matching turned "+("ON" if globalFuzzyMatching else "OFF"))
     pathList = getattr(config, 'common_entities')
     if hasattr(config, 'common_generated_entities'):
         pathList = pathList + getattr(config, 'common_generated_entities')
@@ -76,6 +84,9 @@ def main(argv):
                         entityJSON = {}
                         entityJSON['entity'] = line
                         entityJSON['values'] = []
+                        # Set fuzzy matching
+                        if globalFuzzyMatching:
+                            entityJSON['fuzzy_match'] = True
                         if entityJSON not in entitiesJSON: #we do not want system entities duplicated, e.g., when composing more projects together
                             entitiesJSON.append(entityJSON)
                         else:
@@ -118,6 +129,9 @@ def main(argv):
                                 valueJSON['synonyms'] = synonyms
                         valuesJSON.append(valueJSON)
                 entityJSON['values'] = valuesJSON
+                # Set fuzzy matching
+                if globalFuzzyMatching:
+                    entityJSON['fuzzy_match'] = True
                 entitiesJSON.append(entityJSON)
 
     if getattr(config, 'common_outputs_directory') and hasattr(config, 'common_outputs_entities'):
@@ -135,4 +149,3 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-
