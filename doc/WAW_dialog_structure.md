@@ -122,6 +122,7 @@ elements depend on type (in fact anything is allowed)
 ## Elements
 
 - [`<condition>`](#condition) (only once)
+- [`<type>`](#type-in-node) (only once)
 - [`<context>`](#context) (only once)
 - [`<output>`](#output) (only once)
 - [`<goto>`](#goto) (only once)
@@ -145,6 +146,7 @@ elements depend on type (in fact anything is allowed)
 ```xml
 <node name="Dummy_node1">
   <condition>#INTENT_DUMMY</condition>
+  <type>standard</type>
   <context>...</context>
   <output>...</output>
   <goto>...</goto>
@@ -211,6 +213,21 @@ none
 ```
 
 ---
+
+## **`<type>` in `<node>`**
+This tag specifies the type of the node.
+
+## Allowed values
+
+- `"standard"` (**Default**)
+- `"event_handler"`
+- `"frame"`
+- `"slot"`
+- `"response_condition"`
+- `"folder"`
+
+---
+
 ## **`<context>`**
 
 This tag allows adding custom variables.
