@@ -25,8 +25,6 @@ class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     testOutputPath = os.path.join(dataBasePath, 'outputs')
-    xmlSchemaPath = os.path.join(dataBasePath, 'dialog_schema.xml')
-
 
     def setup_class(cls):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
@@ -49,7 +47,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([['--common_dialog_main', inputXmlPath,
                             '--common_outputs_dialogs', 'dialog.json',
                             '--common_outputs_directory', outputJsonDirPath,
-                            '--common_schema', self.xmlSchemaPath]])
+                            '--common_schema', self.dialogSchemaPath]])
 
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
@@ -85,7 +83,7 @@ class TestMain(BaseTestCaseCapture):
         self.t_noException([['--common_dialog_main', inputXmlPath,
                             '--common_outputs_dialogs', 'dialog.json',
                             '--common_outputs_directory', outputJsonDirPath,
-                            '--common_schema', self.xmlSchemaPath]])
+                            '--common_schema', self.dialogSchemaPath]])
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
@@ -95,4 +93,4 @@ class TestMain(BaseTestCaseCapture):
         inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputNodeTypesInvalid.xml'))
 
         self.t_raiseException(lxml.etree.DocumentInvalid, "The value 'random_type' is not an element of the set",
-                            [['--common_dialog_main', inputXmlPath, '--common_schema', self.xmlSchemaPath]])
+                            [['--common_dialog_main', inputXmlPath, '--common_schema', self.dialogSchemaPath]])
