@@ -26,7 +26,7 @@ from xml.sax.saxutils import unescape
 import lxml.etree as LET
 
 from cfgCommons import Cfg
-from wawCommons import getOptionalParameter, getScriptLogger, setLoggerConfig
+from wawCommons import getRequiredParameter, getOptionalParameter, getScriptLogger, setLoggerConfig
 
 logger = getScriptLogger(__file__)
 
@@ -179,8 +179,8 @@ def importText(importTree, config):
     imports = importTree.xpath('//importText')
     for imp in imports:
         filename = imp.text.split('/')
-        logger.verbose('Importing %s', os.path.join(os.path.dirname(getattr(config, 'common_dialog_main')),*filename))
-        fp = io.open(os.path.join(os.path.dirname(getattr(config, 'common_dialog_main')),*filename) ,'r', encoding='utf-8')
+        logger.verbose('Importing %s', os.path.join(os.path.dirname(getRequiredParameter(config, 'common_dialog_main')), *filename))
+        fp = io.open(os.path.join(os.path.dirname(getRequiredParameter(config, 'common_dialog_main')),*filename) ,'r', encoding='utf-8')
         importTxt = fp.read()
         fp.close()
         imp.getparent().text = ("" if imp.getparent().text is None else imp.getparent().text) + importTxt + ("" if imp.tail is None else imp.tail)
@@ -872,10 +872,7 @@ def main(argv):
     NSMAP = {"xsi" : XSI_NAMESPACE}
 
     # load dialogue from XML
-    if hasattr(config, 'common_dialog_main'):
-        dialogTreeFile = getattr(config, 'common_dialog_main')
-    else:
-        dialogTreeFile = sys.stdin
+    dialogTreeFile = getOptionalParameter(config, 'common_dialog_main') or sys.stdin
 
     if not os.path.exists(dialogTreeFile):
         logger.critical('Root dialog file %s not found.', dialogTreeFile)
