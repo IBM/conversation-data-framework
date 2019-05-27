@@ -528,7 +528,7 @@ Specifies where jump action continues processing.
 
 #### Allowed values
 
-- `"user input"` (**Default**)
+- `"user_input"` (**Default**)
 - `"condition"`
 - `"body"`
 
