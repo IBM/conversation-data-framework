@@ -107,7 +107,7 @@ class TestMain(BaseTestCaseCapture):
         # try to call particular functions
         for functionName in functionNames:
 
-            responseJson, responseError = getFunctionResponseJson(self.cloudFunctionsUrl,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
                                                    self.urlNamespace,
                                                    self.username,
                                                    self.password,
@@ -116,7 +116,6 @@ class TestMain(BaseTestCaseCapture):
                                                    {},
                                                    {'name': 'unit test'})
 
-            assert responseError is None
             assert "Hello unit test!" in responseJson['greeting']
 
 
@@ -137,7 +136,7 @@ class TestMain(BaseTestCaseCapture):
             self.t_noException([params])
             self.packageCreated = True
 
-            responseJson, responseError = getFunctionResponseJson(self.cloudFunctionsUrl,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
                                                    self.urlNamespace,
                                                    self.username,
                                                    self.password,
@@ -146,7 +145,6 @@ class TestMain(BaseTestCaseCapture):
                                                    {},
                                                    {})
 
-            assert responseError is None
             assert pythonVersion == responseJson['majorVersion']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
@@ -174,7 +172,7 @@ class TestMain(BaseTestCaseCapture):
         self.packageCreated = True
 
         # call function and check if sub-function from non-main file was called
-        responseJson, responseError = getFunctionResponseJson(self.cloudFunctionsUrl,
+        responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
                                                self.urlNamespace,
                                                self.username,
                                                self.password,
@@ -183,7 +181,6 @@ class TestMain(BaseTestCaseCapture):
                                                {},
                                                {})
 
-        assert responseError is None
         assert "String from helper function" == responseJson['test']
 
     @pytest.mark.skipiffails(label='Cloud Functions, Invoking an action with blocking=true returns 202')
@@ -208,7 +205,7 @@ class TestMain(BaseTestCaseCapture):
         # try to call particular sequences and test their output
         for sequenceName in sequenceAnswers:
 
-            responseJson, responseError = getFunctionResponseJson(self.cloudFunctionsUrl,
+            responseJson = getFunctionResponseJson(self.cloudFunctionsUrl,
                                                    self.urlNamespace,
                                                    self.username,
                                                    self.password,
@@ -218,7 +215,6 @@ class TestMain(BaseTestCaseCapture):
                                                    {})
 
             shouldAnswer = sequenceAnswers[sequenceName]
-            assert responseError is None
             assert shouldAnswer in responseJson["entries"]
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")

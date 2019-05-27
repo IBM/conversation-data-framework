@@ -180,7 +180,7 @@ class TestMain(BaseTestCaseCapture):
 
     def test_testSingleAllInFileBadUrl(self):
         ''' Tests if bad url was provided '''
-        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '.out.json'))
+        outputFilePath = os.path.abspath(os.path.join(self.testOutputPath, os.path.splitext(os.path.basename(self.testSingleAllInFileJsonPath))[0] + '_bad_url.out.json'))
         testArgs = [self.testSingleAllInFileJsonPath, outputFilePath] + self.functionsTestArgs
         testArgs[testArgs.index('--cloudfunctions_url') + 1] = 'https://us-south.functions.cloud.ibm.com/invalidUrl' # change password to something different
         self.t_noExceptionAndLogMessage(
@@ -189,7 +189,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '404 Not Found' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
@@ -395,7 +395,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '403' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
@@ -409,7 +409,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '404' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")

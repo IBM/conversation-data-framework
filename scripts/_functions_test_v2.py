@@ -25,6 +25,7 @@ from wawCommons import (convertApikeyToUsernameAndPassword,
                         getParametersCombination, getRequiredParameter,
                         getScriptLogger, getTimestampInMillis,
                         replaceValue, setLoggerConfig)
+from ExceptionCommons import CFCallException
 
 logger = getScriptLogger(__file__)
 
@@ -206,26 +207,26 @@ def main(argv):
         test['outputExpected'] = testOutputExpectedJson
 
         # call CF
-        logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
-        testOutputReturnedJson, testOutputError = getFunctionResponseJson(
-            url,
-            namespace,
-            username,
-            password,
-            (test['cf_package'] if 'cf_package' in test else package),
-            (test['cf_function'] if 'cf_function' in test else function),
-            {},
-            testInputJson)
+        try:
+            logger.debug('Sending input json: %s', json.dumps(testInputJson, ensure_ascii=False).encode('utf8'))
+            testOutputReturnedJson = getFunctionResponseJson(
+                url,
+                namespace,
+                username,
+                password,
+                (test['cf_package'] if 'cf_package' in test else package),
+                (test['cf_function'] if 'cf_function' in test else function),
+                {},
+                testInputJson)
 
-        if testOutputReturnedJson:
             logger.debug('Received output json: %s', json.dumps(testOutputReturnedJson, ensure_ascii=False).encode('utf8'))
             test['outputReturned'] = testOutputReturnedJson
-        if testOutputError:
-            test['error'] = errorJsonTemplate(testOutputError, 'CFCallError')
-
+        except CFCallException as e:
+            test['error'] = e.toJson()
         test = setDuration(test)
 
     outputFile.write(json.dumps(inputJson, indent=4, ensure_ascii=False) + '\n')
+    outputFile.close()
     logger.info('FINISHING: '+ os.path.basename(__file__))
 
 if __name__ == '__main__':

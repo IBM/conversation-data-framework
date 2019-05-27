@@ -189,7 +189,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '404 Not Found' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
@@ -435,7 +435,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '403' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
@@ -449,7 +449,7 @@ class TestMain(BaseTestCaseCapture):
         )
         with open(outputFilePath, 'r') as outputFile:
             outputJson = json.load(outputFile)
-            assert 'CFCallError' == outputJson[0]['error']['type']
+            assert 'CFCallStatusException' == outputJson[0]['error']['type']
             assert '404' in outputJson[0]['error']['message']
 
     @pytest.mark.skipif(os.environ.get('TRAVIS_EVENT_TYPE') != "cron", reason="This test is nightly build only.")
