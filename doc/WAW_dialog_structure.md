@@ -431,7 +431,7 @@ Represents a jump to another node or to another type of next step.
 
 ## **`<digress_in>`, `<digress_out>`, `<digress_out_slots>`**
 
-Specifies digression settings of this node. For more information see [digression tutorial](https://console.bluemix.net/docs/services/conversation/dialog-runtime.html#digression-tutorial).
+Specifies digression settings of this node. For more information see [digression tutorial](https://cloud.ibm.com/docs/services/assistant?topic=assistant-tutorial-digressions).
 
 ---
 
