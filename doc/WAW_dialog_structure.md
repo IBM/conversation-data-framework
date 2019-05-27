@@ -182,8 +182,8 @@ Default value: `anything_else` (allows to let the last node as the default node)
 
 - Expressions can be concatenated by "and" or "or" and even brackets are allowed, although the UI does not show them properly.
 - `<` and `>` signs have to be replaced with `&lt;` and `&gt;` respectively.
-- See [dialog-conditions](https://www.ibm.com/watson/developercloud/doc/conversation/dialog-conditions.html) for more information.
-- See [expression-language](https://www.ibm.com/watson/developercloud/doc/conversation/expression-language.html) for accessing global variables.
+- See [dialog-conditions](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-overview#dialog-overview-conditions) for more information.
+- See [expression-language](https://cloud.ibm.com/docs/services/assistant?topic=assistant-expression-language) for accessing global variables.
 
 ### Elements
 
@@ -226,7 +226,7 @@ Default value: `null` (no context)
 - Child elements names are taken as variable names and their inside texts as their values. (e. g. `<agentName>Volvord</agentName>` creates the variable named "agentName" with the value "Volvord")
 - If an attribute `type` with the value `"number"` is present, the variable is considered as numeric and no '"' are added (e. g. `<attempts type="number">5</attempts>` creates the numeric variable named "attempts" with the value 5)
 - If an attribute `type` with the value `"boolean"` is present, the variable is considered as boolean and no '"' are added (e. g. `<filledIn type="boolean">True</filledIn>` creates a boolean value named "filledIn" with the value true)
-- To expand variable values inside other variables, glue strings, add numbers, and add items to a list, use expression evaluation in string values of the JSON update structures. See [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-methods).
+- To expand variable values inside other variables, glue strings, add numbers, and add items to a list, use expression evaluation in string values of the JSON update structures. See [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-expression-language).
 - `<` and `>` signs have to be replaced with `&lt;` and `&gt;` respectively.
 - If there are more variables with the same name, both will appear in the output JSON, but service will use only the last of them.
 
