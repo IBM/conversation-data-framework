@@ -1,32 +1,35 @@
 # DOCUMENTATION OF WAW DIALOG XML FORMAT
-Uses **XSD 1.0**
 
-WARNING: Some of the elements must be in the specified order as attribute `"maxOccurs"` with value `"unbounded"` of elements inside the <xs:all> tag is not allowed for XSD 1.0 ([XMLSchema](https://www.w3.org/2001/XMLSchema.xsd))
+#### The schema file can be found [here](../data_spec/dialog_schema.xml).
 
-_(It is allowed for XSD 1.1 but there is no validation in Python for XSD 1.1 so we have to use XSD 1.0)_
+### Schema specification
+- Uses **XSD 1.0**
 
-Instead of `<xs:all>` tag this schema uses `<xs:sequence minOccurs="1" maxOccurs="1">` tag which allows `"unbounded"`
+- WARNING: Some of the elements must be in the specified order as attribute `"maxOccurs"` with value `"unbounded"` of elements inside the <xs:all> tag is not allowed for XSD 1.0 ([XMLSchema](https://www.w3.org/2001/XMLSchema.xsd))\
+  _(It is allowed for XSD 1.1 but there is no validation in Python for XSD 1.1 so we have to use XSD 1.0)_
+
+- Instead of `<xs:all>` tag this schema uses `<xs:sequence minOccurs="1" maxOccurs="1">` tag which allows `"unbounded"`
 value of `"maxOccurs"` attribute of inside tags.
 
-Sometimes you want to build more dialogs with very similar structure,
+- Sometimes you want to build more dialogs with very similar structure,
 e.g. one online dialog which will reside on the server, and the local one
 which will be always available but will not contain some functionality.
 For this purpose there is the `scope` attribute which indicates whether
 to include this tag to output dialog or not.
 
-- following node will be included only if server dialog is built:
+  - following node will be included only if server dialog is built:
 
-```xml
-<node scope="type-server"/>
-```
+    ```xml
+    <node scope="type-server"/>
+    ```
 
-- following node will be included in all built dialogs:
+  - following node will be included in all built dialogs:
 
-```xml
-<node/>
-```
+    ```xml
+    <node/>
+    ```
 
-`<` and `>` signs have to be replaced with `&lt;` and `&gt;` respectively.
+- `<` and `>` signs have to be replaced with `&lt;` and `&gt;` respectively.
 
 ---
 
