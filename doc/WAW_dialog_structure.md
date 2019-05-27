@@ -151,7 +151,9 @@ elements depend on type (in fact anything is allowed)
 ## **`<outputs>`**
 Specifies outputs for repeat nodes. First output is used in first turn, last is used while returning to the main menu.
 
-**Note**: If there is not enough outputs for all attempts, the second one from the end is repeated.
+#### **Notes**:
+
+- If there is not enough outputs for all attempts, the second one from the end is repeated.
 
 ### Elements
 
@@ -205,7 +207,7 @@ none
 ## **`<type>` in `<node>`**
 This tag specifies the type of the node.
 
-## Allowed values
+### Allowed values
 
 - `"standard"` (**Default**)
 - `"event_handler"`
@@ -481,14 +483,17 @@ Enables multiple responses.
 </textValues>
 ```
 
-**Note**: use the attribute `structure="listItem"` for `<values>` if only one item is specified.
-e.g.:
+#### **Notes**:
 
-```xml
-<textValues>
-  <values structure="listItem">This is a single value.</values>
-</textValues>
-```
+- use the attribute `structure="listItem"` for `<values>` if only one item is specified.
+
+  e.g.:
+
+  ```xml
+  <textValues>
+    <values structure="listItem">This is a single value.</values>
+  </textValues>
+  ```
 
 ---
 
@@ -496,7 +501,7 @@ e.g.:
 
 Specifies what should happen after evaluation of this node.
 
-## Allowed values
+#### Allowed values
 
 - `"jump_to"` (**Default**)
 - `"skip_user_input"`
@@ -509,8 +514,11 @@ Specifies what should happen after evaluation of this node.
 
 ## **`<target>`**
 
-Specifies a name of the node where to jump.\
-**Note**: There is a built-in special key `::FIRST_SIBLING` that is replaced by the name of the first sibling of given dialog level.
+Specifies a name of the node where to jump.
+
+#### **Notes**:
+
+- There is a built-in special key `::FIRST_SIBLING` that is replaced by the name of the first sibling of given dialog level.
 
 ---
 
@@ -518,7 +526,7 @@ Specifies a name of the node where to jump.\
 
 Specifies where jump action continues processing.
 
-## Allowed values
+#### Allowed values
 
 - `"user input"` (**Default**)
 - `"condition"`
@@ -602,7 +610,7 @@ Specifies where jump action continues processing.
 
 Specifies the type of text value selection for output
 
-## Allowed values
+### Allowed values
 
 - `"random"` (**Default**)
 - `"sequential"`
@@ -613,7 +621,7 @@ Specifies the type of text value selection for output
 
 Specifies whether to append a value to an array or overwrite the values in the array with the new value.
 
-## Allowed values
+### Allowed values
 
 - `"true"` (**Default**)
 - `"false"`
@@ -665,7 +673,7 @@ The location in the dialog context where the result of the action is stored.
 
 The type of action to invoke.
 
-## Allowed values
+### Allowed values
 
 - `"client"`
 - `"server"`
