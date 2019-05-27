@@ -110,17 +110,32 @@ class TestMain(BaseTestCaseCapture):
     def test_validation(self):
         """Tests if the script runs successfully with valid dialogs and fails with invalid dialog files."""
 
+        inputOutputMsg = [
+            ("autogenerate_typeValid.xml", "autogenerate_typeInvalid.xml",
+            "Element 'autogenerate': The attribute 'type' is required but missing."),
+            ("goto_targetValid.xml", "goto_targetInvalid.xml",
+            "Element 'goto': Missing child element(s). Expected is one of ( behavior, target )."),
+            ("node_attributeValid.xml", "node_attributeInvalid.xml",
+            "Element 'node', attribute 'nonexistentAttribute': The attribute 'nonexistentAttribute' is not allowed."),
+            ("node_singleElementValid.xml", "node_singleElementInvalid.xml",
+            "Element 'condition': This element is not expected."),
+            ("nodes_subElementsValid.xml", "nodes_subElementsInvalid.xml",
+            "Element 'outputs': This element is not expected. Expected is one of ( import, autogenerate, node )."),
+        ]
+
         validInputsFolder = os.path.join(self.dataBasePath, "validInputsAccordingToSchema")
         invalidInputsFolder = os.path.join(self.dataBasePath, "invalidInputsAccordingToSchema")
 
-        for f in os.listdir(validInputsFolder):
-            validXmlPath = os.path.abspath(os.path.join(validInputsFolder, f))
-            invalidXmlPath = os.path.abspath(os.path.join(invalidInputsFolder, f))
+        for triplet in inputOutputMsg:
+            validXmlPath = os.path.abspath(os.path.join(validInputsFolder, triplet[0]))
+            invalidXmlPath = os.path.abspath(os.path.join(invalidInputsFolder, triplet[1]))
 
             self.t_noException([['--common_dialog_main', validXmlPath,
                                     '--common_schema', self.dialogSchemaPath]])
 
-            self.t_exitCodeAndLogMessage(1, "Invalid root XML",
+            msg = triplet[2]
+
+            self.t_exitCodeAndLogMessage(1, msg,
                                     [['--common_dialog_main', invalidXmlPath,
                                     '--common_schema', self.dialogSchemaPath]])
     def test_mainInvalidNodeTypes(self):
