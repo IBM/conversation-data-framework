@@ -226,7 +226,7 @@ Default value: `null` (no context)
 - Child elements names are taken as variable names and their inside texts as their values. (e. g. `<agentName>Volvord</agentName>` creates the variable named "agentName" with the value "Volvord")
 - If an attribute `type` with the value `"number"` is present, the variable is considered as numeric and no '"' are added (e. g. `<attempts type="number">5</attempts>` creates the numeric variable named "attempts" with the value 5)
 - If an attribute `type` with the value `"boolean"` is present, the variable is considered as boolean and no '"' are added (e. g. `<filledIn type="boolean">True</filledIn>` creates a boolean value named "filledIn" with the value true)
-- To expand variable values inside other variables, glue strings, add numbers, and add items to a list, use expression evaluation in string values of the JSON update structures. See [documentation](https://www.ibm.com/watson/developercloud/doc/conversation/expression-language.html).
+- To expand variable values inside other variables, glue strings, add numbers, and add items to a list, use expression evaluation in string values of the JSON update structures. See [documentation](https://cloud.ibm.com/docs/services/assistant?topic=assistant-dialog-methods).
 - `<` and `>` signs have to be replaced with `&lt;` and `&gt;` respectively.
 - If there are more variables with the same name, both will appear in the output JSON, but service will use only the last of them.
 
