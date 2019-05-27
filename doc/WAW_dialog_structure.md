@@ -1,6 +1,6 @@
 # DOCUMENTATION OF WAW DIALOG XML FORMAT
 
-#### The schema file can be found [here](../data_spec/dialog_schema.xml).
+This file specifies the dialog xml format. The xml files are validated against a schema that can be found [here](../data_spec/dialog_schema.xml).
 
 ### Schema specification
 - Uses **XSD 1.0**
