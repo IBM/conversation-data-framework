@@ -13,16 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os, json
-
+import json
+import os
+import lxml
 import dialog_xml2json
+
 from ...test_utils import BaseTestCaseCapture
+
 
 class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     testOutputPath = os.path.join(dataBasePath, 'outputs')
-
 
     def setup_class(cls):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
@@ -44,10 +46,51 @@ class TestMain(BaseTestCaseCapture):
 
         self.t_noException([['--common_dialog_main', inputXmlPath,
                             '--common_outputs_dialogs', 'dialog.json',
-                            '--common_outputs_directory', outputJsonDirPath]])
+                            '--common_outputs_directory', outputJsonDirPath,
+                            '--common_schema', self.dialogSchemaPath]])
 
-        expectedJson = ""
-        outputJson = ""
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+    def test_mainValidBool(self):
+        """Tests if the script successfully completes with valid input file with bools."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputBoolValid.xml'))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedBoolValid.json'))
+
+        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputBoolValidResult')
+        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
+
+        BaseTestCaseCapture.createFolder(outputJsonDirPath)
+
+        self.t_noException([['--common_dialog_main', inputXmlPath,
+                            '--common_outputs_dialogs', 'dialog.json',
+                            '--common_outputs_directory', outputJsonDirPath]])
+
+        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
+            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+    def test_mainValidNodeTypes(self):
+        """Tests if the script successfully completes with valid input file with node types."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputNodeTypesValid.xml'))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedNodeTypesValid.json'))
+
+        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputNodeTypesValidResult')
+        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
+
+        BaseTestCaseCapture.createFolder(outputJsonDirPath)
+
+        self.t_noException([['--common_dialog_main', inputXmlPath,
+                            '--common_outputs_dialogs', 'dialog.json',
+                            '--common_outputs_directory', outputJsonDirPath,
+                            '--common_schema', self.dialogSchemaPath]])
+
+        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
+            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
+
+    def test_mainInvalidNodeTypes(self):
+        """Tests if the script fails with input file with invalid node type."""
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputNodeTypesInvalid.xml'))
+
+        self.t_raiseException(lxml.etree.DocumentInvalid, "The value 'random_type' is not an element of the set",
+                            [['--common_dialog_main', inputXmlPath, '--common_schema', self.dialogSchemaPath]])
