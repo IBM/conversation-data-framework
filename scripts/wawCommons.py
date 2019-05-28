@@ -597,7 +597,7 @@ def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password,
             responseJson = functionResponse.json()
             if isinstance(responseJson, dict) and 'result' in responseJson\
              and isinstance(responseJson['result'], dict) and 'payload' in responseJson['result']:
-                return responseJson['result']['payload'], None
+                return responseJson['result']['payload']
             else:
                 exception = CFCallException(
                     functionName, 
