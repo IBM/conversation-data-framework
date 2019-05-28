@@ -37,4 +37,4 @@ class CFCallException(_WAWBaseException):
 
 class CFCallStatusException(CFCallException):
     def __init__(self, function, package, response, kwargs={}):
-        super(CFCallStatusException, self).__init__(function, package, response, "Unexpected response status", trailingMessage=None, kwargs)
+        super(CFCallStatusException, self).__init__(function, package, response, "Unexpected response status", None, kwargs)
