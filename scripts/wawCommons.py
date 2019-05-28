@@ -562,7 +562,8 @@ def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password,
                 functionName, 
                 package, 
                 functionResponse, 
-                "Response content type is not json", 
+                "Response content type is not json",
+                None,
                 {'contentType': responseContentType})
             logger.error(exception)
             raise exception
@@ -587,7 +588,8 @@ def getFunctionResponseJson(cloudFunctionsUrl, urlNamespace, username, password,
                     functionName, 
                     package, 
                     functionResponse, 
-                    "Response content type is not json", 
+                    "Response content type is not json",
+                    None,
                     {'activationId': activationId, 'contentType': responseContentType})
                 logger.error(exception)
                 raise exception
