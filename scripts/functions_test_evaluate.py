@@ -96,7 +96,7 @@ def main(argv):
         suite.add_testcase(case)
 
         if classNameDefault:
-            case.classname = suitName + '.' + classNameDefault
+            case.classname = suitName + '.' + classNameDefault.replace(' ', '_')
 
         if not isinstance(test, dict):
             errorMessage = "Test output array element {:d} is not dictionary. Each test output has to be dictionary, please see doc!".format(testCounter)
