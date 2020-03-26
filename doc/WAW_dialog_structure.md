@@ -323,8 +323,8 @@ Represents a jump to another node or to another type of next step.
 
 ### Elements (in this order)
 
-- [`<behavior>`](#behavior) (only once)
-- [`<target>`](#target) **REQUIRED** (only once)
+- [`<behavior>`](#behavior) **REQUIRED** (only once)
+- [`<target>`](#target) (only once)
 - [`<selector>`](#selector) (only once)
 
 ### Attributes

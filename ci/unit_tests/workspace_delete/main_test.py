@@ -34,7 +34,8 @@ class TestMain(BaseTestCaseCapture):
     outputPath = os.path.join(dataBasePath, 'outputs')
     jsonWorkspaceFilename = 'sample-skill.json'
     jsonWorkspacePath = os.path.abspath(os.path.join(dataBasePath, jsonWorkspaceFilename))
-    workspacesUrl = 'https://gateway.watsonplatform.net/conversation/api/v1/workspaces'
+    workspacesUrl = os.environ.get('WA_WORKSPACES_API_URL',
+                                   'https://gateway.watsonplatform.net/conversation/api/v1/workspaces')
     version = '2017-02-03'
 
     def setup_class(cls):

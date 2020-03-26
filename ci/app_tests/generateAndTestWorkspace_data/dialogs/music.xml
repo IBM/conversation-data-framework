@@ -41,6 +41,7 @@
     <node name="generalContext_musicPlay">
         <condition>#ui-musicPlay</condition>
         <goto>
+            <behavior>skip_user_input</behavior>
             <target>generalContext_musicPlay_1stChild</target>
             <selector>condition</selector>
         </goto>
@@ -68,6 +69,7 @@
                     <sa name="sa-musicPlay"/>
                 </output>
                 <goto>
+                    <behavior>skip_user_input</behavior>
                     <target>musicPlayingSong</target>
                     <selector>user_input</selector>
                 </goto>
@@ -78,6 +80,7 @@
                     <sa name="sa-musicSearch"/>
                 </output>
                 <goto>
+                    <behavior>skip_user_input</behavior>
                     <target>musicList</target>
                     <selector>user_input</selector>
                 </goto>
@@ -87,6 +90,7 @@
                     <sa name="sa-musicPlay"/>
                 </output>
                 <goto>
+                    <behavior>skip_user_input</behavior>
                     <target>musicPlayingSong</target>
                     <selector>user_input</selector>
                 </goto>
@@ -130,6 +134,7 @@
             <sa name="sa-musicPlay"/>
         </output>
         <goto>
+            <behavior>skip_user_input</behavior>
             <target>musicPlayingSong</target>
             <selector>user_input</selector>
         </goto>
@@ -140,6 +145,7 @@
             <sa name="sa-musicPlay"/>
         </output>
         <goto>
+            <behavior>skip_user_input</behavior>
             <target>musicPlayingSong</target>
             <selector>user_input</selector>
         </goto>

@@ -35,36 +35,60 @@ def convertDialog(dialogNodesJSON):
 
     dialogXML = LET.Element("nodes", nsmap=NSMAP)
 
-    #print dialogNodesJSON
-    # find root
-    rootJSON = findNode(dialogNodesJSON, None, None)
-    expandNode(dialogNodesJSON, dialogXML, rootJSON)
+    topNodes = popAllChildren(dialogNodesJSON, None)
+    for topNode in topNodes:
+        dialogXML.append(expandNode(dialogNodesJSON, topNode))
+    
     if (len(dialogNodesJSON) > 0):
         logger.error("There are " + str(len(dialogNodesJSON)) + " unprocessed nodes: " + str(dialogNodesJSON))
     return dialogXML
 
 # dialogNodesJSON: rest of nodes to process
-# upperNodeXML: where to append siblings
 # nodeJSON: node to expand
-# Converts this node and recursively all its children and siblings
-def expandNode(dialogNodesJSON, upperNodeXML, nodeJSON):
+# Converts this node and recursively all its children
+def expandNode(dialogNodesJSON, nodeJSON):
     nodeXML = convertNode(nodeJSON)
-    upperNodeXML.append(nodeXML)
 
-    # find first child
-    childJSON = findNode(dialogNodesJSON, nodeJSON['dialog_node'], None) # expanded node as parent, None as sibling
-    if childJSON is not None:
-        childrenXML = LET.Element('nodes') # create 'nodes' tag
-        nodeXML.append(childrenXML)
-        expandNode(dialogNodesJSON, childrenXML, childJSON) # expand first child (process its siblings and children)
+    childrenXML = []
+    for childJSON in popAllChildren(dialogNodesJSON, nodeJSON): 
+        childrenXML.append(expandNode(dialogNodesJSON, childJSON))
 
-    # find next sibling
-    siblingJSON = findNode(dialogNodesJSON, nodeJSON['parent'] if 'parent' in nodeJSON else None, nodeJSON['dialog_node'])
-    if siblingJSON is not None:
-        expandNode(dialogNodesJSON, upperNodeXML, siblingJSON) # expand next sibling (process its siblings and children)
+    lastChildContainerTag = ''
+    childContainer = None
+    for childXML in childrenXML:
+        containerTag = getContainerTag(childXML)
+        if containerTag != lastChildContainerTag:
+            childContainer = LET.Element(containerTag)
+            nodeXML.append(childContainer)
+            lastChildContainerTag = containerTag
+        childContainer.append(childXML)
+    
+    return nodeXML
+
+
+def getContainerTag(nodeXML):
+    containerTag = 'nodes'
+    if nodeXML.tag in ['slot', 'handler']:
+        containerTag = nodeXML.tag + 's' 
+    return containerTag
+
 
 def convertNode(nodeJSON):
-    nodeXML = LET.Element('node')
+
+    def node_tag(nodeJSON):
+        if 'type' in nodeJSON:
+            if nodeJSON['type'] == 'slot':
+                return 'slot'
+            if nodeJSON['type'] == 'event_handler':
+                return 'handler'
+        return 'node'
+
+    def removeChildrenWithTags(nodeXML, tags):
+        for child in list(nodeXML):
+            if child.tag in tags:
+                nodeXML.remove(child)
+
+    nodeXML = LET.Element(node_tag(nodeJSON))
     nodeXML.attrib['name'] = nodeJSON['dialog_node']
     logger.verbose("node '%s'", nodeXML.attrib['name'])
 
@@ -74,9 +98,10 @@ def convertNode(nodeJSON):
             nodeXML.attrib['title'] = nodeJSON['title']
     #type
     if 'type' in nodeJSON:
-        typeNodeXML = LET.Element('type')
-        typeNodeXML.text = nodeJSON['type']
-        nodeXML.append(typeNodeXML)
+        if nodeJSON['type'] != 'frame': 
+            typeNodeXML = LET.Element('type')
+            typeNodeXML.text = nodeJSON['type']
+            nodeXML.append(typeNodeXML)
     #disabled
     if 'disabled' in nodeJSON:
         disabledNodeXML = LET.Element('disabled')
@@ -107,6 +132,8 @@ def convertNode(nodeJSON):
              else:
                  contextXML.text = ""
         else:
+            if isinstance(nodeJSON['context'], dict):
+                nodeJSON['context'].pop('', 'unused value to remove occasional "":"" from context')
             convertAll(nodeXML, nodeJSON, 'context')
     #output
     if 'output' in nodeJSON:
@@ -126,7 +153,12 @@ def convertNode(nodeJSON):
         else:
             convertAll(nodeXML, nodeJSON, 'output')
             if 'text' in nodeJSON['output'] and not isinstance(nodeJSON['output']['text'], basestring):
-              outputXML = nodeXML.find('output').find('text').tag = 'textValues'
+              textValuesXML = nodeXML.find('output').find('text')
+              textValuesXML.tag = 'textValues'
+              if len(textValuesXML.findall('values')) == 1:
+                  textValuesXML = textValuesXML.find('values') 
+                  if 'structure' not in textValuesXML.attrib:
+                    textValuesXML.attrib['structure'] = 'listItem'
             if 'generic' in nodeJSON['output']:
                 if nodeJSON['output']['generic'] is None or len(nodeXML.find('output').findall('generic')) == 0:
                     return
@@ -230,7 +262,6 @@ def convertNode(nodeJSON):
                 actionsXML.append(actionXML)
             nodeXML.append(actionsXML)
 
-    #TODO handlers
     #events
     if 'event_name' in nodeJSON:
         eventXML = LET.Element('event_name')
@@ -239,7 +270,18 @@ def convertNode(nodeJSON):
             eventXML.attrib[XSI+'nil'] = "true"
         else:
             eventXML.text = nodeJSON['event_name']
-    #TODO slots
+
+    if nodeXML.tag == 'slot':
+        if 'variable' in nodeJSON: 
+            nodeXML.attrib['variable'] = nodeJSON['variable']
+        removeChildrenWithTags(nodeXML, ['type']) 
+        # nodeXML.attrib.pop('name', None)
+
+    if nodeXML.tag == 'handler':
+        nodeXML.attrib['eventName'] = nodeJSON['event_name']
+        removeChildrenWithTags(nodeXML, ['event_name', 'type']) 
+        # nodeXML.attrib.pop('name', None)
+
     #TODO responses
 
     return nodeXML
@@ -257,14 +299,18 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
         logger.verbose("structure 'listItem'")
     logger.verbose("name '%s'", nameXML)
 
+    def checkIfStructureIsListItem(structure, nameXML, nodeXML):
+        namesNotToSetListItem = ['action', 'actions', 'values']
+        if structure is not None and nameXML not in namesNotToSetListItem:
+            nodeXML.attrib['structure'] = "listItem"
+            logger.verbose("adding structure 'listItem' to node")
+
     # None
     if nodeJSON[keyJSON] is None:
         logger.verbose("node is None")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
-        if structure is not None and nameXML != "action" and nameXML != "actions":
-            nodeXML.attrib['structure'] = "listItem"
-            logger.verbose("adding structure 'listItem' to node")
+        checkIfStructureIsListItem(structure, nameXML, nodeXML)
         nodeXML.attrib[XSI+'nil'] = "true"
     # list
     elif isinstance(nodeJSON[keyJSON], list):
@@ -294,9 +340,7 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
         else:
             nodeXML = LET.Element(str(nameXML))
             upperNodeXML.append(nodeXML)
-            if structure is not None and nameXML != "action" and nameXML != "actions":
-                nodeXML.attrib['structure'] = "listItem"
-                logger.verbose("add structure 'listItem' for '%s'", nameXML)
+            checkIfStructureIsListItem(structure, nameXML, nodeXML)
             for subKeyJSON in nodeJSON[keyJSON]:
                 convertAll(nodeXML, nodeJSON[keyJSON], subKeyJSON)
     # string
@@ -304,18 +348,14 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
         logger.verbose("node is string")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
-        if structure is not None and nameXML != "action" and nameXML != "actions":
-            nodeXML.attrib['structure'] = "listItem"
-            logger.verbose("add structure 'listItem' for '%s'", nameXML)
+        checkIfStructureIsListItem(structure, nameXML, nodeXML)
         nodeXML.text = nodeJSON[keyJSON]
     # bool
     elif isinstance(nodeJSON[keyJSON], bool):
         logger.verbose("node is boolean")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
-        if structure is not None and nameXML != "action" and nameXML != "actions":
-            nodeXML.attrib['structure'] = "listItem"
-            logger.verbose("add structure 'listItem' for '%s'", nameXML)
+        checkIfStructureIsListItem(structure, nameXML, nodeXML)
         nodeXML.text = str(nodeJSON[keyJSON])
         nodeXML.attrib['type'] = "boolean"
     # int, long, float, complex
@@ -323,9 +363,7 @@ def convertAll(upperNodeXML, nodeJSON, keyJSON, nameXML = None):
         logger.verbose("node is number")
         nodeXML = LET.Element(str(nameXML))
         upperNodeXML.append(nodeXML)
-        if structure is not None and nameXML != "action" and nameXML != "actions":
-            nodeXML.attrib['structure'] = "listItem"
-            logger.verbose("add structure 'listItem' for '%s'", nameXML)
+        checkIfStructureIsListItem(structure, nameXML, nodeXML)
         nodeXML.text = str(nodeJSON[keyJSON])
         nodeXML.attrib['type'] = "number"
     else:
@@ -339,6 +377,27 @@ def findNode(dialogNodesJSON, parentName, siblingName):
             dialogNodesJSON.remove(nodeJSON)
             return nodeJSON
     return None
+
+def popFirstChild(dialogNodesJSON, parentNode):
+    return findNode(dialogNodesJSON, getValue(parentNode, 'dialog_node'), None)
+
+def popNextSibling(dialogNodesJSON, parentNode, siblingNode):
+    return findNode(dialogNodesJSON, getValue(parentNode, 'dialog_node'), getValue(siblingNode, 'dialog_node'))
+
+def popAllChildren(dialogNodesJSON, node):
+    if not node:
+        node = {'dialog_node': None}
+    children = []
+    child = popFirstChild(dialogNodesJSON, node)
+    if child:
+        children.append(child)
+        while True:
+            child = popNextSibling(dialogNodesJSON, node, child)
+            if child:
+                children.append(child)
+            else:
+                break
+    return children
 
 def getValue(dict, key):
     if key in dict:

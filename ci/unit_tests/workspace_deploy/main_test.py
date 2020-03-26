@@ -28,7 +28,8 @@ class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     outputPath = os.path.join(dataBasePath, 'outputs')
-    workspacesUrl = 'https://gateway.watsonplatform.net/conversation/api/v1/workspaces'
+    workspacesUrl = os.environ.get('WA_WORKSPACES_API_URL',
+                                   'https://gateway.watsonplatform.net/conversation/api/v1/workspaces')
     version = '2017-02-03'
 
     def setup_class(cls):

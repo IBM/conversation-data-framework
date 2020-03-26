@@ -197,8 +197,8 @@
 
 <xs:complexType name="gotoSchema">
     <xs:sequence minOccurs="1" maxOccurs="1">
-        <xs:element name="behavior" type="behaviorSchema" minOccurs="0" maxOccurs="unbounded"/>
-        <xs:element name="target" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="behavior" type="behaviorSchema" minOccurs="1" maxOccurs="unbounded"/>
+        <xs:element name="target" type="xs:string" minOccurs="0" maxOccurs="1"/>
         <xs:element name="selector" type="selectorSchema" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="scope" type="xs:string"/>
@@ -281,6 +281,7 @@
 <xs:complexType name="slotSchema">
     <xs:all>
         <xs:element name="handlers" type="handlersSchema" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="output" type="outputSchema" minOccurs="0" maxOccurs="1"/>
     </xs:all>
     <xs:attribute name="variable" use="required" type="xs:string"/>
     <xs:attribute name="scope" type="xs:string"/>

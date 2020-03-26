@@ -26,7 +26,7 @@ from ..test_utils import BaseTestCaseCapture
 
 class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
 
-    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'convertWorkspaceBackAndForth_data' + os.sep)
+    dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'convertWorkspaceBackAndForth_data')
     testOutputPath = os.path.join(dataBasePath, 'outputs')
 
     def setup_class(cls):
@@ -48,7 +48,11 @@ class TestConvertWorkspaceBackAndForth(BaseTestCaseCapture):
             f.write(self.captured.out)
 
         # convert xml back to json
-        self.t_fun_noException(dialog_xml2json.main, [['-dm', dialogXmlPath, '-of', self.testOutputPath, '-od', dialogFilename, '-c', configPath, '-v']])
+        self.t_fun_noException(dialog_xml2json.main, [['-dm', dialogXmlPath,
+                                                       '-of', self.testOutputPath,
+                                                       '-od', dialogFilename,
+                                                       '-c', configPath,
+                                                       '-v']])
 
         # compare dialogs if they are same
-        self.t_fun_exitCode(compare_dialogs.main, 0, [[dialogJsonRefPath, dialogJsonHypPath]])
+        self.t_fun_exitCode(compare_dialogs.main, 0, [[dialogJsonRefPath, dialogJsonHypPath, '--verbose']])

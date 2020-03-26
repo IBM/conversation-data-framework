@@ -1,0 +1,142 @@
+[
+    {
+        "conditions": "#DESIRES_FRIEND",
+        "dialog_node": "frame_test",
+        "digress_out_slots": "allow_returning",
+        "output": {
+            "text": "I will find some friend for you, $name."
+        },
+        "type": "frame"
+    },
+    {
+        "dialog_node": "node_0",
+        "parent": "frame_test",
+        "type": "slot",
+        "variable": "name"
+    },
+    {
+        "dialog_node": "node_1",
+        "event_name": "focus",
+        "output": {
+            "text": "Say your first name."
+        },
+        "parent": "node_0",
+        "type": "event_handler"
+    },
+    {
+        "conditions": "@name",
+        "context": {
+            "name": "@name"
+        },
+        "dialog_node": "node_2",
+        "event_name": "input",
+        "parent": "node_0",
+        "previous_sibling": "node_1",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_3",
+        "event_name": "filled",
+        "output": {
+            "text": "Thank you, @name."
+        },
+        "parent": "node_0",
+        "previous_sibling": "node_2",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_4",
+        "event_name": "nomatch",
+        "output": {
+            "text": "Please say your first name."
+        },
+        "parent": "node_0",
+        "previous_sibling": "node_3",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_5",
+        "parent": "frame_test",
+        "previous_sibling": "node_0",
+        "type": "slot",
+        "variable": "age"
+    },
+    {
+        "dialog_node": "node_6",
+        "event_name": "focus",
+        "output": {
+            "text": "Say your age in years."
+        },
+        "parent": "node_5",
+        "type": "event_handler"
+    },
+    {
+        "conditions": "@sys-number",
+        "context": {
+            "age": "@sys-number"
+        },
+        "dialog_node": "node_7",
+        "event_name": "input",
+        "parent": "node_5",
+        "previous_sibling": "node_6",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_8",
+        "event_name": "filled",
+        "output": {
+            "text": "You are @sys-number years old."
+        },
+        "parent": "node_5",
+        "previous_sibling": "node_7",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_9",
+        "event_name": "nomatch",
+        "output": {
+            "text": "Please say your age in years."
+        },
+        "parent": "node_5",
+        "previous_sibling": "node_8",
+        "type": "event_handler"
+    },
+    {
+        "dialog_node": "node_10",
+        "event_name": "focus",
+        "output": {
+            "text": "Tell me your first name and age in years and I will find a friend for you."
+        },
+        "parent": "frame_test",
+        "previous_sibling": "node_5",
+        "type": "event_handler"
+    },
+    {
+        "conditions": "@sys-date",
+        "dialog_node": "node_11",
+        "event_name": "generic",
+        "output": {
+            "text": "Today is nice weather, isn't it?"
+        },
+        "parent": "frame_test",
+        "previous_sibling": "node_10",
+        "type": "event_handler"
+    },
+    {
+        "conditions": "#ALL_ABOUT_ME_WHAT_DO_YOU_LIKE_TO_DO_FOR_FUN_",
+        "dialog_node": "node_12",
+        "event_name": "generic",
+        "output": {
+            "text": {
+                "selection_policy": "sequential",
+                "values": [
+                    "I enjoy hiking",
+                    "I love swimming?"
+                ]
+            }
+        },
+        "parent": "frame_test",
+        "previous_sibling": "node_11",
+        "type": "event_handler"
+    }
+]

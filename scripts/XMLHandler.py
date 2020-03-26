@@ -159,6 +159,7 @@ class XMLHandler(object):
 
     def _createGotoElement(self, target, selector):
         gotoXml = XML.Element('goto')
+        gotoXml.append(self._createXmlElement('behavior', 'skip_user_input'))
         gotoXml.append(self._createXmlElement('target', target))
         gotoXml.append(self._createXmlElement('selector', selector))
         return gotoXml

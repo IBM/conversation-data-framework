@@ -1,7 +1,7 @@
 <nodes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <node>
     <goto>
-      <target>::FIRST_SIBLING</target>
+      <behavior>skip_user_input</behavior>
     </goto>
   </node>
 </nodes>

@@ -616,6 +616,8 @@ def printNodes(root, parent, dialogJSON):
             nodeJSON['type'] = nodeXML.find('type').text
         elif nodeXML.find('slots') is not None:
             nodeJSON['type'] = "frame"
+        elif nodeXML.tag == 'slot':
+            nodeJSON['type'] = "slot"
         # disabled
         if nodeXML.find('disabled') is not None:
             if nodeXML.find('disabled').text in ["True", "true"]:
@@ -701,9 +703,12 @@ def printNodes(root, parent, dialogJSON):
                 logger.warning('missing goto target in node: %s', nodeXML.find('name').text)
             elif nodeXML.find('goto').find('target').text == '::FIRST_SIBLING':
                 nodeXML.find('goto').find('target').text = next(x for x in root if x.tag == 'node').find('name').text
-            gotoJson = {'dialog_node':nodeXML.find('goto').find('target').text}
+            gotoJson = {}
             gotoJson['behavior'] = nodeXML.find('goto').find('behavior').text if nodeXML.find('goto').find('behavior') is not None else DEFAULT_BEHAVIOR
-            gotoJson['selector'] = nodeXML.find('goto').find('selector').text if nodeXML.find('goto').find('selector') is not None else DEFAULT_SELECTOR
+            if nodeXML.find('goto').find('target') is not None:
+                gotoJson['dialog_node'] = nodeXML.find('goto').find('target').text
+            if nodeXML.find('goto').find('selector') is not None:
+                gotoJson['selector'] = nodeXML.find('goto').find('selector').text
             nodeJSON['next_step'] = gotoJson
         # PARENT
         if parent is not None:
@@ -726,20 +731,11 @@ def printNodes(root, parent, dialogJSON):
         # CLOSE NODE
         previousSibling = nodeXML
 
-        # ADD ALL CHILDREN NODES
-        nodes = nodeXML.find('nodes')
-        if nodes is not None:
-            children.extend(nodes)
-
-        # ADD ALL SLOTS (FRAME FUNCTIONALITY)
-        slots = nodeXML.find('slots')
-        if slots is not None:
-            children.extend(slots)
-
-        # ADD ALL HANDLERS (FRAME FUNCTIONALITY)
-        handlers = nodeXML.find('handlers')
-        if handlers is not None:
-            children.extend(handlers)
+        for node in list(nodeXML):
+            if node.tag in ['node', 'slot', 'handler']:
+                children.append(node)
+            if node.tag in ['nodes', 'slots', 'handlers']:
+                children.extend(node)
 
         # PROCESS ALL CHILDREN
         if children:

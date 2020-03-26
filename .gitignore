@@ -16,3 +16,5 @@ tests/data/dialog/g_dialogs
 **/.pytest_cache/
 ci/outputs.tar.gz
 ci/unit_tests/workspace_addjson/main_data/workspace_forAddJsonTest.json
+.env
+.vscode

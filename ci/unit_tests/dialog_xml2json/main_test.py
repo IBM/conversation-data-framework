@@ -18,14 +18,37 @@ import os
 import lxml
 import dialog_xml2json
 
+import pytest
+
 from ...test_utils import BaseTestCaseCapture
+
+# From http://doc.pytest.org/en/latest/example/parametrize.html#parametrizing-test-methods-through-per-class-configuration
+
+def pytest_generate_tests(metafunc):
+    # called once per each test function
+    funcname = metafunc.function.__name__
+    if funcname in metafunc.cls.params: 
+        funcarglist = metafunc.cls.params[metafunc.function.__name__]
+        argnames = sorted(funcarglist[0])
+        metafunc.parametrize(
+            argnames, [[funcargs[name] for name in argnames] for funcargs in funcarglist]
+        )
 
 
 class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     testOutputPath = os.path.join(dataBasePath, 'outputs')
+    
+    # a map specifying multiple argument sets for a test method
+    params = {
+        "test_validToJsonTransformation": [{'category': 'Actions'}, 
+                                           {'category': 'Bool'},
+                                           {'category': 'NodeTypes'},
+                                           {'category': 'Slots'}],
+    }
 
+    @classmethod
     def setup_class(cls):
         ''' Setup any state specific to the execution of the given class (which usually contains tests). '''
         # create output folder
@@ -35,11 +58,12 @@ class TestMain(BaseTestCaseCapture):
     def callfunc(self, *args, **kwargs):
         dialog_xml2json.main(*args, **kwargs)
 
-
-    def test_mainValidActions(self):
-        """Tests if the script successfully completes with valid input file with actions."""
-        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputActionsValid.xml'))
-        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedActionsValid.json'))
+    def test_validToJsonTransformation(self, category):
+        """Tests if the script successfully completes with valid input file"""
+        inputFileName = 'input' + category + 'Valid.xml'
+        expectedFileName = 'expected' + category + 'Valid.json'
+        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, inputFileName))
+        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, expectedFileName))
 
         outputJsonDirPath = os.path.join(self.testOutputPath, 'outputActionsValidResult')
         outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
@@ -51,41 +75,6 @@ class TestMain(BaseTestCaseCapture):
                             '--common_outputs_directory', outputJsonDirPath,
                             '--common_schema', self.dialogSchemaPath]])
 
-
-        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
-            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
-
-    def test_mainValidBool(self):
-        """Tests if the script successfully completes with valid input file with bools."""
-        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputBoolValid.xml'))
-        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedBoolValid.json'))
-
-        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputBoolValidResult')
-        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
-
-        BaseTestCaseCapture.createFolder(outputJsonDirPath)
-
-        self.t_noException([['--common_dialog_main', inputXmlPath,
-                            '--common_outputs_dialogs', 'dialog.json',
-                            '--common_outputs_directory', outputJsonDirPath]])
-
-        with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
-            assert json.load(expectedJsonFile) == json.load(outputJsonFile)
-
-    def test_mainValidNodeTypes(self):
-        """Tests if the script successfully completes with valid input file with node types."""
-        inputXmlPath = os.path.abspath(os.path.join(self.dataBasePath, 'inputNodeTypesValid.xml'))
-        expectedJsonPath = os.path.abspath(os.path.join(self.dataBasePath, 'expectedNodeTypesValid.json'))
-
-        outputJsonDirPath = os.path.join(self.testOutputPath, 'outputNodeTypesValidResult')
-        outputJsonPath = os.path.join(outputJsonDirPath, 'dialog.json')
-
-        BaseTestCaseCapture.createFolder(outputJsonDirPath)
-
-        self.t_noException([['--common_dialog_main', inputXmlPath,
-                            '--common_outputs_dialogs', 'dialog.json',
-                            '--common_outputs_directory', outputJsonDirPath,
-                            '--common_schema', self.dialogSchemaPath]])
 
         with open(expectedJsonPath, 'r') as expectedJsonFile, open(outputJsonPath, 'r') as outputJsonFile:
             assert json.load(expectedJsonFile) == json.load(outputJsonFile)
@@ -114,7 +103,7 @@ class TestMain(BaseTestCaseCapture):
             ("autogenerate_typeValid.xml", "autogenerate_typeInvalid.xml",
             "Element 'autogenerate': The attribute 'type' is required but missing."),
             ("goto_targetValid.xml", "goto_targetInvalid.xml",
-            "Element 'goto': Missing child element(s). Expected is one of ( behavior, target )."),
+            "Element 'goto': Missing child element(s). Expected is ( behavior )."),
             ("node_attributeValid.xml", "node_attributeInvalid.xml",
             "Element 'node', attribute 'nonexistentAttribute': The attribute 'nonexistentAttribute' is not allowed."),
             ("node_singleElementValid.xml", "node_singleElementInvalid.xml",

@@ -66,6 +66,7 @@ Then set following environment variables
 
 - `WA_USERNAME` (Watson Assistant username - ALWAYS USE INSTANCE DEDICATED FOR TESTING ONLY! ALL CONTENT WILL BE DELETED DURING TESTING PROCESS!)
 - `WA_PASSWORD` (Watson Assistant password)
+- `WA_WORKSPACES_API_URL` (`https://.../assistant/api/v1/workspaces`)
 - `CLOUD_FUNCTIONS_USERNAME` (Cloud Functions username)
 - `CLOUD_FUNCTIONS_PASSWORD` (Cloud Functions password)
 - `CLOUD_FUNCTIONS_URL` (Cloud Functions namespace - it should contain `https://` at the beginning and `/api/v1/namespaces` at the end)
