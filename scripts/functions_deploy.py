@@ -142,7 +142,13 @@ def main(argv):
     if type(sequenceNames) is str:
         sequenceNames = [sequenceNames]
     # Create a dict of {<seqName>: [<functions 1>, <function2> ,...]}
-    sequences = {seqName: getRequiredParameter(config, "cloudfunctions_sequence_" + seqName) for seqName in sequenceNames}
+    sequences = {}
+    for seqName in sequenceNames:
+        seqFunctions = getRequiredParameter(config, "cloudfunctions_sequence_" + seqName)
+        # seqFunctions has to be a list (this covers the case of a sequence with only one function)
+        if type(seqFunctions) is str:
+            seqFunctions = [seqFunctions]
+        sequences[seqName] = seqFunctions
 
     if 'cloudfunctions_apikey' in auth:
         username, password = convertApikeyToUsernameAndPassword(auth['cloudfunctions_apikey'])
