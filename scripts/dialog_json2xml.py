@@ -139,12 +139,23 @@ def convertNode(nodeJSON):
                     if genericItemXML.find('response_type') is None:
                         logger.error("'response_type' is missing in the output of the node " + nodeJSON['dialog_node'])
                     elif genericItemXML.find('response_type').text == 'text': # TODO check other response_types
-                        if genericItemXML.findall('values') is not None:
-                            if len(genericItemXML.findall('values')) == 1:
-                                if not 'structure' in genericItemXML.find('values').attrib: # structure is not specified yet
-                                    # values has to be of type array
-                                    genericItemXML.find('values').attrib['structure'] = 'listItem'
-                                    logger.verbose("setting 'listitem' attribute to 'values' tag")
+                        if genericItemXML.findall('values') is not None and genericItemXML.findall('text') is not None:
+                            # join text elements into one element <textValues>
+                            texts_values = []
+                            textValuesNode = LET.Element("textValues")
+                            for x in genericItemXML.findall('values'):
+                                texts_values.append(x[0].text)
+                                values_item = LET.Element("values")
+                                values_item.attrib['structure'] = 'listItem'
+                                logger.verbose("setting 'listitem' attribute to 'values' tag")
+                                values_item.text = x[0].text
+                                textValuesNode.append(values_item)
+                                genericItemXML.remove(x)
+                            if genericItemXML.find('selection_policy') is not None:
+                                textValuesNode.append(genericItemXML.find('selection_policy'))
+                            genericItemXML.append(textValuesNode)
+                            # No need for response type since we are talking about textValues
+                            genericItemXML.remove(genericItemXML.find("response_type"))
 
     #goto
     if 'next_step' in nodeJSON:
