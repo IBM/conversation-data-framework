@@ -668,14 +668,41 @@ def printNodes(root, parent, dialogJSON):
                     outputNodeXML.append(outputNodeTextXML)
                     # TODO save againMessage
                 outputNodeXML.text = None
-            if outputNodeXML.find('textValues') is not None:
-                outputNodeTextXML = outputNodeXML.find('textValues')
+
+            # output has one child element which is <text>
+            if outputNodeXML.find('text') is not None:
+                genericNode = LET.Element('generic')
+                text_element = outputNodeXML.find('text')
+                values_list = LET.Element("values")
+                values_list.append(text_element)
+                values_list.attrib['structure'] = "listItem"
+                genericNode.append(values_list)
+                genericNode.attrib['structure'] = "listItem"
+                response_type_elem = LET.Element("response_type")
+                response_type_elem.text = "text"
+                genericNode.append(response_type_elem)
+                outputNodeXML.append(genericNode)
+            # transform textValues context to (  "values": [ { "text" : "text1", "text" : "text2" } ], response_type: "text" )
+            if outputNodeXML.find('.//textValues') is not None:
+                outputNodeTextXML = outputNodeXML.find('.//textValues')
                 if outputNodeTextXML.get('structure') is not None:
                     for outputNodeTextValueXML in outputNodeTextXML.findall('values'):
                         outputNodeTextValueXML.attrib['structure'] = outputNodeTextXML.get('structure')
                     outputNodeTextXML.attrib.pop('structure')
-                #rename textValues element to text
-                outputNodeTextXML.tag = 'text'
+                outputNodeTextXML.tag = "values_parent"
+                parentNode = outputNodeTextXML.getparent()
+                for child in outputNodeTextXML.getchildren():
+                    if child.tag == 'values':
+                        textIs = child.text
+                        newElem = LET.Element('text')
+                        newElem.text = textIs
+                        child.append(newElem)
+                    parentNode.append(child)
+                parentNode.remove(outputNodeTextXML)
+                outputNodeTextXML = parentNode
+                response_type = LET.Element('response_type')
+                response_type.text = "text"
+                outputNodeTextXML.append(response_type)
 
             #if len(outputNodeXML.getchildren()) == 0: # remove empy output ("output": Null cannot be uploaded to WA)
             #    nodeXML.remove(outputNodeXML)
@@ -830,7 +857,8 @@ def convertAll(upperNodeJson, nodeXml):
         for name in nodeNameMap:
             # structure=listItem attribute  results in generating array rather then object
             #if len(nodeNameMap[name]) == 1 and nodeNameMap[name][0].get('structure') != 'listItem' and name!='values':
-            if len(nodeNameMap[name]) == 1 and nodeNameMap[name][0].get('structure') != 'listItem' :
+            # generic node has special case where it has to be list even if it contains one element
+            if len(nodeNameMap[name]) == 1 and nodeNameMap[name][0].get('structure') != 'listItem' and len(nodeNameMap[name]) == 1 and name != "generic":
                 convertAll(upperNodeJson[key], nodeNameMap[name][0])
                 logger.verbose("Subtag is tag")
             else:

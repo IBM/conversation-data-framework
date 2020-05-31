@@ -118,28 +118,32 @@
     </xs:attribute>
 </xs:complexType>
 
-<xs:complexType name="outputSchema">
-    <xs:choice minOccurs="1" maxOccurs="1">
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="text" type="textSchema" minOccurs="0" maxOccurs="1"/>
-            <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="textValues" type="textValuesSchema" minOccurs="0" maxOccurs="1"/>
-            <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="response" type="responseSchema" minOccurs="0" maxOccurs="1"/>
-            <xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:choice>
+<xs:complexType name="genericSchema">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="textValues" type="textValuesSchema" minOccurs="0"  maxOccurs="unbounded" nillable="true"/>
+    </xs:sequence>
     <xs:attribute name="scope" type="xs:string"/>
     <xs:attribute name="structure">
         <xs:simpleType>
             <xs:restriction base="xs:string">
               <xs:enumeration value="listItem"/>
+                <xs:enumeration value="emptyList"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="outputSchema">
+    <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="generic" type="genericSchema" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="text" type="textSchema" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:choice>
+    <xs:attribute name="structure">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
               <xs:enumeration value="emptyList"/>
-              <xs:enumeration value="emptyDict"/>
             </xs:restriction>
         </xs:simpleType>
     </xs:attribute>
