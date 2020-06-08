@@ -28,8 +28,8 @@ class TestMain(BaseTestCaseCapture):
 
     dataBasePath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'main_data')
     outputPath = os.path.join(dataBasePath, 'outputs')
-    workspacesUrl = 'https://gateway.watsonplatform.net/conversation/api/v1/workspaces'
-    version = '2017-02-03'
+    workspacesUrl = os.environ['WA_URL']
+    version = os.environ['WA_VERSION']
 
     def setup_class(cls):
         BaseTestCaseCapture.createFolder(cls.outputPath)
@@ -140,7 +140,22 @@ class TestMain(BaseTestCaseCapture):
 
 
     def test_wrongCredentials(self):
-        """Tests if script errors while uploading workspace with wrong credentials."""
+        """Tests if script errors while uploading workspace with wrong apikey."""
+
+        jsonWorkspaceFilename = 'skill_with_name_and_description.json'
+
+        wrongParams = ['--common_outputs_directory', self.dataBasePath,
+                             '--common_outputs_workspace', jsonWorkspaceFilename,
+                             '--conversation_username', 'apikey',
+                             '--conversation_password', str(uuid.uuid4()),
+                             '--conversation_url', self.workspacesUrl,
+                             '--conversation_version', self.version,
+                             '-v']
+        self.t_exitCodeAndLogMessage(1, "Unauthorized", [wrongParams])
+
+
+    def test_badCredentials(self):
+        """Tests if script errors while uploading workspace with bad credentials."""
 
         jsonWorkspaceFilename = 'skill_with_name_and_description.json'
 
@@ -151,7 +166,7 @@ class TestMain(BaseTestCaseCapture):
                              '--conversation_url', self.workspacesUrl,
                              '--conversation_version', self.version,
                              '-v']
-        self.t_exitCodeAndLogMessage(1, "Unauthorized", [wrongParams])
+        self.t_exitCodeAndLogMessage(1, "Forbidden", [wrongParams])
 
 
     def test_args_basic(self):
